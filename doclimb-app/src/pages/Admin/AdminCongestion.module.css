@@ -1,0 +1,67 @@
+/* AdminCongestion.module.css */
+.container {
+    width: 100%;
+    padding-bottom: 40px;
+  }
+  
+  .card {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    border: 1px solid #edf2f7;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .theadRow {
+    background-color: #f7fafc;
+    border-bottom: 2px solid #edf2f7;
+  }
+  
+  .th {
+    padding: 16px 20px;
+    text-align: left;
+    color: #4a5568;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  
+  .td {
+    padding: 20px;
+    border-bottom: 1px solid #f7fafc;
+  }
+  
+  /* 페이징 버튼 영역 */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+  }
+  
+  .pageBtn {
+    padding: 8px 16px;
+    border: 1px solid #e2e8f0;
+    background-color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #4a5568;
+  }
+  
+  .pageBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .activePage {
+    background-color: #3182ce;
+    color: white;
+    border-color: #3182ce;
+  }

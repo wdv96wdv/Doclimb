@@ -1,0 +1,154 @@
+.page {
+    min-height: calc(100vh - 60px);
+    /* 헤더 높이 */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 16px;
+    background: #f5f5f5;
+}
+
+.container {
+    position: relative;
+    /* 중요 */
+    width: 100%;
+    max-width: 720px;
+    background-color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+
+
+.imageWrapper {
+    position: relative;
+    width: 100%;
+    height: 520px;
+    overflow: hidden;
+}
+
+.bgImage {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(20px) brightness(0.9);
+    transform: scale(1.1);
+}
+
+.postImage {
+    position: relative;
+    z-index: 1;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    margin: auto;
+    display: block;
+}
+
+.postContent {
+    padding: 20px;
+}
+
+.authorInfo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.authorAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+    object-fit: cover;
+}
+
+.authorInfo span {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.postCaption {
+    font-size: 1.2em;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.postDate {
+    font-size: 0.9em;
+    color: #888;
+    display: block;
+    text-align: right;
+}
+
+.actions {
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+    padding: 12px 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+
+.editButton,
+.deleteButton {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.editButton {
+    background-color: #007bff;
+    color: white;
+}
+
+.editButton:hover {
+    background-color: #0056b3;
+}
+
+.deleteButton {
+    background-color: #dc3545;
+    color: white;
+}
+
+.deleteButton:hover {
+    background-color: #c82333;
+}
+
+.error {
+    color: red;
+    text-align: center;
+}
+
+.cancelButton {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+
+    background: rgba(255, 255, 255, 0.9);
+    color: #555;
+    border: 1px solid #ddd;
+    border-radius: 999px;
+
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.cancelButton:hover {
+    background: #f5f5f5;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}

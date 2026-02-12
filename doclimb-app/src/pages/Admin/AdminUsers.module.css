@@ -1,0 +1,235 @@
+.container {
+    padding: 40px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+    font-family: 'Pretendard', -apple-system, sans-serif;
+  }
+  
+  .header {
+    margin-bottom: 30px;
+  }
+  
+  .title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1a202c;
+    margin-bottom: 8px;
+  }
+  
+  .subtitle {
+    color: #718096;
+    font-size: 15px;
+  }
+  
+  /* 검색 및 새로고침 섹션 */
+  .searchSection {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+    align-items: center;
+  }
+  
+  .searchForm {
+    flex: 1;
+    display: flex;
+    gap: 8px;
+  }
+  
+  .input {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+  }
+  
+  .input:focus {
+    border-color: #3182ce;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+  }
+  
+  .primaryBtn {
+    padding: 12px 24px;
+    background-color: #3182ce;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .primaryBtn:hover {
+    background-color: #2b6cb0;
+  }
+  
+  .refreshBtn {
+    padding: 12px 20px;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #4a5568;
+    transition: background 0.2s;
+  }
+  
+  .refreshBtn:hover {
+    background-color: #f7fafc;
+  }
+  
+  /* 테이블 카드 */
+  .card {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    border: 1px solid #edf2f7;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .theadRow {
+    background-color: #f7fafc;
+    border-bottom: 2px solid #edf2f7;
+  }
+  
+  .th {
+    padding: 16px 20px;
+    text-align: left;
+    color: #4a5568;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .tr {
+    border-bottom: 1px solid #f7fafc;
+    transition: background 0.2s;
+  }
+  
+  .tr:hover {
+    background-color: #fffaf0; /* 호버 시 약간 노란 빛으로 강조 */
+  }
+  
+  .td {
+    padding: 20px;
+  }
+  
+  .userName {
+    font-weight: 700;
+    color: #2d3748;
+  }
+  
+  .userEmail {
+    font-size: 12px;
+    color: #718096;
+  }
+  
+  /* 배지 스타일 */
+  .badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  
+  .badgeActive {
+    background-color: #ebf8ff;
+    color: #3182ce;
+  }
+  
+  .badgeNone {
+    background-color: #fff5f5;
+    color: #e53e3e;
+  }
+ /* 관리 액션 그룹 컨테이너 */
+.actionBtnGroup {
+    display: flex;
+    gap: 8px;
+    align-items: center; /* 세로축 중앙 정렬 - 회수 버튼 삐뚤어짐 방지 */
+    justify-content: flex-start;
+  }
+  
+  /* 모든 액션 버튼 공통 규격 */
+  .actionBtn, .removeBtn {
+    height: 36px;
+    min-width: 64px; /* 버튼 가로 길이를 최소값으로 고정하여 일관성 유지 */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease; /* 모든 버튼에 동일한 애니메이션 속도 */
+    border: 1px solid transparent;
+    padding: 0 12px;
+    box-sizing: border-box; /* 패딩이 크기에 영향 주지 않도록 */
+  }
+  
+  /* 1. +30일 버튼 (Primary) */
+  .btnBlue {
+    background-color: #ebf8ff;
+    color: #3182ce;
+    border-color: #bee3f8;
+  }
+  .btnBlue:hover {
+    background-color: #3182ce;
+    color: #ffffff;
+    border-color: #3182ce;
+  }
+  
+  /* 2. +1일 버튼 (Secondary) */
+  .btnGray {
+    background-color: #f7fafc;
+    color: #4a5568;
+    border-color: #e2e8f0;
+  }
+  .btnGray:hover {
+    background-color: #edf2f7;
+    color: #2d3748;
+    border-color: #cbd5e0;
+  }
+  
+  /* 3. 직접 입력 버튼 (Ghost/Light) */
+  .btnLightGray {
+    background-color: #ffffff;
+    color: #718096;
+    border-color: #e2e8f0;
+  }
+  .btnLightGray:hover {
+    background-color: #f7fafc;
+    color: #4a5568;
+    border-color: #cbd5e0;
+  }
+  
+  /* 4. ❌ 회수 버튼 (Danger) */
+  .removeBtn {
+    min-width: 36px; /* 회수는 정사각형 느낌으로 */
+    width: 36px;
+    background-color: #fff5f5;
+    color: #e53e3e;
+    border-color: #fed7d7;
+  }
+  .removeBtn:hover {
+    background-color: #e53e3e;
+    color: #ffffff;
+    border-color: #e53e3e;
+  }
+  
+  /* 버튼 내 텍스트/이모지 미세 조정 */
+  .actionBtn span, .removeBtn span {
+    display: block;
+    line-height: 1;
+  }

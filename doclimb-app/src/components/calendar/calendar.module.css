@@ -1,0 +1,117 @@
+.calendar {
+    width: 100%;
+    max-width: 400px;
+    margin: 20px auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .header {
+    display: flex;
+    flex-direction: column; /* Stack year and month navigation vertically */
+    align-items: center;    /* Center items horizontally */
+    padding: 15px;
+    background-color: #007bff;
+    color: white;
+  }
+
+  .yearDisplay {
+    margin-bottom: 5px; /* Space between year and month */
+  }
+  
+  .header h2 { /* Targeting the year display */
+    margin: 0;
+    font-size: 1.5em; /* Make year slightly larger */
+  }
+
+  .monthNavigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; /* Ensure month navigation spans full width */
+    max-width: 200px; /* Optional: constrain width for better appearance */
+  }
+
+  .monthNavigation h3 {
+    margin: 0;
+    font-size: 1.2em;
+  }
+  
+  .header button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 5px 10px;
+  }
+  
+  /* Original .header h2 is now .yearDisplay h2, and .monthNavigation h3 */
+  
+  .weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background-color: #f8f8f8;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .weekdays span {
+    text-align: center;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .daysGrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background-color: #eee; /* Grid line effect */
+  }
+  
+  .day, .emptyDay {
+    padding: 15px 5px;
+    text-align: center;
+    background-color: #fff;
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .emptyDay {
+    background-color: #f9f9f9;
+    cursor: default;
+  }
+  
+  .day:hover:not(.emptyDay) {
+    background-color: #e2f0ff;
+  }
+  
+  .today {
+    background-color: #d1ecf1;
+    font-weight: bold;
+    border: 1px solid #007bff;
+  }
+  
+  .selected {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .hasRecords {
+    background-color: #ffe0b2; /* Light orange for days with records */
+    font-weight: bold;
+  }
+  
+  .hasRecords:hover {
+    background-color: #ffcc80;
+  }

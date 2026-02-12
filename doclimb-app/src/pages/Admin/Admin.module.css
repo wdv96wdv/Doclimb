@@ -1,0 +1,100 @@
+/* pages/Admin/Admin.module.css */
+.adminContainer {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f8fafc; /* 전체 배경을 차분한 연회색으로 */
+    overflow-y: scroll;
+  }
+  
+  /* 사이드바는 그대로 유지 */
+  .sidebar {
+    width: 250px;
+    background-color: #ffffff;
+    border-right: 1px solid #f0f0f0;
+    padding: 32px 16px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+  }
+  
+  /* 핵심: 컨텐츠 영역을 중앙으로 몰아주는 설정 */
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 가로 방향 중앙 정렬 */
+    padding: 40px 20px;
+    background-color: #f8fafc;
+  }
+  
+  /* 내부 컨텐츠가 너무 퍼지지 않게 잡아주는 래퍼(가상의 통로) */
+  .contentInner {
+    width: 100%;
+    max-width: 1100px; /* AdminUsers에서 설정한 max-width와 맞춤 */
+  }
+  
+  .menuTitle {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #94a3b8; /* 차분한 그레이 톤의 제목 */
+    margin-bottom: 24px;
+    padding-left: 12px;
+  }
+  
+  .navLink {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    color: #64748b; /* 기본 텍스트 색상 */
+    text-decoration: none;
+    border-radius: 12px;
+    margin-bottom: 4px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .navLink:hover {
+    background-color: #f1f5f9;
+    color: #1e293b;
+  }
+  
+  /* 활성화된 메뉴 스타일 */
+  .activeLink {
+    background-color: #eff6ff !important; /* 연한 파란색 배경 */
+    color: #2563eb !important; /* 진한 파란색 텍스트 */
+    font-weight: 700;
+  }
+  
+  .footer {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #f1f5f9;
+  }
+  
+  .logoutBtn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.2s;
+  }
+  
+  .logoutBtn:hover {
+    background-color: #fff1f2; /* 로그아웃은 연한 빨간색 피드백 */
+    color: #e11d48;
+  }
