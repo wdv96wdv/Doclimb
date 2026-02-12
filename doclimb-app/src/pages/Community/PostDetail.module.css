@@ -22,10 +22,47 @@
 
 
 .imageWrapper {
-    position: relative;
-    width: 100%;
-    height: 520px;
-    overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 520px;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 24px 12px;
+  }
+
+  .imageWrapper {
+    height: 400px;
+  }
+
+  .postContent {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 16px 12px;
+  }
+
+  .imageWrapper {
+    height: 300px;
+  }
+
+  .postContent {
+    padding: 12px;
+  }
+
+  .postCaption {
+    font-size: 1rem;
+  }
+
+  .actions {
+    flex-wrap: wrap;
+    padding: 10px 12px;
+  }
 }
 
 .bgImage {

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { useAuth, AuthProvider } from "./context/AuthContext";
 import Layout from "./components/layout/Layout";
 
@@ -16,46 +16,65 @@ import PostDetail from "./pages/Community/PostDetail";
 import PostForm from "./pages/Community/PostForm";
 import Admin from "./pages/Admin/Admin";
 import GymList from "./pages/Gym/GymList";
-import Guide from  "./pages/Guide/Guide"
+import Guide from "./pages/Guide/Guide"
 
 function Navigation() {
   const { userProfile, loading } = useAuth();
   const isAdmin = userProfile?.role?.toUpperCase() === 'ADMIN';
 
-  if (loading) return <div style={{display:'flex', justifyContent:'center', alignItems:'center', height:'100vh'}}>권한 확인 중...</div>;
+  if (loading) return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>권한 확인 중...</div>;
 
   return (
     <BrowserRouter>
       <Layout>
         <Routes>
-          {/* 로그인/회원가입: 이미 로그인 된 유저는 각자의 홈으로 보냄 */}
+          {/* [공개 경로] 로그인 여부와 상관없이 누구나 접근 가능 */}
+          <Route path="/" element={isAdmin ? <Navigate to="/admin" replace /> : <Home />} />
+          <Route path="/guide/*" element={<Guide />} />
+          <Route path="/gymlist/*" element={<GymList />} />
+
+          {/* [로그인/회원가입] 로그인 된 유저는 접근 시 홈으로 리다이렉트 */}
           <Route
             path="/login"
-            element={
-              userProfile ? (isAdmin ? <Navigate to="/admin" replace /> : <Navigate to="/" replace />) : <Login />
-            }
+            element={userProfile ? (isAdmin ? <Navigate to="/admin" replace /> : <Navigate to="/" replace />) : <Login />}
           />
           <Route path="/join" element={userProfile ? <Navigate to="/" replace /> : <Join />} />
 
-          {/* 관리자 전용: 관리자가 아니면 무조건 홈으로 */}
+          {/* [관리자 전용] */}
           <Route
             path="/admin/*"
             element={isAdmin ? <Admin /> : <Navigate to="/" replace />}
           />
 
-          {/* 일반 유저 전용: 관리자가 접근하면 관리자 페이지로, 비로그인은 로그인으로 */}
+          {/* [보호된 경로] 로그인한 일반 유저만 접근 가능 */}
+          {/* 1. 등반 기록 */}
           <Route
-            path="/"
-            element={!userProfile ? <Navigate to="/login" replace /> : (isAdmin ? <Navigate to="/admin" replace /> : <Home />)}
+            path="/records"
+            element={!userProfile ? <Navigate to="/login" replace /> : (isAdmin ? <Navigate to="/admin" replace /> : <Outlet />)}
+          >
+            <Route index element={<Records />} />
+            <Route path="new" element={<NewRecord />} />
+            <Route path=":id/edit" element={<EditRecord />} />
+            <Route path=":id" element={<RecordDetail />} />
+          </Route>
+
+          {/* 2. 마이페이지 */}
+          <Route
+            path="/mypage"
+            element={!userProfile ? <Navigate to="/login" replace /> : (isAdmin ? <Navigate to="/admin" replace /> : <MyPage />)}
           />
 
-          {/* 나머지 보호된 경로들 */}
-          <Route path="/records/*" element={!userProfile ? <Navigate to="/login" replace /> : (isAdmin ? <Navigate to="/admin" replace /> : <Records />)} />
-          <Route path="/mypage" element={!userProfile ? <Navigate to="/login" replace /> : (isAdmin ? <Navigate to="/admin" replace /> : <MyPage />)} />
-          <Route path="/community/*" element={!userProfile ? <Navigate to="/login" replace /> : (isAdmin ? <Navigate to="/admin" replace /> : <Community />)} />
-          <Route path="/gymlist/*" element={!userProfile ? <Navigate to="/login" replace /> : (isAdmin ? <Navigate to="/admin" replace /> : <GymList />)} />          
-          <Route path="/guide/*" element={!userProfile ? <Navigate to="/login" replace /> : (isAdmin ? <Navigate to="/admin" replace /> : <Guide />)} />
-          
+          {/* 3. 커뮤니티 (비로그인 유저는 읽기만 가능하게 할지 고민해 보세요. 여기서는 일단 보호로 둡니다.) */}
+          <Route
+            path="/community"
+            element={!userProfile ? <Navigate to="/login" replace /> : (isAdmin ? <Navigate to="/admin" replace /> : <Outlet />)}
+          >
+            <Route index element={<Community />} />
+            <Route path="new" element={<PostForm />} />
+            <Route path=":id/edit" element={<PostForm />} />
+            <Route path=":id" element={<PostDetail />} />
+          </Route>
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>

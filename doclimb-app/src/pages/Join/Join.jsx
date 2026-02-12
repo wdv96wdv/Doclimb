@@ -27,6 +27,7 @@ function Join() {
   const [displayNickname, setDisplayNickname] = useState('');
   const emailRef = useRef(null);
   const nicknameRef = useRef(null);
+  const [isAgreed, setIsAgreed] = useState(false); 
 
   // 상태 변수들
   const [isEmailChecked, setIsEmailChecked] = useState(false);
@@ -86,6 +87,14 @@ function Join() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null); // 에러 초기화
+
+    // 2. 동의 체크박스 확인 로직 추가 (가장 먼저 확인)
+    if (!isAgreed) {
+      return Swal.fire({
+        icon: 'warning',
+        text: '개인정보 수집 및 이용에 동의해주세요.',
+      });
+    }
 
     // 1. 비밀번호 길이 체크 (예: 8자 이상)
     if (password.length < 8) {
@@ -219,6 +228,26 @@ function Join() {
               </label>
             ))}
           </div>
+          <div className={styles.sectionTitle}>약관 동의</div>
+        <div className={styles.agreementGroup}>
+          <label className={styles.checkboxLabel}>
+            <input 
+              type="checkbox" 
+              checked={isAgreed} 
+              onChange={(e) => setIsAgreed(e.target.checked)} 
+              className={styles.checkbox}
+            />
+            <span>개인정보 수집 및 이용 동의 (필수)</span>
+          </label>
+          <button 
+            type="button" 
+            className={styles.policyBtn} 
+            onClick={() => window.open('https://climbing-frame-cc5.notion.site/3050f03e6dcc807586dbfb95ccaf7332', '_blank')}
+          >
+            약관 상세보기
+          </button>
+        </div>
+          
         </div>
 
         {error && <p className={styles.error}>{error}</p>}

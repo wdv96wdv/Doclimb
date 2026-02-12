@@ -1,5 +1,19 @@
+/* ===== 반응형 변수 ===== */
+:root {
+  --nav-bottom-height: 56px;
+  --header-height: 60px;
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --content-max-width: 720px;
+}
+
 * {
   box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html,
@@ -7,10 +21,12 @@ body,
 #root {
   height: 100%;
   margin: 0;
+  padding: 0;
   user-select: none;
   caret-color: transparent;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background-color: #f5f6f8;
+  overflow-x: hidden;
 }
 
 input,
@@ -24,3 +40,4 @@ select,
 button {
   cursor: pointer;
 }
+

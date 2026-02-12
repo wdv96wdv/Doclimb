@@ -85,7 +85,7 @@
     cursor: pointer;
     transition: background-color 0.2s;
   }
-  
+
   .emptyDay {
     background-color: #f9f9f9;
     cursor: default;
@@ -115,3 +115,32 @@
   .hasRecords:hover {
     background-color: #ffcc80;
   }
+
+@media (max-width: 480px) {
+  .calendar {
+    margin: 12px auto;
+  }
+
+  .header {
+    padding: 10px;
+  }
+
+  .header h2 {
+    font-size: 1.3em;
+  }
+
+  .monthNavigation h3 {
+    font-size: 1rem;
+  }
+
+  .day,
+  .emptyDay {
+    padding: 10px 2px;
+    min-height: 40px;
+    font-size: 0.85em;
+  }
+
+  .weekdays span {
+    font-size: 0.8em;
+  }
+}

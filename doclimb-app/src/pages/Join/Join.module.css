@@ -6,6 +6,7 @@
   min-height: 100vh;
   background-color: #f0f2f5;
   padding: 20px;
+  width: 100%;
 }
 
 .title {
@@ -24,6 +25,47 @@
   max-width: 400px;
   display: flex;
   flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .joinContainer {
+    padding: 16px;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .form {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .joinContainer {
+    padding: 12px;
+  }
+
+  .title {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+  }
+
+  .form {
+    padding: 16px;
+  }
+
+  .inputWithBtn {
+    flex-direction: column;
+  }
+
+  .inputWithBtn .input {
+    width: 100%;
+  }
+
+  .checkBtn {
+    width: 100%;
+  }
 }
 
 .inputGroup {
@@ -195,4 +237,49 @@
   color: #888;
   margin-top: 4px;
   margin-left: 2px;
+}
+.agreementGroup {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #2d3748;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  accent-color: #3182ce; /* 체크박스 포인트 컬러 */
+}
+
+.policyBtn {
+  margin-top: 8px;
+  margin-left: 28px;
+  background: none;
+  border: none;
+  color: #3182ce;
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.disabledButton {
+  width: 100%;
+  padding: 14px;
+  background-color: #cbd5e0; /* 비활성화 회색 */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: not-allowed;
 }

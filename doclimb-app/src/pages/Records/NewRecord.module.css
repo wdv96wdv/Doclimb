@@ -1,8 +1,14 @@
 .container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 16px;
   }
+}
   
   .form {
     display: flex;
@@ -38,17 +44,47 @@
     text-align: center;
   }
   
-  button {
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .cancelButton {
+    flex: 1;
+    padding: 12px;
+    background: #f0f0f0;
+    color: #555;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s;
+  }
+
+  .cancelButton:hover {
+    background: #e0e0e0;
+  }
+
+  .submitButton {
+    flex: 2;
     padding: 12px;
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
+    font-weight: 600;
   }
-  
-  button:disabled {
+
+  .submitButton:hover:not(:disabled) {
+    background-color: #0056b3;
+  }
+
+  .submitButton:disabled {
     background-color: #ccc;
+    cursor: not-allowed;
   }
   

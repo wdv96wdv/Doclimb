@@ -5,12 +5,16 @@ import styles from './NewRecord.module.css'; // Assuming you will create a CSS m
 
 function NewRecord() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({
-    date: new Date().toISOString().slice(0, 10), // Default to today
-    location: "",
-    climb_type: "볼더링",
-    difficulty: "V1",
-    success: false,
+  const [form, setForm] = useState(() => {
+    const d = new Date();
+    const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    return {
+      date: today,
+      location: "",
+      climb_type: "볼더링",
+      difficulty: "V1",
+      success: false,
+    };
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -112,9 +116,18 @@ function NewRecord() {
 
         {error && <p className={styles.error}>{error}</p>}
 
-        <button type="submit" disabled={loading}>
-          {loading ? "저장 중..." : "저장"}
-        </button>
+        <div className={styles.actions}>
+          <button
+            type="button"
+            className={styles.cancelButton}
+            onClick={() => navigate("/records")}
+          >
+            목록
+          </button>
+          <button type="submit" disabled={loading} className={styles.submitButton}>
+            {loading ? "저장 중..." : "저장"}
+          </button>
+        </div>
       </form>
     </div>
   );

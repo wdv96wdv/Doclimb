@@ -27,7 +27,7 @@ function MyPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordMessage, setPasswordMessage] = useState('');
-  
+
   // 읽기 전용 정보
   const [email, setEmail] = useState('');
 
@@ -35,7 +35,7 @@ function MyPage() {
     try {
       setLoading(true);
       const profile = await getProfile(user.id);
-      
+
       setName(profile.name || '');
       setDisplayNickname(profile.display_nickname || '');
       setClimbingLevel(profile.climbing_level || '');
@@ -90,7 +90,7 @@ function MyPage() {
       }
 
       console.log('User ID for update:', user.id); // Debugging
-      
+
       if (!name.trim()) {
         Swal.fire({
           icon: 'error',
@@ -172,7 +172,7 @@ function MyPage() {
 
     try {
       const { error: updateError } = await supabase.auth.updateUser({ password });
-      
+
       if (updateError) {
         throw updateError;
       }
@@ -184,7 +184,7 @@ function MyPage() {
         confirmButtonText: '확인',
         confirmButtonColor: '#3085d6'
       });
-      
+
       await signOut();
       navigate('/login');
 
@@ -199,6 +199,50 @@ function MyPage() {
       });
     } finally {
       setPasswordSaving(false);
+    }
+  };
+
+  // 회원 탈퇴 핸들러 추가
+  const handleDeleteAccount = async () => {
+    const { isConfirmed } = await Swal.fire({
+      title: '정말 탈퇴하시겠습니까?',
+      text: "그동안의 클라이밍 기록과 프로필 정보가 모두 삭제되며, 이 작업은 되돌릴 수 없습니다.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: '탈퇴하기',
+      cancelButtonText: '취소',
+    });
+
+    if (isConfirmed) {
+      try {
+        setLoading(true); // 로딩 표시
+
+        // 1. Supabase SQL 함수 호출 (사용자 계정 삭제)
+        const { error: deleteError } = await supabase.rpc('delete_user_account');
+
+        if (deleteError) throw deleteError;
+
+        // 2. 로그아웃 및 홈으로 이동
+        await signOut();
+        await Swal.fire({
+          icon: 'success',
+          title: '탈퇴 완료',
+          text: '그동안 DoClimb을 이용해주셔서 감사합니다.',
+          confirmButtonColor: '#3085d6',
+        });
+        navigate('/');
+      } catch (err) {
+        console.error('탈퇴 오류:', err);
+        Swal.fire({
+          icon: 'error',
+          title: '탈퇴 실패',
+          text: '계정 삭제 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        });
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -228,21 +272,21 @@ function MyPage() {
   return (
     <div className={styles.myPageContainer}>
       <h1 className={styles.title}>마이페이지</h1>
-      
+
       {/* 프로필 수정 폼 */}
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.sectionTitle}>프로필 사진</div>
         <div className={styles.avatarSection}>
-          <img 
-            src={avatarPreview || avatar_url || '/climbing_placeholder.jpg'} 
-            alt="Avatar" 
+          <img
+            src={avatarPreview || avatar_url || '/climbing_placeholder.jpg'}
+            alt="Avatar"
             className={styles.avatarPreview}
           />
-          <input 
-            type="file" 
-            id="avatar" 
-            accept="image/*" 
-            onChange={handleAvatarChange} 
+          <input
+            type="file"
+            id="avatar"
+            accept="image/*"
+            onChange={handleAvatarChange}
             className={styles.avatarInput}
           />
           <label htmlFor="avatar" className={styles.avatarLabel}>
@@ -250,7 +294,7 @@ function MyPage() {
           </label>
         </div>
         <div className={styles.sectionTitle}>계정 정보</div>
-        
+
         <div className={styles.inputGroup}>
           <label className={styles.label}>이메일</label>
           <input
@@ -294,10 +338,10 @@ function MyPage() {
           )}
         </div>
 
-        <button 
+        <button
           type="button"
-          onClick={handlePasswordChange} 
-          disabled={passwordSaving} 
+          onClick={handlePasswordChange}
+          disabled={passwordSaving}
           className={styles.button}
         >
           {passwordSaving ? '변경 중...' : '비밀번호 변경'}
@@ -386,8 +430,19 @@ function MyPage() {
           {saving ? '저장 중...' : '프로필 저장'}
         </button>
       </form>
+
+      <div className={styles.dangerZone}>
+        <div className={styles.sectionTitle}>계정 관리</div>
+        <p className={styles.dangerText}>계정을 삭제하면 모든 데이터가 즉시 파기됩니다.</p>
+        <button
+          type="button"
+          onClick={handleDeleteAccount}
+          className={styles.deleteButton}
+        >
+          회원 탈퇴
+        </button>
+      </div>
     </div>
   );
 }
-
 export default MyPage;

@@ -16,6 +16,35 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .card {
+    padding: 24px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 12px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .title {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+}
+
 .title {
   text-align: center;
   font-size: 28px;
@@ -74,7 +103,31 @@
   margin-top: 10px;
 }
 
-.button {
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.cancelButton {
+  flex: 1;
+  padding: 12px;
+  background: #f0f0f0;
+  color: #555;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+}
+
+.cancelButton:hover {
+  background: #e0e0e0;
+}
+
+.submitButton {
+  flex: 2;
   padding: 14px;
   background-color: #007bff;
   color: white;
@@ -86,11 +139,11 @@
   transition: background-color 0.3s ease;
 }
 
-.button:disabled {
-  background-color: #a0a0a0;
-  cursor: not-allowed;
+.submitButton:hover:not(:disabled) {
+  background-color: #0056b3;
 }
 
-.button:hover:not(:disabled) {
-  background-color: #0056b3;
+.submitButton:disabled {
+  background-color: #a0a0a0;
+  cursor: not-allowed;
 }

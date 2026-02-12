@@ -143,9 +143,18 @@ function EditRecord() {
 
           {error && <p className={styles.error}>{error}</p>}
 
-          <button type="submit" className={styles.button} disabled={loading}>
-            {loading ? "수정 중..." : "수정"}
-          </button>
+          <div className={styles.actions}>
+            <button
+              type="button"
+              className={styles.cancelButton}
+              onClick={() => navigate("/records")}
+            >
+              목록
+            </button>
+            <button type="submit" className={styles.submitButton} disabled={loading}>
+              {loading ? "수정 중..." : "수정"}
+            </button>
+          </div>
         </form>
       </div>
     </div>
