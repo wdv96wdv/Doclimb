@@ -1,11 +1,28 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState  } from "react";
+import { useNavigate, useLocation  } from "react-router-dom";
 import { createRecord } from "../../services/record";
 import styles from './NewRecord.module.css'; // Assuming you will create a CSS module
 
 function NewRecord() {
   const navigate = useNavigate();
+  const location = useLocation(); // URL 정보를 가져오기 위해 호출
+
+  // URL의 쿼리 스트링(?date=2026-02-12)에서 date 값을 추출
+  const queryParams = new URLSearchParams(location.search);
+  const dateFromQuery = queryParams.get("date");
+
   const [form, setForm] = useState(() => {
+    if (dateFromQuery) {
+      return {
+        date: dateFromQuery,
+        location: "",
+        climb_type: "볼더링",
+        difficulty: "V1",
+        success: false,
+      };
+    }
+
+    // 2. 파라미터가 없다면 기존처럼 오늘 날짜를 생성
     const d = new Date();
     const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     return {
@@ -16,6 +33,7 @@ function NewRecord() {
       success: false,
     };
   });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 

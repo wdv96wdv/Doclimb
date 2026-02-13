@@ -48,7 +48,10 @@ function Records() {
         {/* Header */}
         <div className={styles.header}>
           <h2>기록</h2>
-          <Link to="/records/new" className={styles.addButton}>
+          <Link
+            to={selectedDate ? `/records/new?date=${selectedDate}` : "/records/new"}
+            className={styles.addButton}
+          >
             추가
           </Link>
         </div>
