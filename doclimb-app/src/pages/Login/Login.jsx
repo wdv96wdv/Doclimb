@@ -25,7 +25,7 @@ function Login() {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "kakao",
         options: {
-          redirectTo: `${window.location.origin}/`,
+          redirectTo: `https://doclimb.vercel.app/`,
         },
       });
       if (error) throw error;
@@ -134,13 +134,12 @@ function Login() {
           {loading ? "이동 중..." : "로그인"}
         </button>
 
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-          {/* 2. 기존 <button> 대신 <img> 태그 사용 */}
+        <div className={styles.kakaoLoginContainer}>
           <img
             src={kakaoLoginImage}
             alt="카카오 로그인"
             onClick={handleKakaoLogin}
-            style={{ cursor: 'pointer', width: 'auto', height: '48px' }} // 높이는 디자인에 맞게 조절하세요
+            className={styles.kakaoLoginButton}
           />
         </div>
       </form>

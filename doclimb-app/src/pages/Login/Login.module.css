@@ -55,18 +55,21 @@
   }
 }
 
-.inputGroup { /* Styling for each input's wrapper, consistent with Join.module.css */
+.inputGroup {
+  /* Styling for each input's wrapper, consistent with Join.module.css */
   margin-bottom: 20px;
 }
 
-.label { /* Styling for input labels, consistent with Join.module.css */
+.label {
+  /* Styling for input labels, consistent with Join.module.css */
   display: block;
   margin-bottom: 8px;
   color: #555;
   font-weight: 600;
 }
 
-.input { /* Styling for input fields, consistent with Join.module.css */
+.input {
+  /* Styling for input fields, consistent with Join.module.css */
   width: 100%;
   padding: 12px;
   border: 1px solid #ddd;
@@ -87,7 +90,8 @@
   border: 1px solid #f5c6cb;
   padding: 10px;
   border-radius: 5px;
-  margin-bottom: 20px; /* Consistent with Join.module.css */
+  margin-bottom: 20px;
+  /* Consistent with Join.module.css */
   text-align: center;
   font-size: 0.9em;
 }
@@ -98,10 +102,12 @@
   text-align: center;
 }
 
-.button { /* Styling for buttons, consistent with Join.module.css */
+.button {
+  /* Styling for buttons, consistent with Join.module.css */
   background-color: #007bff;
   color: white;
-  padding: 12px 20px; /* Consistent with Join.module.css */
+  padding: 12px 20px;
+  /* Consistent with Join.module.css */
   border: none;
   border-radius: 5px;
   font-size: 1.1em;
@@ -122,7 +128,8 @@
 }
 
 .registerLink {
-  margin-top: 25px; /* Consistent with Join.module.css's .loginLink */
+  margin-top: 25px;
+  /* Consistent with Join.module.css's .loginLink */
   color: #666;
   font-size: 0.95em;
 }
@@ -170,20 +177,48 @@
   opacity: 0.6;
 }
 
-.kakaoBtn {
+/* Login.module.css */
+
+.kakaoLoginContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+  /* 파란 버튼(margin-top: 10px)과 조화롭게 조절 */
   width: 100%;
-  margin-top: 12px;
-  padding: 12px 20px;
-  background-color: #fee500;
-  color: #191919;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
 }
 
-.kakaoBtn:hover {
-  background-color: #fada0a;
+.kakaoLoginButton {
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+
+  /* [핵심] 파란색 버튼(.button)과 동일한 너비 규칙 적용 */
+  width: 100%;
+  /* max-width를 400px(폼의 최대 너비) 안에서 파란 버튼과 동일하게 작동하도록 설정 */
+  height: 50px;
+  /* 파란 버튼의 높이와 시각적으로 맞춤 */
+
+  /* 이미지가 찌그러지지 않고 영역을 꽉 채우도록 설정 */
+  object-fit: fill;
+  border-radius: 5px;
+  /* 파란 버튼의 border-radius와 통일 */
+}
+
+.kakaoLoginButton:hover {
+  opacity: 0.9;
+  /* 파란 버튼의 효과와 비슷하게 그림자 추가 가능 */
+  box-shadow: 0 4px 10px rgba(255, 235, 0, 0.3);
+}
+
+/* 모바일 전용 미세 조정 */
+@media (max-width: 480px) {
+  .kakaoLoginContainer {
+    margin-top: 12px;
+    /* .form의 패딩이 이미 있으므로 중복 패딩은 제거하여 너비를 맞춤 */
+    padding: 0;
+  }
+
+  .kakaoLoginButton {
+    /* 모바일에서 파란 버튼이 작아지는 비율에 맞춰 높이 살짝 조정 가능 */
+    height: 48px;
+  }
 }
