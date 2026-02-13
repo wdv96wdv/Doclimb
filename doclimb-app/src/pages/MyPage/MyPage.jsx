@@ -131,7 +131,7 @@ function MyPage() {
         confirmButtonText: '확인',
         confirmButtonColor: '#3085d6'
       });
-    // 홈화면으로 이독
+      // 홈화면으로 이독
       navigate('/');
     } catch (err) {
       console.error('프로필 수정 오류:', err);
@@ -179,17 +179,23 @@ function MyPage() {
         throw updateError;
       }
 
+      // 2. 알림 표시 (사용자가 확인을 누를 때까지 대기)
       await Swal.fire({
         icon: 'success',
         title: '비밀번호 변경 완료!',
-        text: '비밀번호가 성공적으로 변경되었습니다. 다시 로그인해주세요.',
+        text: '보안을 위해 다시 로그인해주세요.',
         confirmButtonText: '확인',
         confirmButtonColor: '#3085d6'
       });
 
-      await signOut();
-      navigate('/login', { replace: true }); // 로그인 페이지로 이동 (뒤로가기 방지)
-      
+      // 3. ✅ 핵심 수정: 모든 세션 로그아웃 및 로컬 데이터 삭제
+      // AuthContext의 signOut이 내부적으로 supabase.auth.signOut()을 호출한다면 
+      // 아래와 같이 직접 호출하여 확실하게 처리할 수 있습니다.
+      await supabase.auth.signOut({ scope: 'global' });
+
+      // 4. 로그인 페이지로 이동 및 뒤로가기 방지
+      navigate('/login', { replace: true });
+
     } catch (err) {
       console.error('비밀번호 변경 오류:', err);
       Swal.fire({
@@ -197,7 +203,6 @@ function MyPage() {
         title: '비밀번호 변경 실패!',
         text: err.message || '비밀번호 변경 중 오류가 발생했습니다.',
         confirmButtonText: '확인',
-        confirmButtonColor: '#d33'
       });
     } finally {
       setPasswordSaving(false);
