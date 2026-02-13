@@ -69,7 +69,6 @@ function AdminCongestion() {
 
       if (error) throw error;
       
-      Swal.fire({ icon: "success", title: "업데이트 완료", timer: 1000, showConfirmButton: false });
       fetchGyms();
     } catch (err) {
       Swal.fire("오류", err.message, "error");

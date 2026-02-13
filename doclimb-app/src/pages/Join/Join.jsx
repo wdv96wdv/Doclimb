@@ -20,14 +20,13 @@ const CLIMBING_STYLE_OPTIONS = [
 ];
 
 function Join() {
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
   const [displayNickname, setDisplayNickname] = useState('');
   const emailRef = useRef(null);
   const nicknameRef = useRef(null);
-  const [isAgreed, setIsAgreed] = useState(false); 
+  const [isAgreed, setIsAgreed] = useState(false);
 
   // 상태 변수들
   const [isEmailChecked, setIsEmailChecked] = useState(false);
@@ -41,24 +40,83 @@ function Join() {
   const navigate = useNavigate();
   const { signUp } = useAuth();
 
+  const [emailId, setEmailId] = useState('');
+  const [emailDomain, setEmailDomain] = useState('gmail.com');
+  const getFullEmail = () => `${emailId}@${emailDomain}`;
+
+  const EMAIL_DOMAINS = [
+    'gmail.com',
+    'naver.com',
+    'daum.net',
+    'kakao.com',
+    'outlook.com',
+  ];
+
+  const canSubmit =
+    isAgreed &&
+    isEmailChecked &&
+    isNicknameChecked &&
+    password &&
+    confirmPassword &&
+    password === confirmPassword;
+  // 이메일 정규식 (최소 유효성)
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  // 임시 이메일 도메인 차단 목록
+  const BLOCKED_EMAIL_DOMAINS = [
+    'mailinator.com',
+    'tempmail.com',
+    '10minutemail.com',
+    'guerrillamail.com',
+    'dispostable.com',
+    'yopmail.com',
+  ];
+
   // 이메일 중복 확인
   const checkEmailDuplicate = async () => {
-    if (!email) {
-      emailRef.current.focus(); // 입력값이 없으면 포커스
-      return Swal.fire('이메일을 입력해주세요.');
+    const email = getFullEmail();
+
+    if (!emailId) {
+      return Swal.fire('이메일 아이디를 입력해주세요.');
     }
 
-    const { data } = await supabase.from('profiles').select('email').eq('email', email).maybeSingle();
+    if (!EMAIL_REGEX.test(email)) {
+      return Swal.fire({
+        icon: 'error',
+        text: '올바른 이메일 형식이 아닙니다.',
+      });
+    }
+
+    const domain = email.split('@')[1]?.toLowerCase();
+    if (BLOCKED_EMAIL_DOMAINS.includes(domain)) {
+      return Swal.fire({
+        icon: 'error',
+        text: '임시 이메일은 사용할 수 없습니다.',
+      });
+    }
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('email')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (error) {
+      return Swal.fire({
+        icon: 'error',
+        text: '이메일 확인 중 오류가 발생했습니다.',
+      });
+    }
 
     if (data) {
-      Swal.fire({ icon: 'error', text: '이미 가입된 이메일입니다.' });
       setIsEmailChecked(false);
-      emailRef.current.focus(); // 중복이면 다시 포커스
-    } else {
-      Swal.fire({ icon: 'success', text: '사용 가능한 이메일입니다.' });
-      setIsEmailChecked(true);
+      return Swal.fire({ icon: 'error', text: '이미 가입된 이메일입니다.' });
     }
+
+    setIsEmailChecked(true);
+    Swal.fire({ icon: 'success', text: '사용 가능한 이메일입니다.' });
   };
+
 
   // 닉네임 중복 확인
   const checkNicknameDuplicate = async () => {
@@ -88,6 +146,24 @@ function Join() {
     e.preventDefault();
     setError(null); // 에러 초기화
 
+    const email = getFullEmail();
+
+    // 이메일 형식 재검증
+    if (!EMAIL_REGEX.test(email)) {
+      return Swal.fire({
+        icon: 'error',
+        text: '올바른 이메일 형식이 아닙니다.',
+      });
+    }
+
+    const domain = email.split('@')[1]?.toLowerCase();
+    if (BLOCKED_EMAIL_DOMAINS.includes(domain)) {
+      return Swal.fire({
+        icon: 'error',
+        text: '임시 이메일은 사용할 수 없습니다.',
+      });
+    }
+
     // 2. 동의 체크박스 확인 로직 추가 (가장 먼저 확인)
     if (!isAgreed) {
       return Swal.fire({
@@ -104,12 +180,14 @@ function Join() {
       });
     }
 
-    // 2. 비밀번호 복잡도 체크 (영문 + 숫자 조합 예시)
-    const passwordRegEx = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    // 2. 비밀번호 복잡도 체크 (영문 + 숫자 + 특수문자 조합 예시)
+    const passwordRegEx = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+=-])[A-Za-z\d!@#$%^&*()_+=-]{8,}$/;
+
     if (!passwordRegEx.test(password)) {
       return Swal.fire({
         icon: 'warning',
-        text: '비밀번호는 영문과 숫자를 포함하여 8자 이상이어야 합니다.',
+        text: '비밀번호는 영문, 숫자, 특수문자를 포함하여 8자 이상이어야 합니다.'
+
       });
     }
 
@@ -125,8 +203,8 @@ function Join() {
     try {
       await signUp(email, password, {
         name,
-        nickname: displayNickname,        
-        display_nickname: displayNickname, 
+        nickname: displayNickname,
+        display_nickname: displayNickname,
         climbing_level: climbingLevel,
         preferred_gym: preferredGym,
         climbing_style: climbingStyle,
@@ -159,12 +237,62 @@ function Join() {
         <div className={styles.sectionTitle}>필수 정보</div>
 
         <div className={styles.inputGroup}>
-          <label htmlFor="email" className={styles.label}>이메일 <span className={styles.requiredIndicator}>*</span></label>
-          <div className={styles.inputWithBtn}>
-            <input type="email" value={email} ref={emailRef} onChange={(e) => { setEmail(e.target.value); setIsEmailChecked(false); }} required className={styles.input} />
-            <button type="button" onClick={checkEmailDuplicate} className={styles.checkBtn}>중복확인</button>
+          <label className={styles.label}>
+            이메일 <span className={styles.requiredIndicator}>*</span>
+          </label>
+
+          <div className={styles.emailBox}>
+            <input
+              type="text"
+              value={emailId}
+              onChange={(e) => {
+                setEmailId(e.target.value);
+                setIsEmailChecked(false);
+              }}
+              placeholder="이메일 아이디"
+              className={styles.emailInput}
+            />
+
+            <span className={styles.at}>@</span>
+
+            <select
+              value={emailDomain}
+              onChange={(e) => {
+                setEmailDomain(e.target.value);
+                setIsEmailChecked(false);
+              }}
+              className={styles.emailSelect}
+            >
+              {EMAIL_DOMAINS.map((domain) => (
+                <option key={domain} value={domain}>
+                  {domain}
+                </option>
+              ))}
+            </select>
+
+            <button
+              type="button"
+              onClick={checkEmailDuplicate}
+              className={styles.emailCheckBtn}
+            >
+              중복확인
+            </button>
           </div>
+
+          {/* 상태 텍스트 */}
+          {emailId && (
+            <p
+              className={
+                isEmailChecked ? styles.successText : styles.hintText
+              }
+            >
+              {isEmailChecked
+                ? `✔ ${getFullEmail()} 사용 가능`
+                : '이메일 중복 확인이 필요합니다'}
+            </p>
+          )}
         </div>
+
 
         <div className={styles.inputGroup}>
           <label htmlFor="password" className={styles.label}>비밀번호 <span className={styles.requiredIndicator}>*</span></label>
@@ -176,7 +304,22 @@ function Join() {
             required
             className={styles.input}
           />
-          <p className={styles.hintText}>* 8자 이상 영문, 숫자 조합으로 입력해주세요.</p>
+
+          <ul className={styles.passwordChecklist}>
+            <li className={password.length >= 8 ? styles.ok : styles.no}>
+              8자 이상
+            </li>
+            <li className={/[A-Za-z]/.test(password) ? styles.ok : styles.no}>
+              영문 포함
+            </li>
+            <li className={/\d/.test(password) ? styles.ok : styles.no}>
+              숫자 포함
+            </li>
+            <li className={/[!@#$%^&*()_+=-]/.test(password) ? styles.ok : styles.no}>
+              특수문자 포함
+            </li>
+          </ul>
+
         </div>
 
         <div className={styles.inputGroup}>
@@ -198,9 +341,24 @@ function Join() {
           <label htmlFor="displayNickname" className={styles.label}>닉네임 <span className={styles.requiredIndicator}>*</span></label>
           <div className={styles.inputWithBtn}>
             <input type="text" value={displayNickname} ref={nicknameRef} onChange={(e) => { setDisplayNickname(e.target.value); setIsNicknameChecked(false); }} required className={styles.input} />
-            <button type="button" onClick={checkNicknameDuplicate} className={styles.checkBtn}>중복확인</button>
+            <button type="button" onClick={checkNicknameDuplicate} className={styles.emailCheckBtn}>중복확인</button>
           </div>
         </div>
+
+        {displayNickname && (
+          <p
+            className={
+              isNicknameChecked
+                ? styles.successText
+                : styles.hintText
+            }
+          >
+            {isNicknameChecked
+              ? '✔ 사용 가능한 닉네임입니다'
+              : '닉네임 중복 확인이 필요합니다'}
+          </p>
+        )}
+
 
         <div className={styles.sectionTitle}>선택 정보</div>
 
@@ -229,30 +387,35 @@ function Join() {
             ))}
           </div>
           <div className={styles.sectionTitle}>약관 동의</div>
-        <div className={styles.agreementGroup}>
-          <label className={styles.checkboxLabel}>
-            <input 
-              type="checkbox" 
-              checked={isAgreed} 
-              onChange={(e) => setIsAgreed(e.target.checked)} 
-              className={styles.checkbox}
-            />
-            <span>개인정보 수집 및 이용 동의 (필수)</span>
-          </label>
-          <button 
-            type="button" 
-            className={styles.policyBtn} 
-            onClick={() => window.open('https://climbing-frame-cc5.notion.site/3050f03e6dcc807586dbfb95ccaf7332', '_blank')}
-          >
-            약관 상세보기
-          </button>
-        </div>
-          
+          <div className={styles.agreementGroup}>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                checked={isAgreed}
+                onChange={(e) => setIsAgreed(e.target.checked)}
+                className={styles.checkbox}
+              />
+              <span>개인정보 수집 및 이용 동의 (필수)</span>
+            </label>
+            <button
+              type="button"
+              className={styles.policyBtn}
+              onClick={() => window.open('https://climbing-frame-cc5.notion.site/3050f03e6dcc807586dbfb95ccaf7332', '_blank')}
+            >
+              약관 상세보기
+            </button>
+          </div>
+
         </div>
 
         {error && <p className={styles.error}>{error}</p>}
 
-        <button type="submit" disabled={loading} className={styles.button}>
+        <button
+          type="submit"
+          disabled={!canSubmit || loading}
+          className={`${styles.button} ${!canSubmit ? styles.disabled : ''}`}
+        >
+
           {loading ? '가입 중...' : '회원가입'}
         </button>
       </form>
