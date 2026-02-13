@@ -14,7 +14,7 @@ function BottomNav() {
         <span>기록</span>
       </NavLink>
 
-      <NavLink to="/records/new" className={styles.add}>
+      <NavLink to="/records/new" className={({ isActive }) => isActive ? styles.active : ""}>
         ➕
         <span>추가</span>
       </NavLink>

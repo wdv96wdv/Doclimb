@@ -32,11 +32,6 @@
   font-weight: 600;
 }
 
-.add {
-  font-size: 24px;
-  transform: translateY(-10px);
-}
-
 /* 모바일: 아이콘/텍스트 크기 조정 */
 @media (max-width: 480px) {
   .nav a {
