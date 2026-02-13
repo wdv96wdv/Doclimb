@@ -4,6 +4,7 @@ import styles from "./Login.module.css";
 import { useAuth } from "../../context/AuthContext";
 import { supabase } from "../../services/supabase";
 import Swal from "sweetalert2";
+import kakaoLoginImage from '../../assets/img/kakao_login_large_wide.png';
 
 function Login() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ function Login() {
   const [pendingEmail, setPendingEmail] = useState("");
   const [resending, setResending] = useState(false);
 
-  
+
 
   const handleKakaoLogin = async () => {
     try {
@@ -133,9 +134,15 @@ function Login() {
           {loading ? "이동 중..." : "로그인"}
         </button>
 
-        <button type="button" onClick={handleKakaoLogin} className={styles.kakaoBtn}>
-          카카오톡으로 시작하기
-        </button>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+          {/* 2. 기존 <button> 대신 <img> 태그 사용 */}
+          <img
+            src={kakaoLoginImage}
+            alt="카카오 로그인"
+            onClick={handleKakaoLogin}
+            style={{ cursor: 'pointer', width: 'auto', height: '48px' }} // 높이는 디자인에 맞게 조절하세요
+          />
+        </div>
       </form>
       <p className={styles.registerLink}>
         계정이 없으신가요? <span onClick={() => navigate('/join')} className={styles.link}>회원가입</span>
