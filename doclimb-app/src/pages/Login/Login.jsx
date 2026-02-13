@@ -3,12 +3,11 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
 import { useAuth } from "../../context/AuthContext";
 import { supabase } from "../../services/supabase";
-import { createClient } from '@supabase/supabase-js';
+import Swal from "sweetalert2";
 
 function Login() {
   const navigate = useNavigate();
   const { resendConfirmationEmail } = useAuth();
-  const supabase = createClient('URL', 'KEY');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -20,19 +19,20 @@ function Login() {
 
   
 
-  // 카카오 로그인 함수 예시
   const handleKakaoLogin = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'kakao',
-      options: {
-        // 인증 완료 후 사용자를 보낼 페이지 주소 (예: 홈 화면)
-        redirectTo: 'https://doclimb.vercel.app/home'
-      },
-    });
-
-    if (error) {
-      console.error('카카오 로그인 에러:', error.message);
-      Swal.fire({ icon: 'error', text: '카카오 로그인 중 오류가 발생했습니다.' });
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "kakao",
+        options: {
+          redirectTo: `${window.location.origin}/`,
+        },
+      });
+      if (error) throw error;
+      if (data?.url) window.location.href = data.url;
+    } catch (err) {
+      console.error("카카오 로그인 에러:", err);
+      setError(err.message || "카카오 로그인 중 오류가 발생했습니다.");
+      Swal.fire({ icon: "error", text: "카카오 로그인 중 오류가 발생했습니다." });
     }
   };
 
@@ -133,7 +133,7 @@ function Login() {
           {loading ? "이동 중..." : "로그인"}
         </button>
 
-        <button onClick={handleKakaoLogin} className={styles.kakaoBtn}>
+        <button type="button" onClick={handleKakaoLogin} className={styles.kakaoBtn}>
           카카오톡으로 시작하기
         </button>
       </form>
