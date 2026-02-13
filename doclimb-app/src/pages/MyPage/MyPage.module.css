@@ -293,3 +293,25 @@
   border-color: #ef4444;
   color: #ef4444;
 }
+
+.validText {
+  color: #28a745;
+  font-size: 0.85rem;
+  margin-top: 5px;
+}
+
+.invalidText {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 5px;
+}
+
+.inputError {
+  border-color: #dc3545 !important;
+}
+
+/* 비활성화된 버튼 스타일 */
+.button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

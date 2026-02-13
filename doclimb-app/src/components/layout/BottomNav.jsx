@@ -16,6 +16,7 @@ function BottomNav() {
 
       <NavLink to="/records/new" className={styles.add}>
         ➕
+        <span>추가</span>
       </NavLink>
 
       <NavLink to="/mypage" className={({ isActive }) => isActive ? styles.active : ""}>
