@@ -17,6 +17,22 @@ function Login() {
   const [pendingEmail, setPendingEmail] = useState("");
   const [resending, setResending] = useState(false);
 
+  // 카카오 로그인 함수 예시
+  const handleKakaoLogin = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'kakao',
+      options: {
+        // 인증 완료 후 사용자를 보낼 페이지 주소 (예: 홈 화면)
+        redirectTo: window.location.origin + '/home',
+      },
+    });
+
+    if (error) {
+      console.error('카카오 로그인 에러:', error.message);
+      Swal.fire({ icon: 'error', text: '카카오 로그인 중 오류가 발생했습니다.' });
+    }
+  };
+
   const handleResendEmail = async () => {
     if (!pendingEmail) return;
     setResending(true);
@@ -79,7 +95,7 @@ function Login() {
       } else if (err.message.includes("User not found")) {
         korMessage = "존재하지 않는 계정입니다.";
       }
-      
+
       setError(korMessage);
       setLoading(false); // 에러 발생 시에만 버튼 비활성화를 풉니다.
     }
@@ -112,6 +128,10 @@ function Login() {
 
         <button type="submit" disabled={loading} className={styles.button}>
           {loading ? "이동 중..." : "로그인"}
+        </button>
+
+        <button onClick={handleKakaoLogin} className={styles.kakaoBtn}>
+          카카오톡으로 시작하기
         </button>
       </form>
       <p className={styles.registerLink}>
