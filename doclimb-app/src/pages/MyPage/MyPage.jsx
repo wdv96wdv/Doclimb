@@ -131,6 +131,8 @@ function MyPage() {
         confirmButtonText: '확인',
         confirmButtonColor: '#3085d6'
       });
+    // 홈화면으로 이독
+      navigate('/');
     } catch (err) {
       console.error('프로필 수정 오류:', err);
       Swal.fire({
@@ -186,8 +188,8 @@ function MyPage() {
       });
 
       await signOut();
-      navigate('/login');
-
+      navigate('/login', { replace: true }); // 로그인 페이지로 이동 (뒤로가기 방지)
+      
     } catch (err) {
       console.error('비밀번호 변경 오류:', err);
       Swal.fire({

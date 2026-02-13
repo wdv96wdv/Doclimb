@@ -20,20 +20,28 @@ function Login() {
 
 
 
+  // 카카오 로그인 핸들러
   const handleKakaoLogin = async () => {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "kakao",
         options: {
+          // 배포 환경 주소와 일치 시킴
           redirectTo: `https://doclimb.vercel.app/`,
         },
       });
       if (error) throw error;
+      // signInWithOAuth는 자동으로 리다이렉트되지만, 명시적으로 URL이 있는 경우 이동
       if (data?.url) window.location.href = data.url;
     } catch (err) {
       console.error("카카오 로그인 에러:", err);
-      setError(err.message || "카카오 로그인 중 오류가 발생했습니다.");
-      Swal.fire({ icon: "error", text: "카카오 로그인 중 오류가 발생했습니다." });
+      // DB 트리거 에러(saving new user 실패 등) 발생 시 알림
+      Swal.fire({ 
+        icon: "error", 
+        title: "로그인 실패",
+        text: "이미 가입된 이메일이거나 서버 오류가 발생했습니다.",
+        confirmButtonColor: "#007bff"
+      });
     }
   };
 
@@ -69,6 +77,7 @@ function Login() {
 
       if (authError) throw authError;
 
+      // 이메일 로그인 성공 시 프로필 정보(role) 확인
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('role')
