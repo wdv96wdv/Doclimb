@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
 import { useAuth } from "../../context/AuthContext";
 import { supabase } from "../../services/supabase";
+import { createClient } from '@supabase/supabase-js';
 
 function Login() {
   const navigate = useNavigate();
   const { resendConfirmationEmail } = useAuth();
-
+  const supabase = createClient('URL', 'KEY');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -17,13 +18,15 @@ function Login() {
   const [pendingEmail, setPendingEmail] = useState("");
   const [resending, setResending] = useState(false);
 
+  
+
   // 카카오 로그인 함수 예시
   const handleKakaoLogin = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'kakao',
       options: {
         // 인증 완료 후 사용자를 보낼 페이지 주소 (예: 홈 화면)
-        redirectTo: window.location.origin + '/home',
+        redirectTo: 'https://doclimb.vercel.app/home'
       },
     });
 
