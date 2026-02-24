@@ -40,11 +40,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-size: cover;
-  background-position: center;
-  /* 글자가 잘 보이도록 배경을 어둡게 처리 */
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)); 
   z-index: 1;
+  
+  background-size: contain; /* 16:9 비율을 유지하며 영역 안에 맞춤 */
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .heroContent {

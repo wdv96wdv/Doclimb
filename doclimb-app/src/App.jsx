@@ -17,6 +17,8 @@ import PostForm from "./pages/Community/PostForm";
 import Admin from "./pages/Admin/Admin";
 import GymList from "./pages/Gym/GymList";
 import Guide from "./pages/Guide/Guide"
+import CreateBeta from "./pages/Beta/CreateBeta";
+import BetaList from "./pages/Beta/BetaList";
 
 function Navigation() {
   const { userProfile, loading } = useAuth();
@@ -27,13 +29,36 @@ function Navigation() {
   return (
     <BrowserRouter>
       <Layout>
-        <Routes>
-          {/* [공개 경로] 로그인 여부와 상관없이 누구나 접근 가능 */}
+      <Routes>
+          {/* [공개 경로] */}
           <Route path="/" element={isAdmin ? <Navigate to="/admin" replace /> : <Home />} />
           <Route path="/guide/*" element={<Guide />} />
           <Route path="/gymlist/*" element={<GymList />} />
+          <Route path="/beta" element={<BetaList />} />
 
-          {/* [로그인/회원가입] 로그인 된 유저는 접근 시 홈으로 리다이렉트 */}
+          {/* 🌟 커뮤니티 (목록과 상세 페이지는 공개) */}
+          <Route path="/community" element={<Outlet />}>
+            <Route index element={<Community />} />
+            <Route path=":id" element={<PostDetail />} />
+            
+            {/* 글쓰기와 수정은 로그인이 필요함 */}
+            <Route 
+              path="new" 
+              element={!userProfile ? <Navigate to="/login" replace /> : <PostForm />} 
+            />
+            <Route 
+              path=":id/edit" 
+              element={!userProfile ? <Navigate to="/login" replace /> : <PostForm />} 
+            />
+          </Route>
+
+          {/* [보호된 경로 - 베타 업로드] */}
+          <Route
+            path="/beta/new"
+            element={!userProfile ? <Navigate to="/login" replace /> : (isAdmin ? <Navigate to="/admin" replace /> : <CreateBeta />)}
+          />
+
+          {/* [로그인/회원가입] */}
           <Route
             path="/login"
             element={userProfile ? (isAdmin ? <Navigate to="/admin" replace /> : <Navigate to="/" replace />) : <Login />}
@@ -46,8 +71,7 @@ function Navigation() {
             element={isAdmin ? <Admin /> : <Navigate to="/" replace />}
           />
 
-          {/* [보호된 경로] 로그인한 일반 유저만 접근 가능 */}
-          {/* 1. 등반 기록 */}
+          {/* [보호된 경로 - 개인 기록 및 마이페이지] */}
           <Route
             path="/records"
             element={!userProfile ? <Navigate to="/login" replace /> : (isAdmin ? <Navigate to="/admin" replace /> : <Outlet />)}
@@ -58,22 +82,10 @@ function Navigation() {
             <Route path=":id" element={<RecordDetail />} />
           </Route>
 
-          {/* 2. 마이페이지 */}
           <Route
             path="/mypage"
             element={!userProfile ? <Navigate to="/login" replace /> : (isAdmin ? <Navigate to="/admin" replace /> : <MyPage />)}
           />
-
-          {/* 3. 커뮤니티 (비로그인 유저는 읽기만 가능하게 할지 고민해 보세요. 여기서는 일단 보호로 둡니다.) */}
-          <Route
-            path="/community"
-            element={!userProfile ? <Navigate to="/login" replace /> : (isAdmin ? <Navigate to="/admin" replace /> : <Outlet />)}
-          >
-            <Route index element={<Community />} />
-            <Route path="new" element={<PostForm />} />
-            <Route path=":id/edit" element={<PostForm />} />
-            <Route path=":id" element={<PostDetail />} />
-          </Route>
 
           <Route path="*" element={<NotFound />} />
         </Routes>

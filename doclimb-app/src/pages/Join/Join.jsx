@@ -60,8 +60,8 @@ function Join() {
     confirmPassword &&
     password === confirmPassword;
   // 이메일 정규식 (최소 유효성)
-  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
+  const EMAIL_ID_REGEX = /^[a-zA-Z0-9._%+-]+$/;
+  const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   // 임시 이메일 도메인 차단 목록
   const BLOCKED_EMAIL_DOMAINS = [
     'mailinator.com',
@@ -72,6 +72,24 @@ function Join() {
     'yopmail.com',
   ];
 
+  const handleNicknameChange = (e) => {
+    const value = e.target.value;
+    // 한글, 영문, 숫자만 남기고 나머지 제거
+    const filteredValue = value.replace(/[^a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
+
+    setDisplayNickname(filteredValue);
+    setIsNicknameChecked(false);
+  };
+
+  const handleEmailIdChange = (e) => {
+    const value = e.target.value;
+    // 한글 및 공백 제거 (영문, 숫자, 일부 특수문자만 남김)
+    const filteredValue = value.replace(/[^a-zA-Z0-9._%+-]/g, '');
+
+    setEmailId(filteredValue);
+    setIsEmailChecked(false);
+  };
+
   // 이메일 중복 확인
   const checkEmailDuplicate = async () => {
     const email = getFullEmail();
@@ -80,10 +98,10 @@ function Join() {
       return Swal.fire('이메일 아이디를 입력해주세요.');
     }
 
-    if (!EMAIL_REGEX.test(email)) {
+    if (!EMAIL_ID_REGEX.test(emailId) || !EMAIL_REGEX.test(email)) {
       return Swal.fire({
         icon: 'error',
-        text: '올바른 이메일 형식이 아닙니다.',
+        text: '이메일 아이디는 영문, 숫자, 특수문자(._%+-)만 사용 가능합니다.',
       });
     }
 
@@ -245,12 +263,10 @@ function Join() {
             <input
               type="text"
               value={emailId}
-              onChange={(e) => {
-                setEmailId(e.target.value);
-                setIsEmailChecked(false);
-              }}
+              onChange={handleEmailIdChange}
               placeholder="이메일 아이디"
               className={styles.emailInput}
+              maxLength={50}
             />
 
             <span className={styles.at}>@</span>
@@ -279,17 +295,18 @@ function Join() {
             </button>
           </div>
 
-          {/* 상태 텍스트 */}
-          {emailId && (
-            <p
-              className={
-                isEmailChecked ? styles.successText : styles.hintText
-              }
-            >
-              {isEmailChecked
-                ? `✔ ${getFullEmail()} 사용 가능`
-                : '이메일 중복 확인이 필요합니다'}
+          {/* 🌟 경고 문구 위치: 입력창 뭉치 바로 아래 */}
+          {!EMAIL_ID_REGEX.test(emailId) && emailId.length > 0 ? (
+            <p className={styles.errorText} style={{ fontSize: '12px', color: '#ff4d4f', marginTop: '4px' }}>
+              영문, 숫자, 특수문자(._%+-)만 사용 가능합니다.
             </p>
+          ) : (
+            /* 상태 텍스트 (중복 확인 결과 등) */
+            emailId && (
+              <p className={isEmailChecked ? styles.successText : styles.hintText}>
+                {isEmailChecked ? `✔ ${getFullEmail()} 사용 가능` : '이메일 중복 확인이 필요합니다'}
+              </p>
+            )
           )}
         </div>
 
@@ -303,6 +320,7 @@ function Join() {
             placeholder="8자 이상, 영문+숫자 조합"
             required
             className={styles.input}
+            maxLength={20}
           />
 
           <ul className={styles.passwordChecklist}>
@@ -324,7 +342,7 @@ function Join() {
 
         <div className={styles.inputGroup}>
           <label htmlFor="confirmPassword" className={styles.label}>비밀번호 확인 <span className={styles.requiredIndicator}>*</span></label>
-          <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required className={styles.input} />
+          <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required className={styles.input} maxLength={20} />
           {password && confirmPassword && (
             <p className={password === confirmPassword ? styles.successText : styles.errorText}>
               {password === confirmPassword ? '비밀번호가 일치합니다.' : '비밀번호가 일치하지 않습니다.'}
@@ -334,28 +352,23 @@ function Join() {
 
         <div className={styles.inputGroup}>
           <label htmlFor="name" className={styles.label}>이름 <span className={styles.requiredIndicator}>*</span></label>
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required className={styles.input} />
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required className={styles.input} maxLength={10} />
         </div>
 
         <div className={styles.inputGroup}>
           <label htmlFor="displayNickname" className={styles.label}>닉네임 <span className={styles.requiredIndicator}>*</span></label>
           <div className={styles.inputWithBtn}>
-            <input type="text" value={displayNickname} ref={nicknameRef} onChange={(e) => { setDisplayNickname(e.target.value); setIsNicknameChecked(false); }} required className={styles.input} />
+            <input type="text" value={displayNickname} ref={nicknameRef} onChange={handleNicknameChange} required className={styles.input} maxLength={12}/>
             <button type="button" onClick={checkNicknameDuplicate} className={styles.emailCheckBtn}>중복확인</button>
           </div>
         </div>
 
+        {/* 🌟 닉네임 안내/경고 문구 추가 */}
         {displayNickname && (
-          <p
-            className={
-              isNicknameChecked
-                ? styles.successText
-                : styles.hintText
-            }
-          >
+          <p className={isNicknameChecked ? styles.successText : styles.hintText}>
             {isNicknameChecked
               ? '✔ 사용 가능한 닉네임입니다'
-              : '닉네임 중복 확인이 필요합니다'}
+              : '한글, 영문, 숫자만 가능합니다 (중복 확인 필요)'}
           </p>
         )}
 

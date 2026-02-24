@@ -11,7 +11,7 @@ function MyPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [passwordSaving, setPasswordSaving] = useState(false); // 누락된 상태 추가
+  const [passwordSaving, setPasswordSaving] = useState(false);
 
   // 프로필 정보 상태
   const [name, setName] = useState('');
@@ -28,8 +28,9 @@ function MyPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   
-  // 비밀번호 유효성 검사 상태
+  // 정규식 설정 (Join.js와 동일)
   const passwordRegEx = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+=-])[A-Za-z\d!@#$%^&*()_+=-]{8,}$/;
+
   const [passwordErrors, setPasswordErrors] = useState({
     length: false,
     pattern: false,
@@ -37,12 +38,11 @@ function MyPage() {
   });
   const [isPasswordDirty, setIsPasswordDirty] = useState(false);
 
-  // 실시간 유효성 검사 (중복 useEffect 통합)
+  // 실시간 비밀번호 유효성 검사
   useEffect(() => {
     if (password || confirmPassword) {
       setIsPasswordDirty(true);
     }
-
     setPasswordErrors({
       length: password.length >= 8,
       pattern: passwordRegEx.test(password),
@@ -64,7 +64,7 @@ function MyPage() {
       setAvatarUrl(profile.avatar_url);
     } catch (err) {
       console.error('프로필 로드 오류:', err);
-      Swal.fire({ icon: 'error', title: '실패', text: '프로필 로드 실패' });
+      Swal.fire({ icon: 'error', title: '실패', text: '프로필 로드 중 오류가 발생했습니다.' });
     } finally {
       setLoading(false);
     }
@@ -74,7 +74,20 @@ function MyPage() {
     if (user) loadProfile();
   }, [user, loadProfile]);
 
-  // 이벤트 핸들러
+  // --- 핸들러 함수들 ---
+
+  const handleNicknameChange = (e) => {
+    const value = e.target.value;
+    const filteredValue = value.replace(/[^a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
+    setDisplayNickname(filteredValue);
+  };
+
+  const handleNameChange = (e) => {
+    const value = e.target.value;
+    const filteredValue = value.replace(/[^a-zA-Z가-힣]/g, '');
+    setName(filteredValue);
+  };
+
   const handlePasswordKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -95,14 +108,17 @@ function MyPage() {
     setClimbingStyle((prev) => checked ? [...prev, value] : prev.filter((s) => s !== value));
   };
 
-  // 프로필 저장
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name.trim() || !displayNickname.trim()) return;
+    if (!name.trim() || !displayNickname.trim()) {
+      return Swal.fire({ icon: 'warning', text: '필수 정보를 입력해주세요.' });
+    }
+
     setSaving(true);
     try {
       let newAvatarUrl = avatar_url;
       if (avatarFile) newAvatarUrl = await uploadAvatar(avatarFile, user.id);
+      
       await updateProfile(user.id, {
         name,
         display_nickname: displayNickname,
@@ -111,24 +127,29 @@ function MyPage() {
         climbing_style: climbingStyle,
         avatar_url: newAvatarUrl,
       });
+
       Swal.fire({ icon: 'success', title: '수정 완료' });
       navigate('/');
     } catch (err) {
-      console.error(err);
       Swal.fire({ icon: 'error', title: '수정 실패' });
     } finally {
       setSaving(false);
     }
   };
 
-  // 비밀번호 변경
   const handlePasswordChange = async () => {
     if (!passwordErrors.pattern || !passwordErrors.match) return;
+    
     setPasswordSaving(true);
     try {
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
-      await Swal.fire({ icon: 'success', title: '비밀번호 변경 완료', text: '다시 로그인해주세요.' });
+
+      await Swal.fire({ 
+        icon: 'success', 
+        title: '비밀번호 변경 완료', 
+        text: '보안을 위해 다시 로그인해주세요.' 
+      });
       await supabase.auth.signOut({ scope: 'global' });
       navigate('/login', { replace: true });
     } catch (err) {
@@ -138,16 +159,16 @@ function MyPage() {
     }
   };
 
-  // 회원 탈퇴
   const handleDeleteAccount = async () => {
     const { isConfirmed } = await Swal.fire({
       title: '정말 탈퇴하시겠습니까?',
-      text: "모든 데이터가 삭제됩니다.",
+      text: "모든 데이터가 삭제되며 복구할 수 없습니다.",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       confirmButtonText: '탈퇴하기'
     });
+
     if (isConfirmed) {
       try {
         setLoading(true);
@@ -178,22 +199,23 @@ function MyPage() {
       <h1 className={styles.title}>마이페이지</h1>
 
       <form onSubmit={handleSubmit} className={styles.form}>
-        {/* 프로필 사진 섹션 */}
         <div className={styles.sectionTitle}>프로필 사진</div>
         <div className={styles.avatarSection}>
-          <img src={avatarPreview || avatar_url || '/climbing_placeholder.jpg'} alt="Avatar" className={styles.avatarPreview} />
+          <img 
+            src={avatarPreview || avatar_url || '/climbing_placeholder.jpg'} 
+            alt="Avatar" 
+            className={styles.avatarPreview} 
+          />
           <input type="file" id="avatar" accept="image/*" onChange={handleAvatarChange} className={styles.avatarInput} />
-          <label htmlFor="avatar" className={styles.avatarLabel}>사진 선택</label>
+          <label htmlFor="avatar" className={styles.avatarLabel}>사진 변경</label>
         </div>
 
-        {/* 계정 정보 */}
         <div className={styles.sectionTitle}>계정 정보</div>
         <div className={styles.inputGroup}>
           <label className={styles.label}>이메일</label>
           <input type="email" value={email} disabled className={`${styles.input} ${styles.disabled}`} />
         </div>
 
-        {/* 비밀번호 변경 섹션 */}
         <div className={styles.sectionTitle}>비밀번호 변경</div>
         <div className={styles.inputGroup}>
           <label htmlFor="password" className={styles.label}>새 비밀번호</label>
@@ -204,7 +226,8 @@ function MyPage() {
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={handlePasswordKeyDown}
             className={`${styles.input} ${isPasswordDirty && !passwordErrors.pattern ? styles.inputError : ''}`}
-            placeholder="영문+숫자+특수문자 8자리 이상"
+            placeholder="영문+숫자+특수문자 조합 (8자 이상)"
+            maxLength={20}
           />
           {isPasswordDirty && (
             <div className={styles.validationWrapper}>
@@ -224,9 +247,10 @@ function MyPage() {
             type="password"
             id="confirmPassword"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)} // ✅ 수정완료
+            onChange={(e) => setConfirmPassword(e.target.value)}
             onKeyDown={handlePasswordKeyDown}
             className={`${styles.input} ${isPasswordDirty && !passwordErrors.match ? styles.inputError : ''}`}
+            maxLength={20}
           />
           {isPasswordDirty && (
             <p className={passwordErrors.match ? styles.validText : styles.invalidText}>
@@ -239,23 +263,24 @@ function MyPage() {
           type="button"
           onClick={handlePasswordChange}
           disabled={passwordSaving || !passwordErrors.pattern || !passwordErrors.match}
-          className={styles.button}
+          className={styles.passwordButton}
         >
-          {passwordSaving ? '변경 중...' : '비밀번호 변경'}
+          {passwordSaving ? '변경 중...' : '비밀번호 변경 적용'}
         </button>
 
-        {/* 프로필 정보 섹션 */}
+        <hr className={styles.divider} />
+
         <div className={styles.sectionTitle}>프로필 정보</div>
         <div className={styles.inputGroup}>
-          <label className={styles.label}>이름 *</label>
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required className={styles.input} />
+          <label className={styles.label}>이름 <span className={styles.requiredIndicator}>*</span></label>
+          <input type="text" value={name} onChange={handleNameChange} required className={styles.input} maxLength={10} />
         </div>
         <div className={styles.inputGroup}>
-          <label className={styles.label}>닉네임 *</label>
-          <input type="text" value={displayNickname} onChange={(e) => setDisplayNickname(e.target.value)} required className={styles.input} />
+          <label className={styles.label}>닉네임 <span className={styles.requiredIndicator}>*</span></label>
+          <input type="text" value={displayNickname} onChange={handleNicknameChange} required className={styles.input} maxLength={12} />
+          <p className={styles.hintText}>한글, 영문, 숫자 조합 (최대 12자)</p>
         </div>
 
-        {/* 선택 정보 */}
         <div className={styles.sectionTitle}>선택 정보</div>
         <div className={styles.inputGroup}>
           <label className={styles.label}>클라이밍 레벨</label>
@@ -266,7 +291,7 @@ function MyPage() {
 
         <div className={styles.inputGroup}>
           <label className={styles.label}>주로 가는 암장</label>
-          <input type="text" value={preferredGym} onChange={(e) => setPreferredGym(e.target.value)} className={styles.input} />
+          <input type="text" value={preferredGym} onChange={(e) => setPreferredGym(e.target.value)} className={styles.input} maxLength={50} />
         </div>
 
         <div className={styles.inputGroup}>
@@ -280,12 +305,11 @@ function MyPage() {
           </div>
         </div>
 
-        <button type="submit" disabled={saving} className={styles.button}>
-          {saving ? '저장 중...' : '프로필 저장'}
+        <button type="submit" disabled={saving} className={styles.submitButton}>
+          {saving ? '저장 중...' : '프로필 정보 저장'}
         </button>
       </form>
 
-      {/* 회원 탈퇴 */}
       <div className={styles.dangerZone}>
         <button type="button" onClick={handleDeleteAccount} className={styles.deleteButton}>회원 탈퇴</button>
       </div>

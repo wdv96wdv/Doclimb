@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import styles from './Header.module.css'; // Import the CSS module
+import styles from './Header.module.css';
 import logo from '../../assets/img/mainlogo4.png';
 
 function Header() {
@@ -12,6 +12,7 @@ function Header() {
   const handleLogout = async () => {
     await signOut();
     navigate("/", { replace: true });
+    setIsMenuOpen(false); // 로그아웃 시 메뉴 닫기
   };
 
   const handleNavigate = (path) => {
@@ -39,17 +40,21 @@ function Header() {
           </button>
 
           <nav className={`${styles.nav} ${isMenuOpen ? styles.navOpen : ''}`}>
+            {/* 🌍 누구나 볼 수 있는 공통 메뉴 */}
+            <button className={styles.navButton} onClick={() => handleNavigate("/gymlist")}>실시간 암장 혼잡도</button>
+            <button className={styles.navButton} onClick={() => handleNavigate("/community")}>커뮤니티</button>
+            <button className={styles.navButton} onClick={() => handleNavigate("/beta")}>인스타 피드</button>
+            <button className={styles.navButton} onClick={() => handleNavigate("/guide")}>가이드</button>
+
+            {/* 🔒 로그인 상태에 따라 다른 메뉴 */}
             {isAuthenticated ? (
               <>
-                <button className={styles.navButton} onClick={() => handleNavigate("/gymlist")}>실시간 암장 혼잡도</button>
                 <button className={styles.navButton} onClick={() => handleNavigate("/records")}>기록</button>
-                <button className={styles.navButton} onClick={() => handleNavigate("/community")}>커뮤니티</button>
-                <button className={styles.navButton} onClick={() => handleNavigate("/guide")}>가이드</button>
                 <button className={styles.navButton} onClick={() => handleNavigate("/mypage")}>마이페이지</button>
-                <button className={styles.navButton} onClick={handleLogout}>로그아웃</button>
+                <button className={`${styles.navButton} ${styles.logoutBtn}`} onClick={handleLogout}>로그아웃</button>
               </>
             ) : (
-              <button className={styles.navButton} onClick={() => handleNavigate("/login")}>로그인</button>
+              <button className={`${styles.navButton} ${styles.loginBtn}`} onClick={() => handleNavigate("/login")}>로그인</button>
             )}
           </nav>
         </div>

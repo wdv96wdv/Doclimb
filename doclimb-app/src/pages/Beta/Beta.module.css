@@ -1,0 +1,220 @@
+.page {
+    min-height: calc(100vh - 60px);
+    background: #f8f9fa;
+    padding: 40px 16px;
+  }
+  
+  .feed {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .header h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #222;
+  }
+  
+  .addButton {
+    padding: 10px 18px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .addButton:hover {
+    background-color: #0056b3;
+  }
+  
+  .postList {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .postCard {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* 카드 최상단 바 */
+  .cardTopBar {
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f1f3f5;
+  }
+  
+  .gymGroup {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .gymName {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #444;
+  }
+  
+  .deleteButton {
+    background: none;
+    border: none;
+    color: #ff8787;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  /* 작성자 정보 */
+  .authorSection {
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .authorLeft {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .authorAvatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #eee;
+  }
+  
+  .authorTextInfo {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .authorNickname {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #222;
+  }
+  
+  .subText {
+    font-size: 0.75rem;
+    color: #888;
+  }
+  
+  .profileViewButton {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: white;
+    background: #007bff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  /* 영상 영역 */
+  .videoWrapper {
+    width: 100%;
+    background: #000;
+    aspect-ratio: 4 / 5;
+  }
+  
+  /* 설명 및 투표 */
+  .postInfo {
+    padding: 20px;
+  }
+  
+  .postCaption {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .ratingSection {
+    background: #f8f9fa;
+    border-radius: 14px;
+    padding: 16px;
+  }
+  
+  .ratingTitle {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #adb5bd;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  
+  .ratingButtons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .rateBtn {
+    flex: 1;
+    background: white;
+    border: 1px solid #e9ecef;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+  }
+  
+  .rateBtn.active {
+    border-color: #007bff;
+    background: #eef6ff;
+    color: #007bff;
+    transform: scale(1.02);
+  }
+  
+  /* 난이도 태그 */
+  .levelTag {
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    color: white;
+    font-weight: 800;
+  }
+  
+  .빨강 { background: #ff4d4d; }
+  .파랑 { background: #007bff; }
+  .보라 { background: #a020f0; }
+  .회색 { background: #808080; }
+  .검정 { background: #333; }
+  
+  .loading, .empty {
+    text-align: center;
+    padding: 100px;
+    color: #888;
+    font-weight: 600;
+  }
+  /* 반응형 */
+  @media (max-width: 480px) {
+    .page { padding: 20px 10px; }
+    .videoWrapper { min-height: 400px; }
+    .header h2 { font-size: 1.5em; }
+  }

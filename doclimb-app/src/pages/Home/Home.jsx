@@ -68,7 +68,7 @@ function Home() {
             <div className={styles.etiquetteList}>
               <div className={styles.etiquetteItem}>🚩 한 벽에는 한 사람만</div>
               <div className={styles.etiquetteItem}>🧹 사용한 홀드 브러쉬질</div>
-              <div className={styles.etiquetteItem}>👟 매트 위에서는 신발 벗기</div>
+              <div className={styles.etiquetteItem}>❌ 매트 위에는 올라가지 않기</div>
             </div>
           </div>
         </div>

@@ -16,52 +16,6 @@
   font-weight: bold;
 }
 
-@media (max-width: 768px) {
-  .myPageContainer {
-    padding: 16px;
-  }
-
-  .title {
-    font-size: 2rem;
-    margin-bottom: 20px;
-  }
-
-  .form {
-    padding: 24px;
-  }
-}
-
-@media (max-width: 480px) {
-  .myPageContainer {
-    padding: 12px;
-  }
-
-  .title {
-    font-size: 1.6rem;
-  }
-
-  .form {
-    padding: 16px;
-  }
-
-  .sectionTitle {
-    font-size: 1rem;
-  }
-
-  .input {
-    padding: 10px;
-  }
-
-  .avatarPreview {
-    width: 100px;
-    height: 100px;
-  }
-
-  .dangerZone {
-    padding: 16px;
-  }
-}
-
 .form {
   background-color: #ffffff;
   padding: 40px;
@@ -71,6 +25,22 @@
   max-width: 500px;
   display: flex;
   flex-direction: column;
+}
+
+.sectionTitle {
+  font-size: 1.2em;
+  color: #333;
+  margin-top: 25px;
+  margin-bottom: 15px;
+  font-weight: bold;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  width: 100%;
+}
+
+.sectionTitle:first-child {
+  margin-top: 0;
 }
 
 .inputGroup {
@@ -105,108 +75,58 @@
   cursor: not-allowed;
 }
 
-.helpText {
-  font-size: 0.85em;
-  color: #666;
-  margin-top: 5px;
-  font-style: italic;
-}
-
-.error {
-  color: #dc3545;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  text-align: center;
-  font-size: 0.9em;
-}
-
-.button {
-  background-color: #007bff;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 5px;
-  font-size: 1.1em;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  margin-top: 10px;
-}
-
-.button:hover:not(:disabled) {
-  background-color: #0056b3;
-  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-}
-
-.button:disabled {
-  background-color: #a0caff;
-  cursor: not-allowed;
-}
-
-.loading {
-  text-align: center;
-  padding: 40px;
-  font-size: 1.2em;
-  color: #666;
-}
-
-.sectionTitle {
-  font-size: 1.2em;
-  color: #333;
-  margin-top: 25px;
-  margin-bottom: 15px;
-  font-weight: bold;
-  text-align: center;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
-  width: 100%;
-}
-
-.sectionTitle:first-child {
-  margin-top: 0;
+.inputError {
+  border-color: #dc3545 !important;
 }
 
 .requiredIndicator {
   color: #dc3545;
   margin-left: 5px;
+}
+
+.hintText {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 5px;
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background: #eee;
+  margin: 30px 0;
+}
+
+/* Buttons */
+.passwordButton {
+  background-color: #6c757d;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
   font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 10px;
 }
 
-.checkboxGroup {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-top: 5px;
-}
-
-.checkboxLabel {
-  display: flex;
-  align-items: center;
-  font-size: 0.9em;
-  color: #555;
+.submitButton {
+  background-color: #007bff;
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1em;
+  font-weight: bold;
   cursor: pointer;
 }
 
-.checkbox {
-  margin-right: 5px;
-  cursor: pointer;
+.submitButton:disabled, .passwordButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
-.validationSuccess {
-  color: green;
-  font-size: 0.9em;
-  margin-top: 5px;
-}
-
-.validationError {
-  color: red;
-  font-size: 0.9em;
-  margin-top: 5px;
-}
-
+/* Avatar Section */
 .avatarSection {
   display: flex;
   flex-direction: column;
@@ -224,9 +144,7 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.avatarInput {
-  display: none;
-}
+.avatarInput { display: none; }
 
 .avatarLabel {
   background-color: #6c757d;
@@ -235,83 +153,51 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 0.9em;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
 }
 
-.avatarLabel:hover {
-  background-color: #5a6268;
-}
+/* Validation Texts */
+.validText { color: #28a745; font-size: 0.85rem; margin-top: 5px; }
+.invalidText { color: #dc3545; font-size: 0.85rem; margin-top: 5px; }
 
-/* 1. 위험 구역 컨테이너: 배경색을 빼고 경계선만 깔끔하게 */
+/* Danger Zone */
 .dangerZone {
-  margin-top: 60px; /* 위쪽 섹션과 확실히 분리 */
+  margin-top: 40px;
   width: 100%;
-  max-width: 450px;
-  padding: 24px;
-  border-top: 1px solid #e2e8f0; /* 배경색 대신 얇은 선으로 구분 */
+  max-width: 500px;
   text-align: center;
+  padding-top: 20px;
 }
 
-/* 2. 섹션 타이틀: 경고의 의미를 담아 차분한 빨간색으로 */
-.dangerZone .sectionTitle {
-  color: #94a3b8; /* 평소엔 무채색으로 비활성화 느낌 */
-  font-size: 0.9rem;
-  margin-bottom: 8px;
-  justify-content: center;
-}
-
-.dangerZone .sectionTitle::before {
-  background-color: #cbd5e0; /* 선 색상도 연하게 */
-}
-
-/* 3. 안내 문구: 작고 조심스럽게 */
-.dangerText {
-  font-size: 0.8rem;
-  color: #94a3b8;
-  margin-bottom: 20px;
-  line-height: 1.5;
-}
-
-/* 4. 탈퇴 버튼: '유령 버튼(Ghost Button)' 스타일 추천 */
 .deleteButton {
   background-color: transparent;
-  color: #f87171; /* 연한 빨강 글씨 */
+  color: #f87171;
   border: 1px solid #fecaca;
   padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  border-radius: 5px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  display: inline-block;
-  width: auto; /* 전체 너비가 아닌 적당한 크기 */
 }
 
 .deleteButton:hover {
-  background-color: #fff1f2; /* 살짝 붉은 기 도는 배경 */
+  background-color: #fff1f2;
   border-color: #ef4444;
   color: #ef4444;
 }
 
-.validText {
-  color: #28a745;
-  font-size: 0.85rem;
-  margin-top: 5px;
+.checkboxGroup {
+  display: flex;
+  gap: 15px;
+  margin-top: 8px;
 }
 
-.invalidText {
-  color: #dc3545;
-  font-size: 0.85rem;
-  margin-top: 5px;
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  font-size: 0.9em;
+  cursor: pointer;
 }
 
-.inputError {
-  border-color: #dc3545 !important;
-}
-
-/* 비활성화된 버튼 스타일 */
-.button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+/* Responsive */
+@media (max-width: 480px) {
+  .form { padding: 20px; }
+  .title { font-size: 1.8em; }
 }

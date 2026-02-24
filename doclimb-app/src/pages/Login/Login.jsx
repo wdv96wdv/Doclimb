@@ -19,6 +19,32 @@ function Login() {
   const [resending, setResending] = useState(false);
 
 
+  // 구글 로그인 핸들러 추가
+  const handleGoogleLogin = async () => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          // 이미 카카오에서 사용 중인 배포 주소를 그대로 사용합니다.
+          redirectTo: `https://doclimb.vercel.app/`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+      if (error) throw error;
+      if (data?.url) window.location.href = data.url;
+    } catch (err) {
+      console.error("구글 로그인 에러:", err);
+      Swal.fire({
+        icon: "error",
+        title: "로그인 실패",
+        text: "구글 로그인 중 오류가 발생했습니다.",
+        confirmButtonColor: "#007bff"
+      });
+    }
+  };
 
   // 카카오 로그인 핸들러
   const handleKakaoLogin = async () => {
@@ -36,8 +62,8 @@ function Login() {
     } catch (err) {
       console.error("카카오 로그인 에러:", err);
       // DB 트리거 에러(saving new user 실패 등) 발생 시 알림
-      Swal.fire({ 
-        icon: "error", 
+      Swal.fire({
+        icon: "error",
         title: "로그인 실패",
         text: "이미 가입된 이메일이거나 서버 오류가 발생했습니다.",
         confirmButtonColor: "#007bff"
@@ -151,11 +177,27 @@ function Login() {
             className={styles.kakaoLoginButton}
           />
         </div>
-      </form>
-      <p className={styles.registerLink}>
-        계정이 없으신가요? <span onClick={() => navigate('/join')} className={styles.link}>회원가입</span>
-      </p>
-    </div>
+
+        {/* 구글 로그인 버튼 (기능 연결 버전) */}
+        <div className={styles.googleLoginContainer}>
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          className={styles.googleLoginButton}
+        >
+          <img
+            src="https://developers.google.com/identity/images/g-logo.png"
+            alt="Google"
+            style={{ width: '20px', marginRight: '10px' }}
+          />
+          Google 계정으로 로그인
+        </button>
+        </div>
+      </form >
+    <p className={styles.registerLink}>
+      계정이 없으신가요? <span onClick={() => navigate('/join')} className={styles.link}>회원가입</span>
+    </p>
+    </div >
   );
 }
 
