@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom
 import { useAuth, AuthProvider } from "./context/AuthContext";
 import Layout from "./components/layout/Layout";
 import Loading from "./components/common/Loading";
+import { Analytics } from "@vercel/analytics/next"
 
 import Home from "./pages/Home/Home";
 import Records from "./pages/Records/Records";
@@ -99,6 +100,7 @@ function Navigation() {
 function App() {
   return (
     <AuthProvider>
+      <Analytics />
       <Navigation />
     </AuthProvider>
   );
