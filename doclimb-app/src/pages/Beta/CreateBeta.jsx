@@ -45,7 +45,7 @@ function CreateBeta() {
 
   return (
     <div className={styles.container}>
-      <h2>Beta 영상 공유</h2>
+      <h2>인스타 피드 공유</h2>
       <form onSubmit={handleSubmit} className={styles.form}>
         
         {/* 인스타그램 링크 */}

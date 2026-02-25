@@ -11,13 +11,16 @@ export function AuthProvider({ children }) {
 
   // 프로필 로드 함수
   const fetchProfile = async (userId) => {
-    if (!userId) return;
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
     try {
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", userId)
-        .single(); // .single()을 써서 객체 하나만 가져옵니다.
+        .maybeSingle(); // .single() 대신 .maybeSingle() 권장 (데이터 없어도 에러 안 남)
       
       if (error) throw error;
       if (data) {
@@ -26,10 +29,10 @@ export function AuthProvider({ children }) {
     } catch (err) {
       console.error("❌ 프로필 로드 실패:", err.message);
     } finally {
-      setLoading(false); // 프로필까지 로드 완료되어야 로딩 끝
+      setLoading(false); // 어떤 경우에도 로딩은 끝내줘야 화면이 뜹니다.
     }
   };
-
+  
   const signIn = async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;

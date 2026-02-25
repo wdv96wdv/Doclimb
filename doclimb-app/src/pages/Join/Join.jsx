@@ -231,7 +231,8 @@ function Join() {
       Swal.fire({
         icon: 'success',
         title: '가입 신청 완료!',
-        text: '메일함(스팸함 포함)을 확인하여 인증을 완료해주세요.',
+        text: "Doclimb 가입을 환영합니다.",
+        // text: '메일함(스팸함 포함)을 확인하여 인증을 완료해주세요.',
       }).then(() => navigate('/login'));
     } catch (err) {
       let msg = "회원가입 중 오류가 발생했습니다.";

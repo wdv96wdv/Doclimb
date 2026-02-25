@@ -8,7 +8,7 @@ import heroBackground from "../../assets/img/jemogu.jpg";
 function Home() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  
+
   // ... 생략 (summary fetch 로직은 그대로 유지) ...
 
   return (
@@ -60,15 +60,26 @@ function Home() {
       {/* 4. Etiquette & Culture: 새로운 가치 전달 */}
       <section className={styles.cultureSection}>
         <div className={styles.contentWrapper}>
-          <div className={styles.cultureBox}>
-            <div className={styles.cultureText}>
-              <h3>매너가 클라이머를 만든다 🤝</h3>
-              <p>클라이밍장은 모두가 함께 사용하는 공간입니다. <br />기본적인 에티켓을 지키며 즐겁게 등반하세요.</p>
+          <div className={styles.sectionHeader} style={{ textAlign: 'center', marginBottom: '40px' }}>
+            <h3 style={{ fontSize: '28px', fontWeight: '800' }}>매너가 클라이머를 만든다 🤝</h3>
+            <p style={{ color: '#718096', marginTop: '10px' }}>모두가 즐거운 클라이밍을 위한 기본적인 약속</p>
+          </div>
+
+          <div className={styles.etiquetteGrid}>
+            <div className={styles.etiquetteCard}>
+              <span className={styles.etiIcon}>🧗</span>
+              <h4>경로 간섭 주의</h4>
+              <p>다른 클라이머와 루트가 겹치지 않는지 확인 후 시작하세요.</p>
             </div>
-            <div className={styles.etiquetteList}>
-              <div className={styles.etiquetteItem}>🚩 한 벽에는 한 사람만</div>
-              <div className={styles.etiquetteItem}>🧹 사용한 홀드 브러쉬질</div>
-              <div className={styles.etiquetteItem}>❌ 매트 위에는 올라가지 않기</div>
+            <div className={styles.etiquetteCard}>
+              <span className={styles.etiIcon}>⚠️</span>
+              <h4>안전 거리 유지</h4>
+              <p>매트 위는 추락 사고 위험이 있으니 물건을 두거나 앉지 마세요.</p>
+            </div>
+            <div className={styles.etiquetteCard}>
+              <span className={styles.etiIcon}>🧤</span>
+              <h4>초크 매너</h4>
+              <p>다음 사람을 위해 초크 가루가 너무 날리지 않게 주의해주세요.</p>
             </div>
           </div>
         </div>

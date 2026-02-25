@@ -1,0 +1,28 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    gap: 20px;
+    background-color: #ffffff;
+  }
+  
+  /* 펄스 애니메이션 핵심 코드 */
+  .pulseLogo {
+    width: 100px;
+    height: auto;
+    animation: pulse 1.5s ease-in-out infinite; /* 1.5초마다 무한 반복 */
+  }
+  
+  .message {
+    color: #3182ce;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(0.95); opacity: 0.6; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(0.95); opacity: 0.6; }
+  }

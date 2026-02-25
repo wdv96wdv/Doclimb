@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { useAuth, AuthProvider } from "./context/AuthContext";
 import Layout from "./components/layout/Layout";
+import Loading from "./components/Common/Loading";
 
 import Home from "./pages/Home/Home";
 import Records from "./pages/Records/Records";
@@ -24,12 +25,13 @@ function Navigation() {
   const { userProfile, loading } = useAuth();
   const isAdmin = userProfile?.role?.toUpperCase() === 'ADMIN';
 
-  if (loading) return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>권한 확인 중...</div>;
-
+  if (loading) {
+    return <Loading message="권한 정보를 확인하고 있습니다..." />;
+  }
   return (
     <BrowserRouter>
       <Layout>
-      <Routes>
+        <Routes>
           {/* [공개 경로] */}
           <Route path="/" element={isAdmin ? <Navigate to="/admin" replace /> : <Home />} />
           <Route path="/guide/*" element={<Guide />} />
@@ -40,15 +42,15 @@ function Navigation() {
           <Route path="/community" element={<Outlet />}>
             <Route index element={<Community />} />
             <Route path=":id" element={<PostDetail />} />
-            
+
             {/* 글쓰기와 수정은 로그인이 필요함 */}
-            <Route 
-              path="new" 
-              element={!userProfile ? <Navigate to="/login" replace /> : <PostForm />} 
+            <Route
+              path="new"
+              element={!userProfile ? <Navigate to="/login" replace /> : <PostForm />}
             />
-            <Route 
-              path=":id/edit" 
-              element={!userProfile ? <Navigate to="/login" replace /> : <PostForm />} 
+            <Route
+              path=":id/edit"
+              element={!userProfile ? <Navigate to="/login" replace /> : <PostForm />}
             />
           </Route>
 
