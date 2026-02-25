@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { useAuth, AuthProvider } from "./context/AuthContext";
 import Layout from "./components/layout/Layout";
-import Loading from "./components/Common/Loading";
+import Loading from "./components/common/Loading";
 
 import Home from "./pages/Home/Home";
 import Records from "./pages/Records/Records";
