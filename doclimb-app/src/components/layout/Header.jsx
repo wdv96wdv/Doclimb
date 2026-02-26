@@ -49,6 +49,7 @@ function Header() {
             {/* 🔒 로그인 상태에 따라 다른 메뉴 */}
             {isAuthenticated ? (
               <>
+                <button className={styles.navButton} onClick={() => handleNavigate("/ai-coach")}>AI 코칭</button>
                 <button className={styles.navButton} onClick={() => handleNavigate("/records")}>기록</button>
                 <button className={styles.navButton} onClick={() => handleNavigate("/mypage")}>마이페이지</button>
                 <button className={`${styles.navButton} ${styles.logoutBtn}`} onClick={handleLogout}>로그아웃</button>

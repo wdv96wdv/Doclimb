@@ -1,67 +1,55 @@
-// import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-// serve(async (req) => {
-//   if (req.method !== "POST") {
-//     return new Response(
-//       JSON.stringify({ error: "POST only" }),
-//       { status: 405 }
-//     );
-//   }
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
 
-//   let body;
-//   try {
-//     body = await req.json();
-//   } catch {
-//     return new Response(
-//       JSON.stringify({ error: "Invalid JSON body" }),
-//       { status: 400 }
-//     );
-//   }
+serve(async (req) => {
+  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
-//   const { recent_records } = body;
+  try {
+    const { recent_records } = await req.json();
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
 
-//   const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
-//   if (!OPENAI_API_KEY) {
-//     return new Response(
-//       JSON.stringify({ error: "OPENAI_API_KEY not set" }),
-//       { status: 500 }
-//     );
-//   }
+    // 확인된 목록 중 가장 성능이 좋은 2.5 Flash 모델 사용
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
-//   const prompt = `
-// 너는 클라이밍 코치 AI야.
-// 최근 운동 기록을 보고 다음 운동을 추천해줘.
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{
+          parts: [{
+            text: `너는 전문 클라이밍 코치야. 다음 클라이밍 기록을 분석해서 짧은 운동 추천과 응원 메시지를 한국어로 작성해줘. 
+            기록 데이터: ${JSON.stringify(recent_records)}`
+          }]
+        }]
+      }),
+    });
 
-// ${JSON.stringify(recent_records, null, 2)}
+    const data = await response.json();
 
-// 조건:
-// - 한국어
-// - 짧게
-// - 동기부여 한 문장 포함
-// `;
+    if (data.error) {
+      return new Response(JSON.stringify({ 
+        msg: "Gemini 서버 응답 에러", 
+        reason: data.error.message 
+      }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
-//   const response = await fetch("https://api.openai.com/v1/chat/completions", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${OPENAI_API_KEY}`,
-//     },
-//     body: JSON.stringify({
-//       model: "gpt-4o-mini",
-//       messages: [{ role: "user", content: prompt }],
-//     }),
-//   });
+    const message = data.candidates?.[0]?.content?.parts?.[0]?.text || "분석 내용을 가져오지 못했습니다.";
 
-//   if (!response.ok) {
-//     const err = await response.text();
-//     return new Response(JSON.stringify({ error: err }), { status: 500 });
-//   }
+    return new Response(JSON.stringify({ recommendation: message }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
 
-//   const data = await response.json();
-//   const message = data.choices?.[0]?.message?.content ?? "";
-
-//   return new Response(
-//     JSON.stringify({ recommendation: message }),
-//     { headers: { "Content-Type": "application/json" } }
-//   );
-// });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: "Internal Server Error", details: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+});

@@ -9,7 +9,6 @@ function Home() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // ... 생략 (summary fetch 로직은 그대로 유지) ...
 
   return (
     <div className={styles.homeContainer}>
@@ -22,6 +21,33 @@ function Home() {
           <button onClick={() => navigate("/records/new")} className={styles.ctaButton}>
             오늘의 등반 기록하기
           </button>
+        </div>
+      </section>
+
+      {/* ✨ 2. New AI Coach Highlight: AI 기능 홍보 배너 추가 */}
+      <section className={styles.aiPromotionSection}>
+        <div className={styles.contentWrapper}>
+          <div className={styles.aiBannerCard}>
+            <div className={styles.aiBannerText}>
+              <span className={styles.newBadge}>NEW</span>
+              <h2>당신만을 위한 AI 코치가 탄생했습니다 🤖</h2>
+              <p>
+                누적된 등반 기록을 분석하여 다음 목표 난이도와 <br />
+                맞춤형 훈련 솔루션을 제안해 드립니다.
+              </p>
+              <button 
+                onClick={() => navigate("/ai-coach")} 
+                className={styles.aiButton}
+              >
+                무료 AI 분석 시작하기
+              </button>
+            </div>
+            <div className={styles.aiBannerImage}>
+              {/* 여기에 멋진 아이콘이나 그래픽 요소를 넣을 수 있습니다 */}
+              <div className={styles.aiIconFloating}>✨</div>
+              <div className={styles.aiIconFloatingLarge}>🧗‍♂️</div>
+            </div>
+          </div>
         </div>
       </section>
 

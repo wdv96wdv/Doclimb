@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom
 import { useAuth, AuthProvider } from "./context/AuthContext";
 import Layout from "./components/layout/Layout";
 import Loading from "./components/common/Loading";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react"
 
 import Home from "./pages/Home/Home";
 import Records from "./pages/Records/Records";
@@ -21,6 +21,7 @@ import GymList from "./pages/Gym/GymList";
 import Guide from "./pages/Guide/Guide"
 import CreateBeta from "./pages/Beta/CreateBeta";
 import BetaList from "./pages/Beta/BetaList";
+import AiCoach from "./components/ai/AiCoach";
 
 function Navigation() {
   const { userProfile, loading } = useAuth();
@@ -39,23 +40,38 @@ function Navigation() {
           <Route path="/gymlist/*" element={<GymList />} />
           <Route path="/beta" element={<BetaList />} />
 
-          {/* 🌟 커뮤니티 (목록과 상세 페이지는 공개) */}
+          {/* 🌟 AI 코치: 관리자는 접근 불가 (Admin으로 이동) */}
+          <Route
+            path="/ai-coach"
+            element={
+              !userProfile ? <Navigate to="/login" replace /> :
+                isAdmin ? <Navigate to="/admin" replace /> : <AiCoach />
+            }
+          />
+
+          {/* 🌟 커뮤니티 */}
           <Route path="/community" element={<Outlet />}>
             <Route index element={<Community />} />
             <Route path=":id" element={<PostDetail />} />
 
-            {/* 글쓰기와 수정은 로그인이 필요함 */}
+            {/* 글쓰기와 수정: 관리자는 접근 불가 (Admin으로 이동) */}
             <Route
               path="new"
-              element={!userProfile ? <Navigate to="/login" replace /> : <PostForm />}
+              element={
+                !userProfile ? <Navigate to="/login" replace /> :
+                  isAdmin ? <Navigate to="/admin" replace /> : <PostForm />
+              }
             />
             <Route
               path=":id/edit"
-              element={!userProfile ? <Navigate to="/login" replace /> : <PostForm />}
+              element={
+                !userProfile ? <Navigate to="/login" replace /> :
+                  isAdmin ? <Navigate to="/admin" replace /> : <PostForm />
+              }
             />
           </Route>
 
-          {/* [보호된 경로 - 베타 업로드] */}
+          {/* [보호된 경로 - 베타 업로드]: 이미 관리자 처리 완료됨 */}
           <Route
             path="/beta/new"
             element={!userProfile ? <Navigate to="/login" replace /> : (isAdmin ? <Navigate to="/admin" replace /> : <CreateBeta />)}
@@ -74,7 +90,7 @@ function Navigation() {
             element={isAdmin ? <Admin /> : <Navigate to="/" replace />}
           />
 
-          {/* [보호된 경로 - 개인 기록 및 마이페이지] */}
+          {/* [보호된 경로 - 개인 기록]: 이미 관리자 처리 완료됨 */}
           <Route
             path="/records"
             element={!userProfile ? <Navigate to="/login" replace /> : (isAdmin ? <Navigate to="/admin" replace /> : <Outlet />)}
