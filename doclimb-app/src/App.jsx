@@ -22,20 +22,31 @@ import Guide from "./pages/Guide/Guide"
 import CreateBeta from "./pages/Beta/CreateBeta";
 import BetaList from "./pages/Beta/BetaList";
 import AiCoach from "./components/ai/AiCoach";
+import UpdatePassword from "./pages/Auth/UpdatePassword";
 
 function Navigation() {
   const { userProfile, loading } = useAuth();
-  const isAdmin = userProfile?.role?.toUpperCase() === 'ADMIN';
+  const isAdmin = userProfile?.role?.toUpperCase() === "ADMIN";
 
   if (loading) {
     return <Loading message="권한 정보를 확인하고 있습니다..." />;
   }
+
+  const RequireUserNonAdmin = ({ children }) => {
+    if (!userProfile) return <Navigate to="/login" replace />;
+    if (isAdmin) return <Navigate to="/admin" replace />;
+    return children;
+  };
+
   return (
     <BrowserRouter>
       <Layout>
         <Routes>
           {/* [공개 경로] */}
-          <Route path="/" element={isAdmin ? <Navigate to="/admin" replace /> : <Home />} />
+          <Route
+            path="/"
+            element={isAdmin ? <Navigate to="/admin" replace /> : <Home />}
+          />
           <Route path="/guide/*" element={<Guide />} />
           <Route path="/gymlist/*" element={<GymList />} />
           <Route path="/beta" element={<BetaList />} />
@@ -44,8 +55,9 @@ function Navigation() {
           <Route
             path="/ai-coach"
             element={
-              !userProfile ? <Navigate to="/login" replace /> :
-                isAdmin ? <Navigate to="/admin" replace /> : <AiCoach />
+              <RequireUserNonAdmin>
+                <AiCoach />
+              </RequireUserNonAdmin>
             }
           />
 
@@ -58,15 +70,17 @@ function Navigation() {
             <Route
               path="new"
               element={
-                !userProfile ? <Navigate to="/login" replace /> :
-                  isAdmin ? <Navigate to="/admin" replace /> : <PostForm />
+                <RequireUserNonAdmin>
+                  <PostForm />
+                </RequireUserNonAdmin>
               }
             />
             <Route
               path=":id/edit"
               element={
-                !userProfile ? <Navigate to="/login" replace /> :
-                  isAdmin ? <Navigate to="/admin" replace /> : <PostForm />
+                <RequireUserNonAdmin>
+                  <PostForm />
+                </RequireUserNonAdmin>
               }
             />
           </Route>
@@ -74,15 +88,35 @@ function Navigation() {
           {/* [보호된 경로 - 베타 업로드]: 이미 관리자 처리 완료됨 */}
           <Route
             path="/beta/new"
-            element={!userProfile ? <Navigate to="/login" replace /> : (isAdmin ? <Navigate to="/admin" replace /> : <CreateBeta />)}
+            element={
+              <RequireUserNonAdmin>
+                <CreateBeta />
+              </RequireUserNonAdmin>
+            }
           />
 
           {/* [로그인/회원가입] */}
           <Route
             path="/login"
-            element={userProfile ? (isAdmin ? <Navigate to="/admin" replace /> : <Navigate to="/" replace />) : <Login />}
+            element={
+              userProfile ? (
+                isAdmin ? (
+                  <Navigate to="/admin" replace />
+                ) : (
+                  <Navigate to="/" replace />
+                )
+              ) : (
+                <Login />
+              )
+            }
           />
-          <Route path="/join" element={userProfile ? <Navigate to="/" replace /> : <Join />} />
+          <Route
+            path="/join"
+            element={
+              userProfile ? <Navigate to="/" replace /> : <Join />
+            }
+          />
+          <Route path="/update-password" element={<UpdatePassword />} />
 
           {/* [관리자 전용] */}
           <Route
@@ -93,7 +127,11 @@ function Navigation() {
           {/* [보호된 경로 - 개인 기록]: 이미 관리자 처리 완료됨 */}
           <Route
             path="/records"
-            element={!userProfile ? <Navigate to="/login" replace /> : (isAdmin ? <Navigate to="/admin" replace /> : <Outlet />)}
+            element={
+              <RequireUserNonAdmin>
+                <Outlet />
+              </RequireUserNonAdmin>
+            }
           >
             <Route index element={<Records />} />
             <Route path="new" element={<NewRecord />} />
@@ -103,7 +141,11 @@ function Navigation() {
 
           <Route
             path="/mypage"
-            element={!userProfile ? <Navigate to="/login" replace /> : (isAdmin ? <Navigate to="/admin" replace /> : <MyPage />)}
+            element={
+              <RequireUserNonAdmin>
+                <MyPage />
+              </RequireUserNonAdmin>
+            }
           />
 
           <Route path="*" element={<NotFound />} />

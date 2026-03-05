@@ -251,6 +251,31 @@
   margin-right: 12px;
 }
 
+.findCredentials {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.findCredentials .link {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.findCredentials .link:hover {
+  color: #007bff;
+  text-decoration: underline;
+}
+
+.divider {
+  margin: 0 10px;
+  color: #ccc;
+  user-select: none;
+}
+
 /* 모바일 전용 미세 조정 */
 @media (max-width: 480px) {
   .kakaoLoginContainer {
