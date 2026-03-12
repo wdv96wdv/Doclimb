@@ -1,0 +1,37 @@
+.footer {
+  padding: 48px 24px;
+  text-align: center;
+  background: rgba(15, 17, 26, 0.4);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  margin-top: auto;
+}
+
+/* 모바일 환경에서는 하단 네비게이션 바 높이만큼 추가 여백 */
+@media (max-width: 768px) {
+  .footer {
+    padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+.copyright {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.privacyLink {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 2px;
+}
+
+.privacyLink:hover {
+  color: #5271ff;
+  border-color: #5271ff;
+}

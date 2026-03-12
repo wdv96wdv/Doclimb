@@ -1,0 +1,267 @@
+.page {
+  min-height: 100vh;
+  padding: 60px 20px 120px;
+  background: transparent;
+  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+.header h2 {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 16px;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, #ffffff 0%, #a0a5b1 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header p {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+/* 필터 바: 고도화된 정렬 및 검색 */
+.filterBar {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 40px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 10px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+}
+
+.searchInput {
+  flex: 3;
+  padding: 18px 24px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 18px;
+  color: white;
+  font-size: 1.05rem;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  font-weight: 600;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #5271ff;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 4px rgba(82, 113, 255, 0.1);
+}
+
+.statusSelect {
+  flex: 1;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 18px;
+  color: #ffffff;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  color-scheme: dark;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 18px;
+  padding-right: 48px;
+}
+
+.statusSelect option {
+  background-color: #1a1d29;
+  color: #ffffff;
+  padding: 16px;
+}
+
+.statusSelect:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.statusSelect:focus {
+  outline: none;
+  border-color: #5271ff;
+  box-shadow: 0 0 0 4px rgba(82, 113, 255, 0.1);
+}
+
+/* 그리드 레이아웃: 카드 디자인 혁신 */
+.gymGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+  gap: 20px;
+}
+
+.gymCard {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(40px);
+  padding: 32px;
+  border-radius: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+}
+
+.gymCard:hover {
+  transform: translateY(-8px) scale(1.01);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(82, 113, 255, 0.3);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.gymInfo h3 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.gymInfo p {
+  margin: 8px 0 0;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.statusBadge {
+  padding: 10px 20px;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: white;
+  letter-spacing: 0.05em;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+
+/* 관리자 컨트롤: 정교한 인터페이스 */
+.adminControls {
+  margin-top: 30px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  display: flex;
+  gap: 8px;
+}
+
+.adminBtn {
+  flex: 1;
+  padding: 12px 0;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.adminBtn:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.adminBtn.active {
+  background: #5271ff;
+  color: white;
+  border-color: #5271ff;
+  box-shadow: 0 4px 15px rgba(82, 113, 255, 0.3);
+}
+
+/* 페이지네이션 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  margin-top: 60px;
+}
+
+.navBtn {
+  padding: 14px 28px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navBtn:disabled {
+  opacity: 0.1;
+  cursor: not-allowed;
+}
+
+.navBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateX(-4px);
+}
+
+.navBtn:last-child:hover:not(:disabled) {
+  transform: translateX(4px);
+}
+
+.pageInfo {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 100px 0;
+  color: rgba(255, 255, 255, 0.15);
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+@media (max-width: 768px) {
+  .page { padding: 40px 16px 120px; }
+  .header h2 { font-size: 2.2rem; }
+  .filterBar { flex-direction: column; border-radius: 28px; padding: 16px; }
+  .searchInput, .statusSelect { flex: none; width: 100%; border-radius: 16px; }
+  .gymCard { padding: 24px; border-radius: 28px; }
+  .gymInfo h3 { font-size: 1.3rem; }
+  .adminControls { flex-wrap: wrap; }
+  .adminBtn { flex: none; width: calc(50% - 4px); }
+}

@@ -1,11 +1,17 @@
 .page {
-  min-height: calc(100vh - 60px);
-  background: #f8f9fa;
-  padding: 40px 16px;
+  min-height: 100vh;
+  background: transparent;
+  padding: 60px 20px 100px;
+  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .feed {
-  max-width: 600px;
+  max-width: 680px;
   margin: 0 auto;
 }
 
@@ -13,78 +19,110 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 48px;
+  padding: 0 10px;
 }
 
 .header h2 {
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: #222;
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, #ffffff 0%, #888 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .addButton {
-  padding: 10px 18px;
-  background-color: #007bff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #5271ff 0%, #3b82f6 100%);
   color: white;
   border: none;
-  border-radius: 10px;
-  font-weight: 700;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 25px rgba(82, 113, 255, 0.3);
 }
 
 .addButton:hover {
-  background-color: #0056b3;
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(82, 113, 255, 0.4);
 }
 
 .postList {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 60px;
 }
 
 .postCard {
-  background: white;
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(30px);
+  border-radius: 40px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   flex-direction: column;
+  box-shadow: 0 50px 120px rgba(0, 0, 0, 0.5);
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.postCard:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-8px);
 }
 
 /* 카드 최상단 바 */
 .cardTopBar {
-  padding: 14px 18px;
+  padding: 24px 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #f1f3f5;
+  background: rgba(255, 255, 255, 0.01);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .gymGroup {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 16px;
 }
 
 .gymName {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #444;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .deleteButton {
-  background: none;
-  border: none;
-  color: #ff8787;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  padding: 8px 16px;
+  border-radius: 14px;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 800;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.deleteButton:hover {
+  background: #ef4444;
+  color: white;
 }
 
 /* 작성자 정보 */
 .authorSection {
-  padding: 14px 18px;
+  padding: 16px 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -93,168 +131,151 @@
 .authorLeft {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .authorAvatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
   object-fit: cover;
-  border: 1px solid #eee;
-}
-
-.authorTextInfo {
-  display: flex;
-  flex-direction: column;
+  border: 2px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 .authorNickname {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #222;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ffffff;
 }
 
 .subText {
-  font-size: 0.75rem;
-  color: #888;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 600;
 }
 
-.profileViewButton {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: white;
-  background: #007bff;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-/* 영상 영역 */
+/* 영상 영역: 인스타그램 감성 */
 .videoWrapper {
   width: 100%;
   background: #000;
   aspect-ratio: 4 / 5;
+  position: relative;
+}
+
+.videoWrapper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
 }
 
 /* 설명 및 투표 */
 .postInfo {
-  padding: 20px;
+  padding: 32px 40px;
 }
 
 .postCaption {
-  font-size: 1rem;
-  line-height: 1.5;
-  color: #333;
-  margin-bottom: 20px;
+  font-size: 1.25rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 40px;
+  font-weight: 500;
 }
 
 .ratingSection {
-  background: #f8f9fa;
-  border-radius: 14px;
-  padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 32px;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .ratingTitle {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #adb5bd;
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
   text-align: center;
-  margin-bottom: 12px;
+  margin-bottom: 24px;
 }
 
 .ratingButtons {
   display: flex;
-  gap: 10px;
+  gap: 16px;
 }
 
 .rateBtn {
   flex: 1;
-  background: white;
-  border: 1px solid #e9ecef;
-  padding: 10px;
-  border-radius: 10px;
-  font-weight: 700;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 18px;
+  border-radius: 20px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  gap: 6px;
-  transition: all 0.2s;
+  gap: 8px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.rateBtn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-4px);
+  color: white;
 }
 
 .rateBtn.active {
-  border-color: #007bff;
-  background: #eef6ff;
-  color: #007bff;
-  transform: scale(1.02);
+  background: rgba(82, 113, 255, 0.1);
+  border-color: #5271ff;
+  color: #5271ff;
+  box-shadow: 0 10px 20px rgba(82, 113, 255, 0.15);
 }
 
-/* 난이도 태그 */
+.rateBtn span {
+  font-size: 1.1rem;
+}
+
+/* 난이도 태그: 보석 같은 느낌 */
 .levelTag {
-  padding: 3px 10px;
-  border-radius: 6px;
-  font-size: 0.75rem;
+  padding: 6px 16px;
+  border-radius: 12px;
+  font-size: 0.85rem;
   color: white;
-  font-weight: 800;
+  font-weight: 900;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.빨강 {
-  background: #FF0000;
-}
-
-.주황 {
-  background: #FFA500;
-}
-
-.노랑 {
-  background: #FFFF00;
-}
-
-.초록 {
-  background: #008000;
-}
-
-.파랑 {
-  background: #0000FF;
-}
-
-.남색 {
-  background: #000080;
-}
-
-.보라 {
-  background: #800080;
-}
-
-.갈색 {
-  background: #8B4513;
-}
-
-.검정 {
-  background: #000000;
-}
+.빨강 { background: linear-gradient(135deg, #ef4444, #991b1b); border: 1px solid rgba(239, 68, 68, 0.3); }
+.주황 { background: linear-gradient(135deg, #f97316, #9a3412); }
+.노랑 { background: linear-gradient(135deg, #facc15, #854d0e); color: #000; }
+.초록 { background: linear-gradient(135deg, #10b981, #064e3b); }
+.파랑 { background: linear-gradient(135deg, #3b82f6, #1e3a8a); }
+.남색 { background: linear-gradient(135deg, #6366f1, #312e81); }
+.보라 { background: linear-gradient(135deg, #a855f7, #581c87); }
+.갈색 { background: linear-gradient(135deg, #78350f, #451a03); }
+.검정 { background: linear-gradient(135deg, #1a1a1a, #000); border: 1px solid rgba(255,255,255,0.2); }
 
 .loading,
 .empty {
   text-align: center;
-  padding: 100px;
-  color: #888;
-  font-weight: 600;
+  padding: 160px 20px;
+  color: rgba(255, 255, 255, 0.1);
+  font-size: 1.4rem;
+  font-weight: 800;
 }
 
-/* 반응형 */
-@media (max-width: 480px) {
-  .page {
-    padding: 20px 10px;
-  }
-
-  .videoWrapper {
-    min-height: 400px;
-  }
-
-  .header h2 {
-    font-size: 1.5em;
-  }
+@media (max-width: 768px) {
+  .page { padding: 40px 16px 120px; }
+  .header h2 { font-size: 2.2rem; }
+  .postCard { border-radius: 32px; }
+  .postInfo { padding: 24px; }
+  .postCaption { font-size: 1.1rem; }
+  .ratingButtons { flex-direction: row; flex-wrap: wrap; }
+  .rateBtn { padding: 12px; }
 }

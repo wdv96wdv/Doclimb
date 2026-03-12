@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "../../services/supabase";
 import { useNavigate } from "react-router-dom";
+import { Instagram, MapPin, Palette, FileText, Send, RefreshCw } from "lucide-react";
 import Swal from "sweetalert2";
 import styles from "./CreateBeta.module.css";
 
@@ -34,10 +35,23 @@ function CreateBeta() {
 
       if (error) throw error;
 
-      Swal.fire("성공!", "베타 영상이 공유되었습니다.", "success");
-      navigate("/beta"); // 리스트 페이지로 이동
+      await Swal.fire({
+        title: "공유 완료!",
+        text: "베타 영상이 피드에 공유되었습니다.",
+        icon: "success",
+        background: '#1a1d29',
+        color: '#fff',
+        confirmButtonColor: '#5271ff'
+      });
+      navigate("/beta");
     } catch (err) {
-      Swal.fire("에러", err.message, "error");
+      Swal.fire({
+        title: "에러 발생",
+        text: err.message,
+        icon: "error",
+        background: '#1a1d29',
+        color: '#fff'
+      });
     } finally {
       setLoading(false);
     }
@@ -48,9 +62,8 @@ function CreateBeta() {
       <h2>인스타 피드 공유</h2>
       <form onSubmit={handleSubmit} className={styles.form}>
         
-        {/* 인스타그램 링크 */}
         <div className={styles.inputGroup}>
-          <label>영상 링크</label>
+          <label><Instagram size={14} className="inline mr-1" /> 영상 링크</label>
           <input 
             type="url" 
             placeholder="https://www.instagram.com/p/..." 
@@ -60,21 +73,19 @@ function CreateBeta() {
           />
         </div>
 
-        {/* 암장 이름 */}
         <div className={styles.inputGroup}>
-          <label>클라이밍장</label>
+          <label><MapPin size={14} className="inline mr-1" /> 클라이밍장</label>
           <input 
             type="text" 
-            placeholder="암장 이름을 입력하세요 (예: 더클라임 연남)" 
+            placeholder="암장 이름을 입력하세요" 
             value={formData.gym_name}
             required 
             onChange={(e) => setFormData({...formData, gym_name: e.target.value})}
           />
         </div>
 
-        {/* 난이도 선택 (이 부분이 추가되었습니다) */}
         <div className={styles.inputGroup}>
-          <label>난이도 색상</label>
+          <label><Palette size={14} className="inline mr-1" /> 난이도 색상</label>
           <select 
             className={styles.select}
             value={formData.color_level}
@@ -92,18 +103,28 @@ function CreateBeta() {
           </select>
         </div>
 
-        {/* 상세 설명 */}
         <div className={styles.inputGroup}>
-          <label>설명</label>
+          <label><FileText size={14} className="inline mr-1" /> 상세 설명</label>
           <textarea 
             placeholder="문제에 대한 팁이나 설명을 적어주세요."
             value={formData.description}
+            rows={4}
             onChange={(e) => setFormData({...formData, description: e.target.value})}
           />
         </div>
 
         <button type="submit" className={styles.submitButton} disabled={loading}>
-          {loading ? "공유 중..." : "공유하기"}
+          {loading ? (
+            <>
+              <RefreshCw size={20} className="refresh-spin" />
+              <span>공유 중...</span>
+            </>
+          ) : (
+            <>
+              <Send size={20} />
+              <span>피드에 공유하기</span>
+            </>
+          )}
         </button>
       </form>
     </div>

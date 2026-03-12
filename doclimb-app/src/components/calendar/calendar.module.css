@@ -1,146 +1,173 @@
 .calendar {
-    width: 100%;
-    max-width: 400px;
-    margin: 20px auto;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-family: Arial, sans-serif;
-    overflow: hidden;
-    background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  }
-  
-  .header {
-    display: flex;
-    flex-direction: column; /* Stack year and month navigation vertically */
-    align-items: center;    /* Center items horizontally */
-    padding: 15px;
-    background-color: #007bff;
-    color: white;
-  }
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+  font-family: 'Inter', sans-serif;
+  color: #ffffff;
+  background: transparent;
+  user-select: none;
+}
 
-  .yearDisplay {
-    margin-bottom: 5px; /* Space between year and month */
-  }
-  
-  .header h2 { /* Targeting the year display */
-    margin: 0;
-    font-size: 1.5em; /* Make year slightly larger */
-  }
+/* Header Sections */
+.calendarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 8px 24px 8px;
+}
 
-  .monthNavigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%; /* Ensure month navigation spans full width */
-    max-width: 200px; /* Optional: constrain width for better appearance */
-  }
+.dateDisplay {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
-  .monthNavigation h3 {
-    margin: 0;
-    font-size: 1.2em;
-  }
-  
-  .header button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.2em;
-    cursor: pointer;
-    padding: 5px 10px;
-  }
-  
-  /* Original .header h2 is now .yearDisplay h2, and .monthNavigation h3 */
-  
-  .weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    background-color: #f8f8f8;
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .weekdays span {
-    text-align: center;
-    font-weight: bold;
-    color: #555;
+.yearText {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.monthText {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.navButtons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.navButtons button {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.navButtons button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.navButtons button:active {
+  transform: translateY(0);
+}
+
+/* Weekdays */
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 12px;
+}
+
+.weekdays span {
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Days Grid */
+.daysGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.day, .emptyDay {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.day {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.emptyDay {
+  cursor: default;
+}
+
+.dayNumber {
+  font-size: 0.95rem;
+  font-weight: 600;
+  z-index: 1;
+}
+
+.day:hover:not(.emptyDay) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Special States */
+.today {
+  border-color: #5271ff !important;
+  color: #5271ff;
+  font-weight: 800;
+}
+
+.selected {
+  background: #5271ff !important;
+  color: white !important;
+  border-color: #5271ff !important;
+  box-shadow: 0 4px 12px rgba(82, 113, 255, 0.4);
+}
+
+.selected .recordIndicator {
+  background: white !important;
+}
+
+/* Record Indicators */
+.recordIndicator {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #5271ff;
+  position: absolute;
+  bottom: 8px;
+}
+
+.hasRecords:not(.selected) .dayNumber {
+  color: #ffffff;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .monthText {
+    font-size: 1.5rem;
   }
   
   .daysGrid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 1px;
-    background-color: #eee; /* Grid line effect */
+    gap: 4px;
   }
   
-  .day, .emptyDay {
-    padding: 15px 5px;
-    text-align: center;
-    background-color: #fff;
-    min-height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 0.9em;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-
-  .emptyDay {
-    background-color: #f9f9f9;
-    cursor: default;
+  .day {
+    border-radius: 8px;
   }
   
-  .day:hover:not(.emptyDay) {
-    background-color: #e2f0ff;
-  }
-  
-  .today {
-    background-color: #d1ecf1;
-    font-weight: bold;
-    border: 1px solid #007bff;
-  }
-  
-  .selected {
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-  }
-  
-  .hasRecords {
-    background-color: #ffe0b2; /* Light orange for days with records */
-    font-weight: bold;
-  }
-  
-  .hasRecords:hover {
-    background-color: #ffcc80;
-  }
-
-@media (max-width: 480px) {
-  .calendar {
-    margin: 12px auto;
-  }
-
-  .header {
-    padding: 10px;
-  }
-
-  .header h2 {
-    font-size: 1.3em;
-  }
-
-  .monthNavigation h3 {
-    font-size: 1rem;
-  }
-
-  .day,
-  .emptyDay {
-    padding: 10px 2px;
-    min-height: 40px;
-    font-size: 0.85em;
-  }
-
-  .weekdays span {
-    font-size: 0.8em;
+  .dayNumber {
+    font-size: 0.85rem;
   }
 }

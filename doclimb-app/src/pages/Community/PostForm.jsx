@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { createPost, getPostById, updatePost } from "../../services/community";
+import { ImagePlus, Upload, X, Send, Check, RefreshCw, MessageSquare, Tag } from "lucide-react";
+import noImage from "../../assets/img/no_image.png";
 import styles from "./PostForm.module.css";
 
 function PostForm() {
@@ -11,15 +13,19 @@ function PostForm() {
   const [caption, setCaption] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
+  const [selectedTag, setSelectedTag] = useState("자유소통");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const tags = ["자유소통", "암장추천", "장비리뷰", "정복완료", "도와줘요"];
 
   useEffect(() => {
     if (isEditMode) {
       setLoading(true);
       getPostById(id)
         .then(post => {
-          setCaption(post.caption);
+          setCaption(post.caption || "");
+          setSelectedTag(post.category || "자유소통");
           setImagePreview(post.image_url);
         })
         .catch(err => {
@@ -44,8 +50,8 @@ function PostForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!caption || (!imageFile && !isEditMode)) {
-      setError("사진과 설명을 모두 입력해주세요.");
+    if (!caption) {
+      setError("글 내용을 입력해주세요.");
       return;
     }
 
@@ -54,9 +60,9 @@ function PostForm() {
 
     try {
       if (isEditMode) {
-        await updatePost(id, { caption, imageFile });
+        await updatePost(id, { caption, category: selectedTag, imageFile });
       } else {
-        await createPost({ caption, imageFile });
+        await createPost({ caption, category: selectedTag, imageFile });
       }
       navigate("/community");
     } catch (err) {
@@ -67,47 +73,91 @@ function PostForm() {
     }
   };
 
-  if (loading && isEditMode) return <div>로딩 중...</div>;
+  if (loading && isEditMode) return <div className={styles.page}><div className={styles.error}>데이터를 가져오는 중...</div></div>;
 
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <h2>{isEditMode ? "게시물 수정" : "새 게시물"}</h2>
+        <div className={styles.header}>
+          <h2>{isEditMode ? "게시물 수정" : "새 게시물 작성"}</h2>
+          <p>오늘의 등반 이야기를 들려주세요.</p>
+        </div>
+        
+        {error && <p className={styles.error}>{error}</p>}
+
         <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.imagePreview}>
-            {imagePreview ? (
-              <img src={imagePreview} alt="Preview" />
-            ) : (
-              <span>사진을 선택하세요</span>
-            )}
+          {/*Trendy Card Preview 섹션 */}
+          <div className={styles.previewSection}>
+            <p className={styles.sectionTitle}>미리보기</p>
+            <div className={styles.previewCard}>
+              <div className={styles.previewImageWrapper}>
+                <img src={imagePreview || noImage} alt="Preview" className={styles.previewImage} />
+                <div className={styles.previewTag}>{selectedTag}</div>
+              </div>
+              <div className={styles.previewContent}>
+                <p className={styles.previewCaption}>{caption || "여기에 내용이 표시됩니다..."}</p>
+              </div>
+            </div>
           </div>
-          <label htmlFor="imageUpload" className={styles.imageUploadLabel}>
-            사진 선택
-          </label>
-          <input
-            id="imageUpload"
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className={styles.imageUploadInput}
-          />
 
-          <label htmlFor="caption" className={styles.captionLabel}>설명</label>
-          <textarea
-            id="caption"
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
-            placeholder="사진에 대한 설명을 입력하세요..."
-            className={styles.captionInput} 
-            maxLength={200}
-          />
+          <div className={styles.inputSection}>
+            <div className={styles.fieldGroup}>
+              <label className={styles.label}><Tag size={16} /> 카테고리 선택</label>
+              <div className={styles.tagList}>
+                {tags.map(tag => (
+                  <button
+                    key={tag}
+                    type="button"
+                    className={`${styles.tagBtn} ${selectedTag === tag ? styles.activeTag : ""}`}
+                    onClick={() => setSelectedTag(tag)}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-          {error && <p className={styles.error}>{error}</p>}
+            <div className={styles.fieldGroup}>
+              <label className={styles.label}><Upload size={16} /> 사진 추가 (선택)</label>
+              <div className={styles.uploadArea}>
+                <input
+                  id="imageUpload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className={styles.hiddenInput}
+                />
+                <label htmlFor="imageUpload" className={styles.uploadBtn}>
+                  {imagePreview ? <RefreshCw size={20} /> : <ImagePlus size={24} />}
+                  <span>{imagePreview ? "사진 변경하기" : "사진 업로드하기"}</span>
+                </label>
+                {imagePreview && (
+                  <button type="button" className={styles.removeBtn} onClick={() => {setImageFile(null); setImagePreview("");}}>
+                    <X size={16} /> 제거
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className={styles.fieldGroup}>
+              <div className={styles.labelRow}>
+                <label className={styles.label}><MessageSquare size={16} /> 내용</label>
+                <span className={styles.charCounter}>{caption.length}/200</span>
+              </div>
+              <textarea
+                value={caption}
+                onChange={(e) => setCaption(e.target.value)}
+                placeholder="어떤 멋진 등반을 하셨나요? 자유롭게 들려주세요."
+                className={styles.textarea} 
+                maxLength={200}
+              />
+            </div>
+          </div>
 
           <div className={styles.actions}>
             <button
               type="button"
-              className={styles.cancelButton}
+              className={styles.cancelBtn}
               onClick={() => navigate("/community")}
             >
               취소
@@ -115,13 +165,18 @@ function PostForm() {
 
             <button
               type="submit"
-              disabled={loading}
-              className={styles.submitButton}
+              disabled={loading || !caption}
+              className={styles.submitBtn}
             >
-              {loading ? "저장 중..." : isEditMode ? "수정" : "게시"}
+              {loading ? (
+                <RefreshCw size={20} className="animate-spin" />
+              ) : isEditMode ? (
+                "수정 완료"
+              ) : (
+                "지금 게시하기"
+              )}
             </button>
           </div>
-
         </form>
       </div>
     </div>

@@ -5,6 +5,8 @@
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   --safe-area-top: env(safe-area-inset-top, 0px);
   --content-max-width: 720px;
+  --bg-dark: #0f111a;
+  --text-main: #ffffff;
 }
 
 * {
@@ -14,6 +16,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
+  background-color: var(--bg-dark); /* FOUC 방지 */
 }
 
 html,
@@ -24,20 +27,27 @@ body,
   padding: 0;
   user-select: none;
   caret-color: transparent;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background-color: #f5f6f8;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
   overflow-x: hidden;
 }
 
 input,
 textarea,
-select,
-[contenteditable="true"] {
+select {
   user-select: text;
   caret-color: auto;
+  color-scheme: dark;
+}
+
+option {
+  background-color: #1a1d29;
+  color: #ffffff;
 }
 
 button {
   cursor: pointer;
+  font-family: inherit;
 }
 

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import styles from "./calendar.module.css"; // Assume a CSS module for styling
 
 const Calendar = ({ recordsByDate, onSelectDate }) => {
@@ -52,14 +53,18 @@ const Calendar = ({ recordsByDate, onSelectDate }) => {
 
   return (
     <div className={styles.calendar}>
-      <div className={styles.header}>
-        <div className={styles.yearDisplay}>
-          <h2>{currentMonth.getFullYear()}년</h2>
+      <div className={styles.calendarHeader}>
+        <div className={styles.dateDisplay}>
+          <span className={styles.yearText}>{currentMonth.getFullYear()}년</span>
+          <h2 className={styles.monthText}>{currentMonth.getMonth() + 1}월</h2>
         </div>
-        <div className={styles.monthNavigation}>
-          <button onClick={handlePrevMonth}>&lt;</button>
-          <h3>{currentMonth.getMonth() + 1}월</h3>
-          <button onClick={handleNextMonth}>&gt;</button>
+        <div className={styles.navButtons}>
+          <button onClick={handlePrevMonth} aria-label="이전 달">
+            <ChevronLeft size={20} />
+          </button>
+          <button onClick={handleNextMonth} aria-label="다음 달">
+            <ChevronRight size={20} />
+          </button>
         </div>
       </div>
       <div className={styles.weekdays}>
@@ -81,7 +86,8 @@ const Calendar = ({ recordsByDate, onSelectDate }) => {
             className={`${styles.day} ${isToday(day) ? styles.today : ""} ${selectedDay === day.getDate() ? styles.selected : ""} ${hasRecords(day) ? styles.hasRecords : ""}`}
             onClick={() => handleDayClick(day)}
           >
-            {day.getDate()}
+            <span className={styles.dayNumber}>{day.getDate()}</span>
+            {hasRecords(day) && <div className={styles.recordIndicator} />}
           </div>
         ))}
       </div>

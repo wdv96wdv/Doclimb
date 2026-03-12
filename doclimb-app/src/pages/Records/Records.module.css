@@ -1,90 +1,114 @@
 /* =========================
-   Page / Feed (Community 동일)
+   변수 및 기본 레이아웃
 ========================= */
+:root {
+  --bg-dark: #0f111a;
+  --surface-dark: rgba(255, 255, 255, 0.03);
+  --surface-light: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.1);
+  --primary: #5271ff;
+  --text-main: #ffffff;
+  --text-muted: #a0a5b1;
+  --success: #10b981;
+  --failure: #ef4444;
+}
+
 .page {
-  min-height: calc(100vh - 60px);
-  background: #f5f5f5;
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+  background-image: 
+    radial-gradient(circle at 50% -20%, rgba(82, 113, 255, 0.15), transparent 40%),
+    radial-gradient(circle at 10% 80%, rgba(16, 185, 129, 0.05), transparent 40%);
   padding: 48px 20px;
+  color: var(--text-main);
 }
 
 .feed {
-  max-width: 720px;
+  max-width: 800px;
   margin: 0 auto;
+  animation: fadeIn 0.8s ease-out;
 }
 
-@media (max-width: 768px) {
-  .page {
-    padding: 24px 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .page {
-    padding: 20px 12px;
-  }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* =========================
-   Header
+   헤더 (Header)
 ========================= */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 }
 
 .header h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #333;
-}
-
-@media (max-width: 480px) {
-  .header h2 {
-    font-size: 1.5rem;
-  }
-
-  .addButton {
-    padding: 8px 16px;
-    font-size: 0.9rem;
-  }
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff 0%, #a0a5b1 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .addButton {
-  padding: 10px 20px;
-  background-color: #007bff;
+  padding: 12px 24px;
+  background: var(--primary);
   color: white;
   text-decoration: none;
-  border-radius: 5px;
-  font-weight: bold;
-  transition: background-color 0.3s;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(82, 113, 255, 0.3);
 }
 
 .addButton:hover {
-  background: #0056b3;
+  background: #4059db;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(82, 113, 255, 0.4);
 }
 
 /* =========================
-   Calendar
+   달력 (Calendar Wrapper)
 ========================= */
 .calendarWrapper {
-  display: flex;
-  justify-content: center;
+  background: var(--surface-dark);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 24px;
+  padding: 24px;
   margin-bottom: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 /* =========================
-   Records
+   기록 섹션 (Record Section)
 ========================= */
 .recordSection {
-  margin-top: 20px;
+  margin-top: 32px;
 }
 
 .selectedDate {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.selectedDate::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 18px;
+  background: var(--primary);
+  border-radius: 2px;
 }
 
 .recordList {
@@ -93,83 +117,135 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 /* =========================
-   Record Card (Community 카드 느낌)
+   기록 카드 (Record Card)
 ========================= */
 .recordCard {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  background: var(--surface-light);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
   overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .recordCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  transform: scale(1.01) translateX(4px);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
 .recordCard a {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 24px;
   text-decoration: none;
   color: inherit;
-}
-
-/* =========================
-   Card Content
-========================= */
-.recordTop {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  margin-bottom: 12px;
-  color: #666;
-}
-
-.recordLocation {
-  font-weight: 600;
-}
-
-.recordDate {
-  font-size: 13px;
-}
-
-.recordBottom {
-  display: flex;
-  gap: 16px;
-  font-size: 14px;
   align-items: center;
 }
 
+.cardMainInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.recordLocation {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.recordMeta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cardRightInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
 /* =========================
-   Status
+   상태 뱃지 (Status & Grade)
 ========================= */
-.success {
-  color: #2ecc71;
-  font-weight: 700;
+.difficultyBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid var(--border-subtle);
 }
 
-.failure {
-  color: #e74c3c;
-  font-weight: 700;
+.colorDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 8px currentColor;
 }
+
+.successStatus {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.success { color: var(--success); }
+.failure { color: var(--text-muted); }
 
 /* =========================
-   Empty / Error
+   기타 (Empty / Error)
 ========================= */
 .empty {
   text-align: center;
-  color: #888;
-  margin-top: 40px;
+  padding: 80px 0;
+  color: var(--text-muted);
+  border: 1px dashed var(--border-subtle);
+  border-radius: 24px;
+  margin-top: 20px;
+}
+
+.empty p {
+  margin-top: 12px;
+  font-size: 1.1rem;
 }
 
 .error {
   text-align: center;
-  color: red;
+  color: var(--failure);
+  background: rgba(239, 68, 68, 0.1);
+  padding: 20px;
+  border-radius: 16px;
   margin-top: 60px;
+}
+
+/* =========================
+   반응형 모바일
+========================= */
+@media (max-width: 480px) {
+  .header h2 { font-size: 1.8rem; }
+  .addButton { padding: 10px 18px; font-size: 0.85rem; }
+  .recordCard a { padding: 20px; }
+  .recordLocation { font-size: 1rem; }
+  .recordMeta { gap: 10px; flex-wrap: wrap; }
 }

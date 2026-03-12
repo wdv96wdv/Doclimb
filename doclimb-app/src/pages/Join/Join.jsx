@@ -231,8 +231,10 @@ function Join() {
       Swal.fire({
         icon: 'success',
         title: '가입 신청 완료!',
-        // text: "Doclimb 가입을 환영합니다.",
-         text: '메일함(스팸함 포함)을 확인하여 인증을 완료해주세요.',
+        text: '메일함(스팸함 포함)을 확인하여 인증을 완료해주세요.',
+        background: '#1a1d29',
+        color: '#fff',
+        confirmButtonColor: '#5271ff'
       }).then(() => navigate('/login'));
     } catch (err) {
       let msg = "회원가입 중 오류가 발생했습니다.";
@@ -243,7 +245,12 @@ function Join() {
         msg = "이미 등록된 이메일입니다.";
       }
 
-      Swal.fire({ icon: 'error', text: msg });
+      Swal.fire({ 
+        icon: 'error', 
+        text: msg,
+        background: '#1a1d29',
+        color: '#fff'
+      });
     } finally {
       setLoading(false);
     }

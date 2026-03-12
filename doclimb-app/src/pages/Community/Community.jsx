@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getPosts } from "../../services/community";
+import { Plus, Image as ImageIcon, MessageCircle, Heart } from "lucide-react";
+import noImage from "../../assets/img/no_image.png";
 import styles from "./Community.module.css";
 
 function Community() {
@@ -15,8 +17,6 @@ function Community() {
       } catch (err) {
         setError("게시물을 불러오는데 실패했습니다.");
         console.error(err);
-      } finally {
-        console.log("기록을 불러오는데 성공했습니다.");
       }
     };
 
@@ -31,6 +31,7 @@ function Community() {
         <div className={styles.header}>
           <h2>커뮤니티</h2>
           <Link to="/community/new" className={styles.addButton}>
+            <Plus size={20} strokeWidth={3} />
             글쓰기
           </Link>
         </div>
@@ -39,16 +40,17 @@ function Community() {
           {posts.length > 0 ? (
             posts.map((post) => (
               <Link
-                to={`/community/${post.id}`}
+                to={`` + `/community/${post.id}`}
                 key={post.id}
                 className={styles.postCard}
               >
                 <img
-                  src={post.image_url}
+                  src={post.image_url || noImage}
                   alt={post.caption}
                   className={styles.postImage}
                 />
                 <div className={styles.postInfo}>
+                  <div className={styles.tagBadge}>{post.category || '자유소통'}</div>
                   <p className={styles.postCaption}>{post.caption}</p>
                   <div className={styles.authorInfo}>
                     <img
@@ -62,7 +64,10 @@ function Community() {
               </Link>
             ))
           ) : (
-            <p>아직 게시물이 없습니다. 첫 게시물을 작성해보세요!</p>
+            <div className={styles.emptyFeed}>
+              <ImageIcon size={64} strokeWidth={1} style={{ opacity: 0.2, marginBottom: '20px' }} />
+              <p>아직 게시물이 없습니다. <br />첫 등반의 설렘을 공유해보세요!</p>
+            </div>
           )}
         </div>
       </div>

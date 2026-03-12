@@ -1,6 +1,6 @@
 import Header from "./Header";
 import BottomNav from "./BottomNav";
-import Footer from "./Footer"; // 추가
+import Footer from "./Footer";
 
 function Layout({ children }) {
   const hideLayout = false; 
@@ -8,7 +8,7 @@ function Layout({ children }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       {!hideLayout && <Header />}
-      <main style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', paddingBottom: 'calc(56px + env(safe-area-inset-bottom, 0px))' }}>
+      <main style={{ flex: '1 0 auto', display: 'flex', flexDirection: 'column' }}>
         {children}
       </main>
       {!hideLayout && <Footer />}

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../services/supabase";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { Plus, Trash2, MapPin, Smile, Meh, Frown, PlayCircle } from "lucide-react";
 import styles from "./Beta.module.css";
 import Swal from "sweetalert2";
 
@@ -43,7 +44,13 @@ function BetaList() {
 
   const handleRate = async (betaId, ratingValue) => {
     if (!userProfile) {
-      Swal.fire({ icon: "warning", title: "로그인 필요", text: "투표를 하려면 로그인이 필요합니다." });
+      Swal.fire({ 
+        icon: "warning", 
+        title: "로그인 필요", 
+        text: "투표를 하려면 로그인이 필요합니다.",
+        background: '#1a1d29',
+        color: '#fff'
+      });
       return;
     }
     try {
@@ -54,7 +61,13 @@ function BetaList() {
       if (error) throw error;
       fetchBetas();
     } catch (err) {
-      Swal.fire({ icon: "error", title: "에러", text: "이미 투표하셨거나 권한이 없습니다." });
+      Swal.fire({ 
+        icon: "error", 
+        title: "에러", 
+        text: "이미 투표하셨거나 권한이 없습니다.",
+        background: '#1a1d29',
+        color: '#fff'
+      });
     }
   };
 
@@ -64,17 +77,20 @@ function BetaList() {
       text: "복구할 수 없는 작업입니다!",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#ff4d4f',
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: 'rgba(255,255,255,0.1)',
       confirmButtonText: '삭제',
-      cancelButtonText: '취소'
+      cancelButtonText: '취소',
+      background: '#1a1d29',
+      color: '#fff'
     });
 
     if (result.isConfirmed) {
       const { error } = await supabase.from("betas").delete().eq("id", id);
       if (error) {
-        Swal.fire("에러", error.message, "error");
+        Swal.fire({ title: "에러", text: error.message, icon: "error", background: '#1a1d29', color: '#fff' });
       } else {
-        Swal.fire("삭제 완료", "포스트가 삭제되었습니다.", "success");
+        Swal.fire({ title: "삭제 완료", text: "포스트가 삭제되었습니다.", icon: "success", background: '#1a1d29', color: '#fff' });
         fetchBetas();
       }
     }
@@ -88,7 +104,7 @@ function BetaList() {
 
   const getRatingCount = (ratings, type) => ratings?.filter(r => r.perceived_difficulty === type).length || 0;
 
-  if (loading) return <div className={styles.loading}>데이터를 불러오는 중...</div>;
+  if (loading) return <div className={styles.loading}>등반 영상 로드 중...</div>;
 
   return (
     <div className={styles.page}>
@@ -96,7 +112,8 @@ function BetaList() {
         <div className={styles.header}>
           <h2>인스타 피드</h2>
           <button onClick={() => navigate("/beta/new")} className={styles.addButton}>
-            글쓰기
+            <Plus size={20} strokeWidth={3} />
+            영상 공유
           </button>
         </div>
 
@@ -107,20 +124,20 @@ function BetaList() {
               
               return (
                 <div key={beta.id} className={styles.postCard}>
-                  {/* 상단 암장 정보 바 */}
                   <div className={styles.cardTopBar}>
                     <div className={styles.gymGroup}>
                       <span className={`${styles.levelTag} ${styles[beta.color_level]}`}>
                         {beta.color_level}
                       </span>
-                      <span className={styles.gymName}>{beta.gym_name}</span>
+                      <span className={styles.gymName}><MapPin size={14} className="inline mr-1" /> {beta.gym_name}</span>
                     </div>
                     {userProfile?.id === beta.user_id && (
-                      <button className={styles.deleteButton} onClick={() => handleDelete(beta.id)}>삭제</button>
+                      <button className={styles.deleteButton} onClick={() => handleDelete(beta.id)}>
+                        <Trash2 size={14} />
+                      </button>
                     )}
                   </div>
 
-                  {/* 작성자 프로필 섹션 */}
                   <div className={styles.authorSection}>
                     <div className={styles.authorLeft}>
                       <img 
@@ -130,13 +147,11 @@ function BetaList() {
                       />
                       <div className={styles.authorTextInfo}>
                         <span className={styles.authorNickname}>{beta.profiles?.display_nickname || "익명"}</span>
-                        {/* <span className={styles.subText}>오리지널 오디오</span> */}
+                        <span className={styles.subText}>{new Date(beta.created_at).toLocaleDateString()}</span>
                       </div>
                     </div>
-                    {/* <button className={styles.profileViewButton}>프로필 보기</button> */}
                   </div>
 
-                  {/* 비디오 컨텐츠 */}
                   <div className={styles.videoWrapper}>
                     <iframe
                       src={getEmbedUrl(beta.video_url)}
@@ -149,21 +164,20 @@ function BetaList() {
                     ></iframe>
                   </div>
 
-                  {/* 하단 설명 및 투표 */}
                   <div className={styles.postInfo}>
                     <p className={styles.postCaption}>{beta.description}</p>
                     
                     <div className={styles.ratingSection}>
-                      <p className={styles.ratingTitle}>체감 난이도</p>
+                      <p className={styles.ratingTitle}>체감 난이도 투표</p>
                       <div className={styles.ratingButtons}>
                         <button className={`${styles.rateBtn} ${myRating === "쉬워요" ? styles.active : ""}`} onClick={() => handleRate(beta.id, "쉬워요")}>
-                          🟢 {getRatingCount(beta.route_ratings, "쉬워요")}
+                          <Smile size={18} /> <span>{getRatingCount(beta.route_ratings, "쉬워요")}</span>
                         </button>
                         <button className={`${styles.rateBtn} ${myRating === "적당해요" ? styles.active : ""}`} onClick={() => handleRate(beta.id, "적당해요")}>
-                          🟡 {getRatingCount(beta.route_ratings, "적당해요")}
+                          <Meh size={18} /> <span>{getRatingCount(beta.route_ratings, "적당해요")}</span>
                         </button>
                         <button className={`${styles.rateBtn} ${myRating === "매워요" ? styles.active : ""}`} onClick={() => handleRate(beta.id, "매워요")}>
-                          🔴 {getRatingCount(beta.route_ratings, "매워요")}
+                          <Frown size={18} /> <span>{getRatingCount(beta.route_ratings, "매워요")}</span>
                         </button>
                       </div>
                     </div>
@@ -172,7 +186,10 @@ function BetaList() {
               );
             })
           ) : (
-            <div className={styles.empty}>아직 공유된 영상이 없습니다.</div>
+            <div className={styles.empty}>
+              <PlayCircle size={64} strokeWidth={1} style={{ opacity: 0.1, marginBottom: '20px' }} />
+              <p>아직 공유된 영상이 없습니다. <br />첫 영상을 공유해보세요!</p>
+            </div>
           )}
         </div>
       </div>

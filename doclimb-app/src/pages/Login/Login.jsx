@@ -27,26 +27,22 @@ function Login() {
     const { value: formValues } = await Swal.fire({
       title: '아이디 찾기',
       html:
-        '<input id="swal-input1" class="swal2-input" placeholder="이름을 입력하세요">' +
-        '<input id="swal-input2" class="swal2-input" placeholder="닉네임을 입력하세요">',
+        '<input id="swal-input1" class="swal2-input" placeholder="이름을 입력하세요" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1);">' +
+        '<input id="swal-input2" class="swal2-input" placeholder="닉네임을 입력하세요" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1);">',
       focusConfirm: false,
       showCancelButton: true,
-      confirmButtonColor: "#007bff",
-      // 1. 이제 팝업이 열렸으니, 화면에서 입력창을 찾을 수 있습니다
+      background: '#1a1d29',
+      color: '#fff',
+      confirmButtonColor: "#5271ff",
       didOpen: () => {
-        // 1. 팝업창에서 입력창을 찾는다
         const input1 = document.getElementById('swal-input1');
         const input2 = document.getElementById('swal-input2');
-      
-        // 2. 이름 입력창에서 엔터 치면 -> 닉네임창으로 이동
         input1.addEventListener('keydown', (event) => {
           if (event.key === 'Enter') {
-            event.preventDefault(); // 엔터 시 폼 제출 방지 (필요 시)
+            event.preventDefault();
             input2.focus();
           }
         });
-      
-        // 3. 닉네임 입력창에서 엔터 치면 -> 확인 버튼 클릭 (제출)
         input2.addEventListener('keydown', (event) => {
           if (event.key === 'Enter') {
             event.preventDefault();
@@ -69,22 +65,31 @@ function Login() {
         .from('profiles')
         .select('email')
         .eq('name', formValues.name)
-        .eq('display_nickname', formValues.nickname) // 닉네임까지 대조하여 중복 방지
+        .eq('display_nickname', formValues.nickname)
         .maybeSingle();
   
       if (error) {
-        Swal.fire({ icon: 'error', text: '조회 중 오류가 발생했습니다.' });
+        Swal.fire({ 
+          icon: 'error', 
+          text: '조회 중 오류가 발생했습니다.',
+          background: '#1a1d29',
+          color: '#fff'
+        });
       } else if (data) {
         Swal.fire({
           icon: 'success',
           title: '아이디 찾기 결과',
           html: `가입하신 이메일은 <br><b>[ ${data.email} ]</b><br> 입니다.`,
-          confirmButtonColor: "#007bff",
+          background: '#1a1d29',
+          color: '#fff',
+          confirmButtonColor: "#5271ff",
         });
       } else {
         Swal.fire({ 
           icon: 'warning', 
-          text: '일치하는 정보가 없습니다. 이름과 닉네임을 다시 확인해주세요.' 
+          text: '일치하는 정보가 없습니다. 이름과 닉네임을 다시 확인해주세요.',
+          background: '#1a1d29',
+          color: '#fff'
         });
       }
     }
@@ -97,7 +102,9 @@ function Login() {
       inputPlaceholder: 'example@email.com',
       showCancelButton: true,
       confirmButtonText: '메일 발송',
-      // 🌟 엔터키 기능만 쏙 넣기
+      background: '#1a1d29',
+      color: '#fff',
+      confirmButtonColor: "#5271ff",
       didOpen: () => {
         Swal.getInput().addEventListener('keydown', (e) => {
           if (e.key === 'Enter') Swal.clickConfirm();
@@ -111,13 +118,22 @@ function Login() {
       });
   
       if (error) {
-        // 🌟 에러 메시지만 한글로 간단히 보여주기
         const msg = error.message.includes("Too many requests") 
                     ? "잠시 후 다시 시도해주세요." 
                     : "발송 실패 (이메일을 확인해주세요)";
-        Swal.fire({ icon: 'error', text: msg });
+        Swal.fire({ 
+          icon: 'error', 
+          text: msg,
+          background: '#1a1d29',
+          color: '#fff'
+        });
       } else {
-        Swal.fire({ icon: 'success', text: '재설정 메일을 보냈습니다!' });
+        Swal.fire({ 
+          icon: 'success', 
+          text: '재설정 메일을 보냈습니다!',
+          background: '#1a1d29',
+          color: '#fff'
+        });
       }
     }
   };
@@ -144,7 +160,9 @@ function Login() {
         icon: "error",
         title: "로그인 실패",
         text: "구글 로그인 중 오류가 발생했습니다.",
-        confirmButtonColor: "#007bff"
+        background: '#1a1d29',
+        color: '#fff',
+        confirmButtonColor: "#5271ff"
       });
     }
   };
@@ -159,16 +177,16 @@ function Login() {
         },
       });
       if (error) throw error;
-      // signInWithOAuth는 자동으로 리다이렉트되지만, 명시적으로 URL이 있는 경우 이동
       if (data?.url) window.location.href = data.url;
     } catch (err) {
       console.error("카카오 로그인 에러:", err);
-      // DB 트리거 에러(saving new user 실패 등) 발생 시 알림
       Swal.fire({
         icon: "error",
         title: "로그인 실패",
         text: "이미 가입된 이메일이거나 서버 오류가 발생했습니다.",
-        confirmButtonColor: "#007bff"
+        background: '#1a1d29',
+        color: '#fff',
+        confirmButtonColor: "#5271ff"
       });
     }
   };

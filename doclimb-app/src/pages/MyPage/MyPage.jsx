@@ -64,7 +64,13 @@ function MyPage() {
       setAvatarUrl(profile.avatar_url);
     } catch (err) {
       console.error('프로필 로드 오류:', err);
-      Swal.fire({ icon: 'error', title: '실패', text: '프로필 로드 중 오류가 발생했습니다.' });
+      Swal.fire({ 
+        icon: 'error', 
+        title: '실패', 
+        text: '프로필 로드 중 오류가 발생했습니다.',
+        background: '#1a1d29',
+        color: '#fff'
+      });
     } finally {
       setLoading(false);
     }
@@ -111,7 +117,12 @@ function MyPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim() || !displayNickname.trim()) {
-      return Swal.fire({ icon: 'warning', text: '필수 정보를 입력해주세요.' });
+      return Swal.fire({ 
+        icon: 'warning', 
+        text: '필수 정보를 입력해주세요.',
+        background: '#1a1d29',
+        color: '#fff'
+      });
     }
 
     setSaving(true);
@@ -128,10 +139,21 @@ function MyPage() {
         avatar_url: newAvatarUrl,
       });
 
-      Swal.fire({ icon: 'success', title: '수정 완료' });
+      Swal.fire({ 
+        icon: 'success', 
+        title: '수정 완료',
+        background: '#1a1d29',
+        color: '#fff',
+        confirmButtonColor: '#5271ff'
+      });
       navigate('/');
     } catch (err) {
-      Swal.fire({ icon: 'error', title: '수정 실패' });
+      Swal.fire({ 
+        icon: 'error', 
+        title: '수정 실패',
+        background: '#1a1d29',
+        color: '#fff'
+      });
     } finally {
       setSaving(false);
     }
@@ -148,7 +170,10 @@ function MyPage() {
       await Swal.fire({ 
         icon: 'success', 
         title: '비밀번호 변경 완료', 
-        text: '보안을 위해 다시 로그인해주세요.' 
+        text: '보안을 위해 다시 로그인해주세요.',
+        background: '#1a1d29',
+        color: '#fff',
+        confirmButtonColor: '#5271ff'
       });
       await supabase.auth.signOut({ scope: 'global' });
       navigate('/login', { replace: true });
@@ -165,8 +190,11 @@ function MyPage() {
       text: "모든 데이터가 삭제되며 복구할 수 없습니다.",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      confirmButtonText: '탈퇴하기'
+      confirmButtonColor: '#ff4d4f',
+      cancelButtonColor: '#5271ff',
+      confirmButtonText: '탈퇴하기',
+      background: '#1a1d29',
+      color: '#fff'
     });
 
     if (isConfirmed) {

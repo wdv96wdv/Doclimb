@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import styles from "./Guide.module.css";
+import { Lightbulb, Info, ShieldCheck, HeartPulse, Droplets } from "lucide-react";
+
+// 이미지 임포트는 기존 코드와 동일하게 유지
 import hold1 from "../../assets/img/hold1.png";
 import hold2 from "../../assets/img/hold2.png";
 import hold3 from "../../assets/img/hold3.png";
@@ -17,7 +20,7 @@ const DATA = {
   hold: [
     {
       name: "저그 (Jug)",
-      img: hold1, // 이모지 대신 이미지 변수 할당
+      img: hold1,
       desc: "손가락 전체로 움켜쥘 수 있는 크고 깊은 홀드입니다.",
       howTo: "손바닥 전체를 밀착시켜 안정적으로 잡으세요.",
       difficulty: "하"
@@ -70,9 +73,8 @@ const DATA = {
 function Guide() {
   const [activeTab, setActiveTab] = useState("hold");
 
-  // 난이도별 색상 클래스 매핑
   const getLevelClass = (lv) => {
-    if (!lv) return styles.medium; // 난이도 데이터가 없을 경우 기본값 반환
+    if (!lv) return styles.medium;
     if (lv === "하") return styles.easy;
     if (lv.includes("상")) return styles.hard;
     return styles.medium;
@@ -81,7 +83,7 @@ function Guide() {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Climbing A to Z 🧗</h1>
+        <h1 className={styles.title}>Climbing A to Z</h1>
         <p className={styles.subtitle}>Doclimb이 제안하는 완벽 등반 가이드</p>
       </header>
 
@@ -93,13 +95,12 @@ function Guide() {
       <div className={styles.grid}>
         {DATA[activeTab].map((item, idx) => (
           <div key={idx} className={styles.card}>
-            {/* 이미지를 카드 맨 위로 이동 */}
-            <di7v className={styles.imageWrapper}>
+            <div className={styles.imageWrapper}>
               <img src={item.img} alt={item.name} className={styles.cardImage} />
               <div className={`${styles.levelBadge} ${getLevelClass(item.difficulty)}`}>
                 {item.difficulty}
               </div>
-            </di7v>
+            </div>
 
             <div className={styles.cardContent}>
               <h3 className={styles.cardTitle}>{item.name}</h3>
@@ -107,7 +108,9 @@ function Guide() {
 
               {activeTab === "hold" && (
                 <div className={styles.howToBox}>
-                  <span className={styles.howToTitle}>💡 잡는 법</span>
+                  <span className={styles.howToTitle}>
+                    <Lightbulb size={14} /> 잡는 법
+                  </span>
                   <p>{item.howTo}</p>
                 </div>
               )}
@@ -117,19 +120,28 @@ function Guide() {
       </div>
 
       <section className={styles.infoSection}>
-        <h3 className={styles.infoTitle}>암장 가기 전, 이것만은 챙기세요! 🎒</h3>
+        <h3 className={styles.infoTitle}>암장 가기 전, 이것만은 챙기세요!</h3>
         <div className={styles.etiquetteGrid}>
           <div className={styles.etiquetteItem}>
-            <span className={styles.etiEmoji}>🧴</span>
-            <p><strong>스킨 케어</strong><br />손톱은 짧게 깎고, 상처가 있다면 테이핑을 준비하세요.</p>
+            <div className={styles.etiIcon}><ShieldCheck size={28} /></div>
+            <div>
+              <strong>스킨 케어</strong>
+              <p>손톱은 짧게 깎고, 상처가 있다면 테이핑을 준비하세요.</p>
+            </div>
           </div>
           <div className={styles.etiquetteItem}>
-            <span className={styles.etiEmoji}>🧘</span>
-            <p><strong>충분한 스트레칭</strong><br />부상 방지를 위해 손가락과 어깨 예열은 필수입니다.</p>
+            <div className={styles.etiIcon}><HeartPulse size={28} /></div>
+            <div>
+              <strong>충분한 스트레칭</strong>
+              <p>부상 방지를 위해 손가락과 어깨 예열은 필수입니다.</p>
+            </div>
           </div>
           <div className={styles.etiquetteItem}>
-            <span className={styles.etiEmoji}>🥤</span>
-            <p><strong>수분 보충</strong><br />강도 높은 운동인 만큼 충분한 물을 챙겨가세요.</p>
+            <div className={styles.etiIcon}><Droplets size={28} /></div>
+            <div>
+              <strong>수분 보충</strong>
+              <p>강도 높은 운동인 만큼 충분한 물을 챙겨가세요.</p>
+            </div>
           </div>
         </div>
       </section>

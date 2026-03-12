@@ -2,6 +2,12 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 80px 24px;
+  animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .header {
@@ -10,70 +16,88 @@
 }
 
 .title {
-  font-size: 42px;
+  font-size: 3rem;
   font-weight: 800;
-  color: #1a202c;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #ffffff 0%, #a0a5b1 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   margin-bottom: 12px;
 }
 
-/* 탭 버튼 모던화 */
+.subtitle {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1.1rem;
+}
+
+/* 탭 버튼 글래스모피즘 */
 .tabGroup {
   display: flex;
   justify-content: center;
   gap: 12px;
   margin-bottom: 50px;
-  background: #edf2f7;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
   padding: 6px;
-  border-radius: 16px;
+  border-radius: 20px;
   width: fit-content;
   margin-left: auto;
   margin-right: auto;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .tabBtn {
-  padding: 10px 32px;
-  border-radius: 12px;
+  padding: 12px 36px;
+  border-radius: 16px;
   border: none;
   background: transparent;
   font-weight: 700;
-  color: #718096;
+  color: rgba(255, 255, 255, 0.4);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .tabBtn.active {
-  background-color: #ffffff;
-  color: #3182ce;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  background-color: #5271ff;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(82, 113, 255, 0.3);
 }
 
-/* 카드 디자인 대폭 개선 */
+.tabBtn:hover:not(.active) {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* 카드 디자인 프리미엄화 */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 32px;
 }
 
 .card {
-  background: #ffffff;
-  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border-radius: 28px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid #f1f5f9;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
 }
 
 .card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+  transform: translateY(-12px) scale(1.02);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
 }
 
 .imageWrapper {
   position: relative;
   width: 100%;
-  height: 450px;
+  height: 480px;
   overflow: hidden;
 }
 
@@ -81,105 +105,132 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card:hover .cardImage {
-  transform: scale(1.1);
+  transform: scale(1.08);
 }
 
 /* 난이도 배지 */
 .levelBadge {
   position: absolute;
-  top: 15px;
-  right: 15px;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 12px;
+  top: 20px;
+  right: 20px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 0.8rem;
   font-weight: 800;
   color: white;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.easy { background: rgba(72, 187, 120, 0.9); }
-.medium { background: rgba(237, 137, 54, 0.9); }
-.hard { background: rgba(229, 62, 62, 0.9); }
+.easy { background: rgba(16, 185, 129, 0.8); }
+.medium { background: rgba(245, 158, 11, 0.8); }
+.hard { background: rgba(239, 68, 68, 0.8); }
 
 .cardContent {
-  padding: 24px;
+  padding: 32px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
 .cardTitle {
-  font-size: 22px;
+  font-size: 1.6rem;
   font-weight: 800;
-  color: #2d3748;
-  margin-bottom: 10px;
+  color: #ffffff;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
 }
 
 .cardDesc {
-  color: #4a5568;
-  font-size: 15px;
-  line-height: 1.6;
-  margin-bottom: 20px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 24px;
 }
 
 .howToBox {
-  background: #f7fafc;
-  padding: 16px;
-  border-radius: 12px;
-  border-left: 4px solid #3182ce;
+  margin-top: auto;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .howToTitle {
-  display: block;
-  font-weight: 700;
-  color: #2b6cb0;
-  font-size: 13px;
-  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  color: #5271ff;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-/* 에티켓 섹션 모던화 */
+/* 에티켓 섹션 리뉴얼 */
 .infoSection {
-  margin-top: 100px;
-  padding: 60px;
-  background: #1a202c;
-  border-radius: 32px;
-  color: white;
+  margin-top: 120px;
+  padding: 80px 60px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 48px;
 }
 
 .infoTitle {
   text-align: center;
-  font-size: 28px;
-  margin-bottom: 40px;
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 50px;
+  letter-spacing: -0.02em;
 }
 
 .etiquetteGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 40px;
 }
 
 .etiquetteItem {
   display: flex;
-  gap: 15px;
+  gap: 20px;
   align-items: flex-start;
 }
 
-.etiEmoji {
-  font-size: 24px;
-  background: rgba(255,255,255,0.1);
-  padding: 10px;
-  border-radius: 12px;
+.etiIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: rgba(82, 113, 255, 0.1);
+  color: #5271ff;
+  border-radius: 18px;
+  flex-shrink: 0;
 }
 
+.etiquetteItem strong {
+  display: block;
+  font-size: 1.1rem;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.etiquetteItem p {
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
 
 /* 반응형 유지 */
 @media (max-width: 768px) {
-  .container { padding: 40px 20px; }
-  .title { font-size: 32px; }
-  .infoSection { padding: 40px 24px; }
-  .etiquetteGrid { grid-template-columns: 1fr; }
+  .container { padding: 60px 20px; }
+  .title { font-size: 2.4rem; }
+  .infoSection { padding: 60px 32px; border-radius: 32px; }
+  .etiquetteGrid { grid-template-columns: 1fr; gap: 32px; }
 }

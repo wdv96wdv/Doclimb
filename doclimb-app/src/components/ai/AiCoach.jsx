@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { supabase } from '../../services/supabase';
 import { useAuth } from '../../context/AuthContext';
-import styles from './AiCoach.module.css'; // CSS 모듈 임포트
+import { Sparkles, BrainCircuit, RefreshCw } from 'lucide-react';
+import styles from './AiCoach.module.css';
 
 const fetchAiRecommendation = async (records) => {
   const API_URL = 'https://ufdqnkmefcaemqvietpf.supabase.co/functions/v1/ai-recommend';
@@ -76,11 +77,11 @@ export default function AiCoach() {
     <div className={styles.container}>
       <div className={styles.wrapper}>
         <div className={styles.headerSection}>
-          <h2 className={styles.title}>🤖 AI 코칭 센터</h2>
+          <h2 className={styles.title}><Sparkles className="inline-block mr-2" size={32} color="#5271ff" /> AI 코칭 센터</h2>
           <div className={styles.subtitle}>
             {isFetching ? (
               <div className="flex items-center justify-center gap-2">
-                <div className={styles.spinner} style={{width: '16px', height: '16px', borderTopColor: '#3b82f6'}} />
+                <div className={styles.spinner} />
                 <span>데이터 동기화 중...</span>
               </div>
             ) : realRecords.length > 0 ? (
@@ -97,30 +98,34 @@ export default function AiCoach() {
           className={styles.coachButton}
         >
           {loading ? (
-            <div className="flex items-center justify-center gap-2">
-              <div className={styles.spinner} />
+            <>
+              <RefreshCw className="animate-spin" size={20} />
               <span>AI 코칭 생성 중...</span>
-            </div>
+            </>
           ) : (
-            '나만의 맞춤 코칭 받기'
+            <>
+              <BrainCircuit size={22} />
+              <span>나만의 맞춤 코칭 받기</span>
+            </>
           )}
         </button>
 
         {recommendation && (
           <div className={styles.reportCard}>
             <div className={styles.reportHeader}>
-              <span className={styles.reportTag}>DOCLIMB AI</span>
-              <span className="text-gray-400 text-xs">Analysis Report</span>
+              <span className={styles.reportTag}>DOCLIMB AI ENGINE</span>
+              <span className="text-white/30 text-xs font-mono">Status: Analysis Complete</span>
             </div>
             
             <div className={styles.reportContent}>
               <ReactMarkdown
                 components={{
-                  h1: ({...props}) => <h1 className="text-2xl font-bold text-gray-900 mb-6" {...props} />,
-                  h2: ({...props}) => <h2 className="text-xl font-bold text-blue-600 mt-10 mb-4 pb-2 border-b border-blue-50" {...props} />,
-                  p: ({...props}) => <p className="text-gray-600 leading-relaxed mb-4" {...props} />,
-                  strong: ({...props}) => <strong className="text-gray-900 font-bold bg-blue-50 px-1 rounded" {...props} />,
-                  li: ({...props}) => <li className="list-disc ml-5 mb-2 text-gray-600" {...props} />,
+                  h1: ({...props}) => <h1 className="text-3xl font-black text-white mb-8" {...props} />,
+                  h2: ({...props}) => <h2 className="text-xl font-bold text-blue-400 mt-12 mb-6 pb-2 border-b border-white/10" {...props} />,
+                  p: ({...props}) => <p className="text-white/70 leading-relaxed mb-6 text-lg" {...props} />,
+                  strong: ({...props}) => <strong className="text-white font-bold bg-blue-500/20 px-1.5 py-0.5 rounded" {...props} />,
+                  li: ({...props}) => <li className="list-disc ml-5 mb-3 text-white/70" {...props} />,
+                  ul: ({...props}) => <ul className="mb-6" {...props} />,
                 }}
               >
                 {recommendation}

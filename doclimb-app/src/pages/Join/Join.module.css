@@ -1,408 +1,222 @@
 .joinContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-color: #f0f2f5;
-  padding: 20px;
-  width: 100%;
+  max-width: 600px;
+  margin: 80px auto;
+  padding: 60px 48px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border-radius: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
+  animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .title {
-  font-size: 2.5em;
-  color: #333;
-  margin-bottom: 30px;
-  font-weight: bold;
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 48px;
+  background: linear-gradient(to right, #ffffff, #a5b4fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .form {
-  background-color: #ffffff;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
   display: flex;
   flex-direction: column;
+  gap: 32px;
 }
 
-@media (max-width: 768px) {
-  .joinContainer {
-    padding: 16px;
-  }
-
-  .title {
-    font-size: 2rem;
-  }
-
-  .form {
-    padding: 24px;
-  }
-}
-
-@media (max-width: 480px) {
-  .joinContainer {
-    padding: 12px;
-  }
-
-  .title {
-    font-size: 1.6rem;
-    margin-bottom: 20px;
-  }
-
-  .form {
-    padding: 16px;
-  }
-
-  .inputWithBtn {
-    flex-direction: column;
-  }
-
-  .inputWithBtn .input {
-    width: 100%;
-  }
-
-  .checkBtn {
-    width: 100%;
-  }
+.sectionTitle {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #5271ff;
+  margin-bottom: -8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .inputGroup {
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .label {
-  display: block;
-  margin-bottom: 8px;
-  color: #555;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-left: 4px;
 }
 
+.requiredIndicator { color: #ff4d4f; }
+
 .input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 1em;
-  box-sizing: border-box;
-  /* Ensures padding doesn't increase total width */
-  transition: border-color 0.3s ease;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
 .input:focus {
-  border-color: #007bff;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  border-color: #5271ff;
+  box-shadow: 0 0 20px rgba(82, 113, 255, 0.1);
 }
 
-/* --- 중복 확인 버튼을 위한 새로운 스타일 --- */
-
-/* 입력창과 버튼을 나란히 배치 */
-.inputWithBtn {
-  display: flex;
-  gap: 10px;
-  /* 입력창과 버튼 사이 간격 */
-}
-
-/* 나란히 있을 때의 입력창: 버튼 공간을 위해 너비 자동 조절 */
-.inputWithBtn .input {
-  flex: 1;
-}
-
-/* 중복확인 버튼 스타일: 기존 .button 스타일을 변형 */
-.checkBtn {
-  flex-shrink: 0;
-  background-color: #6c757d;
-  /* 중복확인은 서브 버튼 느낌으로 회색 톤 */
-  color: white;
-  padding: 0 15px;
-  border: none;
-  border-radius: 5px;
-  font-size: 0.9em;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  white-space: nowrap;
-}
-
-.checkBtn:hover {
-  background-color: #5a6268;
-}
-
-/* --- 비밀번호 검증 메시지 스타일 --- */
-.successText {
-  color: #28a745;
-  /* 초록색 */
-  font-size: 0.85em;
-  margin-top: 5px;
-  font-weight: 500;
-}
-
-.errorText {
-  color: #dc3545;
-  /* 기존 에러 색상과 동일 */
-  font-size: 0.85em;
-  margin-top: 5px;
-  font-weight: 500;
-}
-
-.error {
-  color: #dc3545;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  text-align: center;
-  font-size: 0.9em;
-}
-
-.button {
-  background-color: #007bff;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 5px;
-  font-size: 1.1em;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  margin-top: 10px;
-}
-
-.button:hover:not(:disabled) {
-  background-color: #0056b3;
-  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-}
-
-.button:disabled {
-  background-color: #a0caff;
-  cursor: not-allowed;
-}
-
-.loginLink {
-  margin-top: 25px;
-  color: #666;
-  font-size: 0.95em;
-}
-
-.link {
-  color: #007bff;
-  text-decoration: none;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.link:hover {
-  text-decoration: underline;
-}
-
-/* New styles for checkboxes */
-.checkboxGroup {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 5px;
-}
-
-.checkboxLabel {
-  display: flex;
-  align-items: center;
-  font-size: 0.9em;
-  color: #555;
-  cursor: pointer;
-}
-
-.checkbox {
-  margin-right: 5px;
-  /* Basic styling for checkbox, can be enhanced */
-}
-
-/* New styles for section titles and required indicator */
-.sectionTitle {
-  font-size: 1.2em;
-  color: #333;
-  margin-top: 25px;
-  margin-bottom: 15px;
-  font-weight: bold;
-  text-align: center;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
-  width: 100%;
-}
-
-.requiredIndicator {
-  color: #dc3545;
-  /* Red color for asterisk */
-  margin-left: 5px;
-  font-weight: bold;
-}
-
-.hintText {
-  font-size: 0.75em;
-  color: #888;
-  margin-top: 4px;
-  margin-left: 2px;
-}
-
-.agreementGroup {
-  margin: 20px 0;
-  padding: 15px;
-  background-color: #f8fafc;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-}
-
-.checkboxLabel {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  color: #2d3748;
-}
-
-.checkbox {
-  width: 18px;
-  height: 18px;
-  margin-right: 10px;
-  accent-color: #3182ce;
-  /* 체크박스 포인트 컬러 */
-}
-
-.policyBtn {
-  margin-top: 8px;
-  margin-left: 28px;
-  background: none;
-  border: none;
-  color: #3182ce;
-  font-size: 12px;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.disabledButton {
-  width: 100%;
-  padding: 14px;
-  background-color: #cbd5e0;
-  /* 비활성화 회색 */
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: not-allowed;
-}
-
-.passwordChecklist {
-  list-style: none;
-  padding: 0;
-  margin-top: 6px;
-  font-size: 13px;
-}
-
-.passwordChecklist li {
-  margin-bottom: 4px;
-}
-
-.ok {
-  color: #2ecc71;
-}
-
-.no {
-  color: #bbb;
-}
-
-.disabled {
-  background-color: #ccc !important;
-  cursor: not-allowed;
-}
-
-/* 이메일 전체 컨테이너 */
+/* Email Box */
 .emailBox {
   display: flex;
+  gap: 12px;
   align-items: center;
-  gap: 0; /* 내부 간격은 요소별 padding으로 조절 */
-  padding: 0 8px 0 16px; /* 왼쪽은 여백, 오른쪽은 버튼 공간 */
-  border: 1px solid #ddd;
-  border-radius: 8px; /* 조금 더 부드러운 곡선 */
-  background: #fff;
-  height: 52px; /* 전체 높이를 키워 시원하게 */
-  transition: all 0.2s ease;
-  box-sizing: border-box;
 }
 
-/* 포커스 되었을 때 효과 */
-.emailBox:focus-within {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-}
-
-/* 이메일 아이디 입력창 */
 .emailInput {
   flex: 2;
-  border: none;
-  outline: none;
-  font-size: 15px;
-  background: transparent;
-  height: 100%;
-  min-width: 0; /* flex 환경에서 width 뭉개짐 방지 */
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  color: white;
 }
 
-/* @ 기호 */
-.at {
-  color: #94a3b8;
-  font-size: 15px;
-  margin: 0 8px;
-  user-select: none;
-}
+.at { color: rgba(255, 255, 255, 0.3); font-weight: 700; }
 
-/* 도메인 선택창 */
 .emailSelect {
   flex: 1.5;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: 14px;
-  color: #475569;
-  cursor: pointer;
-  height: 100%;
-  padding-right: 8px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  color: white;
 }
 
-/* 이메일 중복 확인 버튼 */
-.emailCheckBtn {
-  height: 38px; /* 박스 높이보다 살짝 작게 */
-  padding: 0 16px;
-  border-radius: 6px;
-  border: none;
-  background-color: #4f46e5;
+.emailSelect option {
+  background: #1a1d29;
   color: white;
-  font-size: 13px;
-  font-weight: 600;
+}
+
+.emailCheckBtn {
+  flex: 1;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  color: white;
+  font-weight: 700;
   cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
 }
 
 .emailCheckBtn:hover {
-  background-color: #4338ca;
+  background: rgba(255, 255, 255, 0.12);
 }
 
-/* 상태 메시지 디자인 개선 */
-.successText, .hintText {
-  font-size: 13px;
-  margin-top: 8px;
-  margin-left: 4px;
+/* Password Checklist */
+.passwordChecklist {
+  display: flex;
+  gap: 16px;
+  list-style: none;
+  padding: 8px 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.ok { color: #52c41a; }
+.no { color: rgba(255, 255, 255, 0.2); }
+
+/* Nickname Box */
+.inputWithBtn {
+  display: flex;
+  gap: 12px;
+}
+
+.inputWithBtn input { flex: 1; }
+
+/* Styles & Levels */
+.checkboxGroup {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.checkboxLabel {
   display: flex;
   align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 12px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
-.successText {
-  color: #10b981; /* 더 선명한 초록색 */
-  font-weight: 500;
+.checkboxLabel:hover { background: rgba(255, 255, 255, 0.08); }
+
+/* Agreement */
+.agreementGroup {
+  background: rgba(82, 113, 255, 0.05);
+  padding: 24px;
+  border-radius: 20px;
+  border: 1px solid rgba(82, 113, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.hintText {
-  color: #94a3b8;
+.policyBtn {
+  background: transparent;
+  border: none;
+  color: #a5b4fc;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-align: left;
+  padding: 0;
+}
+
+/* Submit */
+.button {
+  margin-top: 24px;
+  background: #5271ff;
+  color: white;
+  padding: 20px;
+  border: none;
+  border-radius: 16px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 15px 35px rgba(82, 113, 255, 0.3);
+}
+
+.button:hover:not(.disabled) {
+  background: #6b88ff;
+  transform: translateY(-2px);
+}
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.successText { color: #52c41a; font-size: 0.8rem; margin-left: 4px; }
+.errorText { color: #ff4d4f; font-size: 0.8rem; margin-left: 4px; }
+.hintText { color: rgba(255, 255, 255, 0.3); font-size: 0.8rem; margin-left: 4px; }
+
+@media (max-width: 640px) {
+  .joinContainer { margin: 20px 16px; padding: 40px 20px; border-radius: 32px; }
+  .emailBox { flex-direction: column; align-items: stretch; }
+  .at { display: none; }
 }
