@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { getRecords } from "../../services/record";
 import { getProfile } from "../../services/profile";
 import { Activity, CheckCircle2, XCircle, ChevronRight, Inbox, Plus } from "lucide-react";
-import Calendar from "../../components/Calendar/Calendar";
+import Calendar from "../../components/calendar/Calendar";
 import styles from "./Records.module.css";
 
 // 날짜별로 그룹화하는 헬퍼 함수
@@ -111,13 +111,13 @@ function Records() {
     const order = ["흰색", "주황", "노랑", "초록", "파랑", "남색", "빨강", "보라", "회색", "갈색", "검정색", "핑크색"];
     const successfulRecords = allRecords.filter(r => r.success);
     if (successfulRecords.length === 0) return "#5271ff"; // 기본색 (보라/파랑 계열)
-    
+
     let highestIdx = -1;
     successfulRecords.forEach(r => {
       const idx = order.indexOf(r.difficulty);
       if (idx > highestIdx) highestIdx = idx;
     });
-    
+
     return highestIdx === -1 ? "#5271ff" : getDifficultyColor(order[highestIdx]);
   };
 
@@ -145,9 +145,9 @@ function Records() {
     <div className={styles.page}>
       <div className={styles.feed}>
         {/* Profile Header */}
-        <div 
-          className={styles.profileHeader} 
-          style={{ 
+        <div
+          className={styles.profileHeader}
+          style={{
             '--user-level-color': highestColor,
             '--avatar-text-color': avatarTextColor,
             '--level-glow': levelGlow
