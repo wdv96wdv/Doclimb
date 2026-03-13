@@ -136,10 +136,11 @@
 }
 
 .authorAvatar {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   object-fit: cover;
+  transition: all 0.3s ease;
   border: 1.5px solid rgba(255, 255, 255, 0.1);
 }
 

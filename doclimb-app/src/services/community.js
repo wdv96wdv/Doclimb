@@ -8,7 +8,7 @@ const BUCKET_NAME = 'climbing';
 export const getPosts = async () => {
   const { data, error } = await supabase
     .from('community_posts')
-    .select('*, profiles!user_id(display_nickname, avatar_url)') // Join with profiles to get user info
+    .select('*, profiles!user_id(display_nickname, avatar_url, highest_level_color)') // Join with profiles to get user info
     .order('created_at', { ascending: false });
 
   if (error) throw error;
@@ -22,7 +22,7 @@ export const getPosts = async () => {
 export const getPostById = async (id) => {
   const { data, error } = await supabase
     .from('community_posts')
-    .select('*, profiles!user_id(display_nickname, avatar_url)')
+    .select('*, profiles!user_id(display_nickname, avatar_url, highest_level_color)')
     .eq('id', id)
     .single();
 
@@ -146,7 +146,8 @@ export const getCommentsByPostId = async (postId) => {
       *,
       profiles!user_id (
         display_nickname,
-        avatar_url
+        avatar_url,
+        highest_level_color
       )
     `)
     .eq('post_id', postId)
@@ -179,7 +180,8 @@ export const createComment = async ({ postId, content, parentId = null }) => {
       *,
       profiles!user_id (
         display_nickname,
-        avatar_url
+        avatar_url,
+        highest_level_color
       )
     `);
 

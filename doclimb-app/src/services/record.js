@@ -21,6 +21,31 @@ export const createRecord = async (recordData) => {
 };
 
 /**
+ * 여러 개의 클라이밍 기록을 한 번에 생성합니다.
+ * @param {Array} recordsData - 생성할 기록 데이터 배열.
+ */
+export const createRecords = async (recordsData) => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("로그인이 필요합니다.");
+
+  const formattedData = recordsData.map(record => ({
+    ...record,
+    user_id: user.id
+  }));
+
+  const { data, error } = await supabase
+    .from('records')
+    .insert(formattedData)
+    .select();
+
+  if (error) {
+    console.error('Error creating records:', error);
+    throw error;
+  }
+  return data;
+};
+
+/**
  * 현재 로그인된 사용자의 모든 클라이밍 기록을 가져옵니다.
  */
 export const getRecords = async () => {

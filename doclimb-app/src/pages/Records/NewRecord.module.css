@@ -203,6 +203,95 @@
   gap: 15px;
 }
 
+.challengesTitle {
+  margin: 10px 0 0 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-main);
+  background: linear-gradient(135deg, #ffffff 0%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.challengeList {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.challengeItem {
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: all 0.3s ease;
+}
+
+.challengeItem:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(82, 113, 255, 0.3);
+}
+
+.challengeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.challengeNumber {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.removeBtn {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.removeBtn:hover {
+  background: var(--danger);
+  color: white;
+  border-color: var(--danger);
+}
+
+.addChallengeBtn {
+  width: 100%;
+  background: transparent;
+  color: var(--primary);
+  border: 2px dashed var(--primary);
+  padding: 18px;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+}
+
+.addChallengeBtn:hover {
+  background: rgba(82, 113, 255, 0.05);
+  transform: translateY(-2px);
+}
+
 .successBtn {
   flex: 1;
   display: flex;

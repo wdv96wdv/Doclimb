@@ -57,6 +57,10 @@ function Community() {
                       src={post.profiles.avatar_url || "/climbing_placeholder.jpg"}
                       alt={post.profiles.display_nickname}
                       className={styles.authorAvatar}
+                      style={{ 
+                        border: `2px solid ${post.profiles.highest_level_color || 'transparent'}`,
+                        boxShadow: post.profiles.highest_level_color ? `0 0 8px ${post.profiles.highest_level_color}aa` : 'none'
+                      }}
                     />
                     <span>{post.profiles.display_nickname}</span>
                   </div>

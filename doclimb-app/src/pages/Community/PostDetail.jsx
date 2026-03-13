@@ -162,6 +162,10 @@ function PostDetail() {
                 src={post.profiles.avatar_url || '/climbing_placeholder.jpg'}
                 alt={post.profiles.display_nickname}
                 className={styles.authorAvatar}
+                style={{ 
+                  border: `3px solid ${post.profiles.highest_level_color || 'rgba(255,255,255,0.1)'}`,
+                  boxShadow: post.profiles.highest_level_color ? `0 0 12px ${post.profiles.highest_level_color}88` : 'none'
+                }}
               />
               <div className={styles.authorText}>
                 <span className={styles.nickname}>{post.profiles.display_nickname || "클라이머"}</span>
@@ -265,6 +269,10 @@ function CommentNode({ node, user, onReply, onDelete, depth }) {
           src={node.profiles.avatar_url || '/climbing_placeholder.jpg'} 
           alt="" 
           className={styles.commentAvatar} 
+          style={{ 
+            border: `2px solid ${node.profiles.highest_level_color || 'transparent'}`,
+            boxShadow: node.profiles.highest_level_color ? `0 0 8px ${node.profiles.highest_level_color}66` : 'none'
+          }}
         />
         <div className={styles.commentBody}>
           <div className={styles.commentInfo}>
