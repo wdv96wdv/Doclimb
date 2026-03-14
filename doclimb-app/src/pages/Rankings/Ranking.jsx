@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { fetchGymRankings } from "../../services/gamification";
-import { Trophy, Medal, Award, MapPin, User, Loader2 } from "lucide-react";
+import { Trophy, Medal, Award, MapPin, User, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import styles from "./Ranking.module.css";
 
 function Ranking() {
   const [rankings, setRankings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 6;
 
   useEffect(() => {
     const loadRankings = async () => {
@@ -15,6 +17,12 @@ function Ranking() {
     };
     loadRankings();
   }, []);
+
+  const totalPages = Math.ceil(rankings.length / ITEMS_PER_PAGE);
+  const currentRankings = rankings.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   if (loading) {
     return (
@@ -36,8 +44,8 @@ function Ranking() {
       </header>
 
       <div className={styles.rankingGrid}>
-        {rankings.length > 0 ? (
-          rankings.map((group, idx) => (
+        {currentRankings.length > 0 ? (
+          currentRankings.map((group, idx) => (
             <div key={idx} className={styles.gymCard}>
               <div className={styles.gymHeader}>
                 <MapPin size={18} />
@@ -75,6 +83,38 @@ function Ranking() {
           </div>
         )}
       </div>
+
+      {totalPages > 1 && (
+        <div className={styles.pagination}>
+          <button 
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(prev => prev - 1)}
+            className={styles.pageBtn}
+          >
+            <ChevronLeft size={20} />
+          </button>
+          
+          <div className={styles.pageNumbers}>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
+              <button
+                key={num}
+                onClick={() => setCurrentPage(num)}
+                className={`${styles.numberBtn} ${currentPage === num ? styles.active : ''}`}
+              >
+                {num}
+              </button>
+            ))}
+          </div>
+
+          <button 
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(prev => prev + 1)}
+            className={styles.pageBtn}
+          >
+            <ChevronRight size={20} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

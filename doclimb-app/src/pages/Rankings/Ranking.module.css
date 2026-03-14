@@ -152,3 +152,68 @@
   .header h2 { font-size: 2rem; }
   .rankingGrid { grid-template-columns: 1fr; }
 }
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.pageBtn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pageBtn:hover:not(:disabled) {
+  background: rgba(82, 113, 255, 0.1);
+  border-color: rgba(82, 113, 255, 0.5);
+  color: #5271ff;
+  transform: translateY(-2px);
+}
+
+.pageBtn:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+.pageNumbers {
+  display: flex;
+  gap: 8px;
+}
+
+.numberBtn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: rgba(255, 255, 255, 0.4);
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.numberBtn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.numberBtn.active {
+  background: #5271ff;
+  color: #fff;
+  box-shadow: 0 0 15px rgba(82, 113, 255, 0.4);
+}

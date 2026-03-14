@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import styles from './NewRecord.module.css';
 
 import { getAllGyms } from "../../services/gym";
-import { difficultyColors } from "../../utils/climbingUtils";
+import { difficultyColors, getContrastColor } from "../../utils/climbingUtils";
 
 function NewRecord() {
   const navigate = useNavigate();
@@ -32,6 +32,8 @@ function NewRecord() {
     { id: Date.now(), climb_type: "볼더링", difficulty: "흰색", success: false }
   ]);
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [gyms, setGyms] = useState([]);
   const [gymLoading, setGymLoading] = useState(true);
   const [isCustomLocation, setIsCustomLocation] = useState(false);
@@ -53,7 +55,7 @@ function NewRecord() {
 
   const handleCommonChange = (e) => {
     const { name, value } = e.target;
-    if (name === "location") {
+    if (name === "gymSelector") {
       if (value === "custom") {
         setIsCustomLocation(true);
         setCommonInfo(prev => ({ ...prev, location: "" }));
@@ -174,8 +176,8 @@ function NewRecord() {
               <div className={styles.loadingText}>암장 목록을 불러오는 중...</div>
             ) : (
               <select
-                id="location"
-                name="location"
+                id="gymSelector"
+                name="gymSelector"
                 className={styles.select}
                 value={isCustomLocation ? "custom" : commonInfo.location}
                 onChange={handleCommonChange}
@@ -261,7 +263,7 @@ function NewRecord() {
                         onClick={() => handleChallengeChange(ch.id, 'difficulty', diff.label)}
                         style={{
                           '--btn-color': diff.color,
-                          color: (diff.id === 'white' || diff.id === 'yellow') ? '#000' : '#fff'
+                          color: getContrastColor(diff.label)
                         }}
                       >
                         {diff.label}

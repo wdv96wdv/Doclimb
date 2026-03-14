@@ -1,6 +1,6 @@
 export const difficultyOrder = {
-  "흰색": 1, "주황": 2, "노랑": 3, "초록": 4, "파랑": 5, 
-  "남색": 6, "빨강": 7, "보라": 8, "회색": 9, "갈색": 10, 
+  "흰색": 1, "주황": 2, "노랑": 3, "초록": 4, "파랑": 5,
+  "남색": 6, "빨강": 7, "보라": 8, "회색": 9, "갈색": 10,
   "검정색": 11, "핑크색": 12
 };
 
@@ -36,7 +36,7 @@ export const difficultyEmojis = {
 
 export const getHighestDifficulty = (records) => {
   if (!records || records.length === 0) return "-";
-  
+
   const successfulRecords = records.filter(r => r.success);
   if (successfulRecords.length === 0) return "-";
 
@@ -67,3 +67,8 @@ export const formatDate = (dateString) => {
 
 export const getDifficultyColor = (difficulty) => difficultyColors[difficulty] || "#5271ff";
 export const getDifficultyEmoji = (difficulty) => difficultyEmojis[difficulty] || "🧗";
+
+export const getContrastColor = (difficulty) => {
+  const lightColors = ["흰색", "노랑"];
+  return lightColors.includes(difficulty) ? "#000000" : "#FFFFFF";
+};
