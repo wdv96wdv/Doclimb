@@ -2,6 +2,7 @@
   min-height: 100vh;
   color: #ffffff;
   overflow-x: hidden;
+  background-color: #0f111a;
 }
 
 /* --- Hero Section --- */
@@ -92,7 +93,6 @@
 .mainActionBtn:hover {
   transform: translateY(-4px);
   background: #6b88ff;
-  box-shadow: 0 20px 45px rgba(82, 113, 255, 0.4);
 }
 
 /* Landing Hero (Guest) */
@@ -109,7 +109,7 @@
 }
 
 .textGradient {
-  background: linear-gradient(135deg, #5271ff 0%, #a5b4fc 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #888 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -118,7 +118,6 @@
 .subTitle {
   font-size: 1.5rem;
   color: rgba(255, 255, 255, 0.6);
-  line-height: 1.6;
   margin-bottom: 48px;
 }
 
@@ -138,7 +137,6 @@
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 15px 35px rgba(82, 113, 255, 0.3);
 }
 
 .outlineBtn {
@@ -151,43 +149,151 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
   transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
 }
 
-/* --- Sections Common --- */
+/* --- Gamification Widgets --- */
+.recentBadgesWidget {
+  margin-top: 32px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.widgetHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.widgetHeader span {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #5271ff;
+  text-transform: uppercase;
+}
+
+.widgetHeader button {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.badgeRow {
+  display: flex;
+  gap: 16px;
+}
+
+.miniBadgeCard {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 16px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 90px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.miniBadgeName {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.rankingPreviewSection {
+  padding: 40px 0;
+}
+
+.rankingCard {
+  background: linear-gradient(135deg, #1e253b 0%, #111420 100%);
+  padding: 32px;
+  border-radius: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid rgba(82, 113, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.rankingCard:hover {
+  transform: translateY(-5px);
+  border-color: #5271ff;
+}
+
+.rankTag {
+  background: rgba(82, 113, 255, 0.1);
+  color: #5271ff;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  display: inline-block;
+}
+
+.rankCardLeft h3 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.rankCardLeft p {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.rankCardRight {
+  display: flex;
+  align-items: center;
+}
+
+.miniRankUser {
+  position: relative;
+  margin-left: -12px;
+}
+
+.miniRankUser img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 3px solid #111420;
+  object-fit: cover;
+}
+
+.firstIcon {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  color: #ffd700;
+}
+
+.arrowIcon {
+  margin-left: 20px;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* --- Content Sections --- */
 .contentWrapper {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
 }
 
-/* AI Promotion */
 .aiPromotionSection {
   padding: 100px 0;
 }
 
 .aiBannerCard {
-  background: linear-gradient(135deg, rgba(82, 113, 255, 0.1) 0%, rgba(165, 180, 252, 0.05) 100%);
-  border-radius: 32px;
+  background: linear-gradient(135deg, rgba(82, 113, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border-radius: 40px;
   padding: 60px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 48px;
-  overflow: hidden;
-}
-
-.newBadge {
-  background: rgba(82, 113, 255, 0.2);
-  color: #5271ff;
-  padding: 6px 16px;
-  border-radius: 100px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  margin-bottom: 24px;
-  display: inline-block;
-  border: 1px solid rgba(82, 113, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .aiBannerText h2 {
@@ -197,59 +303,57 @@
 }
 
 .aiBannerText p {
-  font-size: 1.15rem;
   color: rgba(255, 255, 255, 0.5);
   margin-bottom: 32px;
   max-width: 500px;
 }
 
 .aiButton {
-  background: white;
+  background: #ffffff;
   color: #0f111a;
   padding: 16px 32px;
   border-radius: 16px;
-  font-weight: 700;
+  font-weight: 800;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: all 0.3s ease;
 }
 
-.aiButton:hover {
-  transform: translateX(8px);
-  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+.newBadge {
+  background: #5271ff;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+  display: inline-block;
 }
 
-.aiBannerImage {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.8;
+.shortcutSection {
+  padding: 80px 0;
 }
 
-/* Shortcuts */
 .shortcutGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 32px;
-  padding-bottom: 100px;
 }
 
 .shortcutCard {
   background: rgba(255, 255, 255, 0.03);
   padding: 48px;
   border-radius: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
 }
 
 .shortcutCard:hover {
   background: rgba(255, 255, 255, 0.06);
-  transform: translateY(-8px);
-  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-5px);
 }
 
 .iconWrapper {
@@ -260,25 +364,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 24px;
   color: #5271ff;
+  margin-bottom: 24px;
 }
 
 .shortcutCard h3 {
   font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 12px;
+  font-weight: 800;
+  margin-bottom: 8px;
 }
 
 .shortcutCard p {
-  color: rgba(255, 255, 255, 0.5);
-  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.4);
 }
 
-/* Culture & Etiquette */
 .cultureSection {
-  padding: 100px 0 140px;
-  background: rgba(255, 255, 255, 0.01);
+  padding: 100px 0;
 }
 
 .sectionHeader {
@@ -293,7 +394,7 @@
 }
 
 .sectionHeader p {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .etiquetteGrid {
@@ -303,70 +404,28 @@
 }
 
 .etiquetteCard {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.02);
   padding: 40px;
   border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: all 0.3s ease;
-}
-
-.etiquetteCard:hover {
-  background: rgba(255, 255, 255, 0.05);
-  transform: translateY(-5px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .etiIcon {
   color: #5271ff;
-  margin-bottom: 20px;
-}
-
-/* Education Highlight */
-.guideHighlight {
-  padding: 120px 0;
-  background: linear-gradient(to bottom, transparent, rgba(82, 113, 255, 0.05), transparent);
-  text-align: center;
-}
-
-.tag {
-  color: #5271ff;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-size: 0.9rem;
-  margin-bottom: 24px;
-  display: block;
-}
-
-.guideContent h2 {
-  font-size: 3rem;
-  font-weight: 900;
   margin-bottom: 24px;
 }
 
-.guideContent p {
+.etiquetteCard h4 {
   font-size: 1.25rem;
-  color: rgba(255, 255, 255, 0.5);
-  max-width: 600px;
-  margin: 0 auto 48px;
+  font-weight: 800;
+  margin-bottom: 12px;
 }
 
-.outlineButton {
-  background: transparent;
-  color: white;
-  padding: 18px 40px;
-  border-radius: 16px;
-  font-weight: 700;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  transition: all 0.3s ease;
+.etiquetteCard p {
+  color: rgba(255, 255, 255, 0.4);
 }
 
-.outlineButton:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: white;
-}
-
-/* Animations */
+/* --- Animations --- */
 .animateFadeInUp {
   animation: fadeInUp 0.8s ease-out forwards;
 }
@@ -376,25 +435,17 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-.delay1 { animation-delay: 0.2s; }
-.delay2 { animation-delay: 0.4s; }
-.delay3 { animation-delay: 0.6s; }
-
-/* Responsive */
+/* --- Responsive --- */
 @media (max-width: 1024px) {
   .mainTitle { font-size: 3.5rem; }
-  .aiBannerCard { flex-direction: column; text-align: center; padding: 40px; }
-  .aiBannerText p { margin: 0 auto 32px; }
-  .aiButton { margin: 0 auto; }
+  .aiBannerCard { flex-direction: column; text-align: center; }
+  .aiBannerImage { margin-top: 40px; }
 }
 
 @media (max-width: 768px) {
-  .dashboardHero { padding: 40px 24px; }
-  .welcomeText h1 { font-size: 2rem; }
   .shortcutGrid { grid-template-columns: 1fr; }
   .etiquetteGrid { grid-template-columns: 1fr; }
-  .statValue { font-size: 2rem; }
+  .dashboardHero { padding: 40px 24px; }
+  .welcomeText h1 { font-size: 2rem; }
   .mainActionBtn { width: 100%; margin-top: 24px; }
-  .mainTitle { font-size: 2.8rem; }
-  .guideContent h2 { font-size: 2rem; }
 }

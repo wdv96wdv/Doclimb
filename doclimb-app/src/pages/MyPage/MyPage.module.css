@@ -200,6 +200,82 @@
 .hintText { color: rgba(255, 255, 255, 0.3); font-size: 0.8rem; margin-top: 4px; }
 .loading { color: white; text-align: center; margin-top: 100px; font-size: 1.2rem; }
 
+/* Badge Collection Styles */
+.badgeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.badgeItem {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s ease;
+}
+
+.badgeItem:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(82, 113, 255, 0.2);
+  transform: translateY(-4px);
+}
+
+.badgeIconWrapper {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, rgba(82, 113, 255, 0.1), rgba(82, 113, 255, 0.05));
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #5271ff;
+  flex-shrink: 0;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.badgeInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.badgeName {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+.badgeDesc {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.4;
+}
+
+.earnedAt {
+  font-size: 0.75rem;
+  color: #5271ff;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+
+.noBadge {
+  text-align: center;
+  padding: 40px;
+  color: rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+  grid-column: 1 / -1;
+  background: rgba(255, 255, 255, 0.01);
+  border-radius: 20px;
+  border: 1px dashed rgba(255, 255, 255, 0.05);
+}
+
 @media (max-width: 768px) {
   .myPageContainer { margin: 20px 16px; padding: 40px 24px; border-radius: 32px; }
   .title { font-size: 2rem; }

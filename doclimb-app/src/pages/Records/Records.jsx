@@ -4,58 +4,18 @@ import { useAuth } from "../../context/AuthContext";
 import { getRecords } from "../../services/record";
 import { getProfile } from "../../services/profile";
 import { Activity, CheckCircle2, XCircle, ChevronRight, Inbox, Plus } from "lucide-react";
-import Calendar from "../../components/calendar/Calendar";
+import Calendar from "../../components/Calendar/Calendar";
 import styles from "./Records.module.css";
 
-// 날짜별로 그룹화하는 헬퍼 함수
-const groupByDate = (records) => {
-  return records.reduce((acc, record) => {
-    const date = record.date;
-    if (!acc[date]) acc[date] = [];
-    acc[date].push(record);
-    return acc;
-  }, {});
-};
+import { 
+  getDifficultyColor, 
+  getDifficultyEmoji, 
+  groupByDate, 
+  difficultyOrder,
+  difficultyColors
+} from "../../utils/climbingUtils";
 
-// 난이도별 색상 매핑 함수
-const getDifficultyColor = (difficulty) => {
-  const colors = {
-    "흰색": "#FFFFFF",
-    "주황": "#ff8c00",
-    "노랑": "#ffd700",
-    "초록": "#32cd32",
-    "파랑": "#1e90ff",
-    "남색": "#04203aff",
-    "빨강": "#ff0000",
-    "보라": "#8a2be2",
-    "회색": "#808080",
-    "갈색": "#8b4513",
-    "검정색": "#000000",
-    "핑크색": "#eb0cc5ff"
-  };
-  return colors[difficulty] || "#5271ff";
-};
-
-// 난이도별 이모지 매핑
-const getDifficultyEmoji = (difficulty) => {
-  const emojis = {
-    "흰색": "🤍",
-    "주황": "🧡",
-    "노랑": "💛",
-    "초록": "💚",
-    "파랑": "💙",
-    "남색": "🌑",
-    "빨강": "❤️",
-    "보라": "💜",
-    "회색": "🩶",
-    "갈색": "🤎",
-    "검정색": "🖤",
-    "핑크색": "🩷"
-  };
-  return emojis[difficulty] || "🧗";
-};
-
-// 통계 요약 계산 함수
+// 통계 요약 계산 함수 (여기서만 쓰이는 특화 로직이므로 유지하되 유틸 사용)
 const getSummary = (records) => {
   const successful = records.filter(r => r.success);
   const summary = successful.reduce((acc, r) => {
@@ -63,7 +23,7 @@ const getSummary = (records) => {
     return acc;
   }, {});
 
-  const order = ["흰색", "주황", "노랑", "초록", "파랑", "남색", "빨강", "보라", "회색", "갈색", "검정색", "핑크색"];
+  const order = Object.keys(difficultyOrder).sort((a, b) => difficultyOrder[a] - difficultyOrder[b]);
   return order
     .filter(diff => summary[diff])
     .map(diff => ({ label: diff, count: summary[diff], emoji: getDifficultyEmoji(diff) }));
@@ -108,17 +68,16 @@ function Records() {
 
   // 최고 레벨 색상 계산
   const getHighestColor = () => {
-    const order = ["흰색", "주황", "노랑", "초록", "파랑", "남색", "빨강", "보라", "회색", "갈색", "검정색", "핑크색"];
     const successfulRecords = allRecords.filter(r => r.success);
-    if (successfulRecords.length === 0) return "#5271ff"; // 기본색 (보라/파랑 계열)
+    if (successfulRecords.length === 0) return "#5271ff";
 
-    let highestIdx = -1;
-    successfulRecords.forEach(r => {
-      const idx = order.indexOf(r.difficulty);
-      if (idx > highestIdx) highestIdx = idx;
-    });
+    const highest = successfulRecords.reduce((prev, curr) => {
+      const prevLevel = difficultyOrder[prev.difficulty] || 0;
+      const currLevel = difficultyOrder[curr.difficulty] || 0;
+      return currLevel > prevLevel ? curr : prev;
+    }, { difficulty: "-" });
 
-    return highestIdx === -1 ? "#5271ff" : getDifficultyColor(order[highestIdx]);
+    return getDifficultyColor(highest.difficulty);
   };
 
   const highestColor = getHighestColor();

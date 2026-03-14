@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { getProfile, updateProfile, uploadAvatar } from '../../services/profile';
 import { supabase } from '../../services/supabase';
+import { Footprints, Trophy, Map, Flame, Medal, Award } from 'lucide-react';
 import styles from './MyPage.module.css';
 import Swal from 'sweetalert2';
 
@@ -23,6 +24,7 @@ function MyPage() {
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [email, setEmail] = useState('');
+  const [badges, setBadges] = useState([]);
 
   // 비밀번호 상태
   const [password, setPassword] = useState('');
@@ -76,9 +78,39 @@ function MyPage() {
     }
   }, [user.id]);
 
+  const loadBadges = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('user_badges')
+        .select(`
+          earned_at,
+          badges (*)
+        `)
+        .eq('user_id', user.id);
+      
+      if (error) throw error;
+      setBadges(data || []);
+    } catch (err) {
+      console.error('뱃지 로드 오류:', err);
+    }
+  }, [user.id]);
+
   useEffect(() => {
-    if (user) loadProfile();
-  }, [user, loadProfile]);
+    if (user) {
+      loadProfile();
+      loadBadges();
+    }
+  }, [user, loadProfile, loadBadges]);
+
+  const getBadgeIcon = (iconType) => {
+    switch (iconType) {
+      case 'Footprints': return <Footprints size={24} />;
+      case 'Trophy': return <Trophy size={24} />;
+      case 'Map': return <Map size={24} />;
+      case 'Flame': return <Flame size={24} />;
+      default: return <Award size={24} />;
+    }
+  };
 
   // --- 핸들러 함수들 ---
 
@@ -236,6 +268,26 @@ function MyPage() {
           />
           <input type="file" id="avatar" accept="image/*" onChange={handleAvatarChange} className={styles.avatarInput} />
           <label htmlFor="avatar" className={styles.avatarLabel}>사진 변경</label>
+        </div>
+
+        <div className={styles.sectionTitle}>나의 뱃지 컬렉션</div>
+        <div className={styles.badgeGrid}>
+          {badges.length > 0 ? (
+            badges.map((item) => (
+              <div key={item.badges.id} className={styles.badgeItem}>
+                <div className={styles.badgeIconWrapper}>
+                  {getBadgeIcon(item.badges.icon_type)}
+                </div>
+                <div className={styles.badgeInfo}>
+                  <p className={styles.badgeName}>{item.badges.name}</p>
+                  <p className={styles.badgeDesc}>{item.badges.description}</p>
+                  <span className={styles.earnedAt}>{new Date(item.earned_at).toLocaleDateString()} 획득</span>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className={styles.noBadge}>아직 획득한 뱃지가 없습니다. 등반을 기록해보세요!</p>
+          )}
         </div>
 
         <div className={styles.sectionTitle}>계정 정보</div>

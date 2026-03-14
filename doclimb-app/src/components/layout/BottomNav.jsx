@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Home, ScrollText, PlusCircle, User } from "lucide-react";
+import { Home, ScrollText, PlusCircle, User, Trophy } from "lucide-react";
 import styles from "./BottomNav.module.css";
 
 function BottomNav() {
@@ -18,6 +18,11 @@ function BottomNav() {
       <NavLink to="/records/new" className={({ isActive }) => isActive ? styles.active : ""}>
         <PlusCircle size={20} />
         <span>추가</span>
+      </NavLink>
+
+      <NavLink to="/ranking" className={({ isActive }) => isActive ? styles.active : ""}>
+        <Trophy size={20} />
+        <span>랭킹</span>
       </NavLink>
 
       <NavLink to="/mypage" className={({ isActive }) => isActive ? styles.active : ""}>

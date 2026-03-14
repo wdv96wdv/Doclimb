@@ -104,6 +104,7 @@ function BetaList() {
 
   const getRatingCount = (ratings, type) => ratings?.filter(r => r.perceived_difficulty === type).length || 0;
 
+
   if (loading) return <div className={styles.loading}>등반 영상 로드 중...</div>;
 
   return (
@@ -181,6 +182,7 @@ function BetaList() {
                         </button>
                       </div>
                     </div>
+
                   </div>
                 </div>
               );

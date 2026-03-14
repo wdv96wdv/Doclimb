@@ -99,7 +99,7 @@ CREATE TABLE public.records (
   climb_type TEXT,
   difficulty TEXT,
   success BOOLEAN DEFAULT FALSE,
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL
+  user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL
 );
 
 -- -----------------------------------------------------------------------------
@@ -198,3 +198,35 @@ CREATE POLICY "Allow users to update their own images." ON storage.objects FOR U
 
 -- Allow users to delete their own images
 CREATE POLICY "Allow users to delete their own images." ON storage.objects FOR DELETE USING (bucket_id = 'post_images' AND auth.uid() = owner);
+
+-- -----------------------------------------------------------------------------
+-- Gamification: Badges and Rankings
+-- -----------------------------------------------------------------------------
+
+-- 뱃지 정보 테이블
+CREATE TABLE IF NOT EXISTS public.badges (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name TEXT NOT NULL UNIQUE,
+    description TEXT NOT NULL,
+    icon_type TEXT NOT NULL, -- Lucide 아이콘 명칭
+    requirement_type TEXT NOT NULL, -- total_success, gym_count, level_reach 등
+    requirement_value INTEGER NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 유저가 획득한 뱃지 테이블
+CREATE TABLE IF NOT EXISTS public.user_badges (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    badge_id UUID NOT NULL REFERENCES public.badges(id) ON DELETE CASCADE,
+    earned_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    UNIQUE(user_id, badge_id)
+);
+
+-- RLS 설정
+ALTER TABLE public.badges ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_badges ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "뱃지 정보는 누구나 조회 가능" ON public.badges FOR SELECT USING (true);
+CREATE POLICY "자신의 뱃지 획득 정보만 조회 가능" ON public.user_badges FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "자신의 뱃지 정보 저장 가능" ON public.user_badges FOR INSERT WITH CHECK (auth.uid() = user_id);

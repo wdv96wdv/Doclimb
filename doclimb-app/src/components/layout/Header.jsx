@@ -44,6 +44,7 @@ function Header() {
             <button className={styles.navButton} onClick={() => handleNavigate("/gymlist")}>실시간 암장 혼잡도</button>
             <button className={styles.navButton} onClick={() => handleNavigate("/community")}>커뮤니티</button>
             <button className={styles.navButton} onClick={() => handleNavigate("/beta")}>인스타 피드</button>
+            <button className={styles.navButton} onClick={() => handleNavigate("/ranking")}>명예의 전당</button>
             <button className={styles.navButton} onClick={() => handleNavigate("/guide")}>가이드</button>
 
             {/* 🔒 로그인 상태에 따라 다른 메뉴 */}

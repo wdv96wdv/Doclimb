@@ -1,8 +1,13 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { createRecords } from "../../services/record";
+import { supabase } from "../../services/supabase";
+import { checkAndAwardBadges } from "../../services/gamification";
 import { Calendar, MapPin, Activity, Mountain, Trophy, XCircle, CheckCircle2, Plus, Trash2 } from "lucide-react";
+import Swal from "sweetalert2";
 import styles from './NewRecord.module.css';
+
+import { difficultyColors } from "../../utils/climbingUtils";
 
 function NewRecord() {
   const navigate = useNavigate();
@@ -35,7 +40,7 @@ function NewRecord() {
   };
 
   const handleChallengeChange = (id, field, value) => {
-    setChallenges(prev => prev.map(ch => 
+    setChallenges(prev => prev.map(ch =>
       ch.id === id ? { ...ch, [field]: value } : ch
     ));
   };
@@ -71,6 +76,26 @@ function NewRecord() {
       }));
 
       await createRecords(recordsToSave);
+
+      // 뱃지 체크 로직 추가
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const earned = await checkAndAwardBadges(user.id);
+        if (earned && earned.length > 0) {
+          // 다중 뱃지 획득 시 처리
+          const badgeNames = earned.map(b => `[${b.name}]`).join(", ");
+          await Swal.fire({
+            title: '✨ 새로운 뱃지 획득!',
+            html: `<div style="color: #eee; font-size: 0.9rem;">축하합니다! <b style="color: #5271ff">${badgeNames}</b> 뱃지를 획득하셨습니다. <br/> 마이페이지에서 확인해보세요!</div>`,
+            icon: 'success',
+            background: '#1a1d29',
+            color: '#fff',
+            confirmButtonColor: '#5271ff',
+            confirmButtonText: '확인'
+          });
+        }
+      }
+
       navigate("/records");
     } catch (err) {
       setError("기록 저장에 실패했습니다. 다시 시도해주세요.");
@@ -81,20 +106,11 @@ function NewRecord() {
   };
 
   const climbTypes = ["볼더링", "리드", "탑로프"];
-  const difficulties = [
-    { id: "white", label: "흰색", color: "#FFFFFF" },
-    { id: "orange", label: "주황", color: "#ff8c00" },
-    { id: "yellow", label: "노랑", color: "#ffd700" },
-    { id: "green", label: "초록", color: "#32cd32" },
-    { id: "blue", label: "파랑", color: "#1e90ff" },
-    { id: "navy", label: "남색", color: "#04203aff" },
-    { id: "red", label: "빨강", color: "#ff0000" },
-    { id: "purple", label: "보라", color: "#8a2be2" },
-    { id: "gray", label: "회색", color: "#808080" },
-    { id: "brown", label: "갈색", color: "#8b4513" },
-    { id: "black", label: "검정색", color: "#000000" },
-    { id: "pink", label: "핑크색", color: "#eb0cc5ff" }
-  ];
+  const difficulties = Object.entries(difficultyColors).map(([label, color]) => ({
+    id: label,
+    label,
+    color
+  }));
 
   return (
     <div className={styles.pageOverlay}>
@@ -141,7 +157,7 @@ function NewRecord() {
           </div>
 
           <hr style={{ border: 'none', borderTop: '1px solid var(--border-subtle)', margin: '10px 0' }} />
-          
+
           <h3 className={styles.challengesTitle}>도전 내용</h3>
 
           {/* Challenges List */}
@@ -151,9 +167,9 @@ function NewRecord() {
                 <div className={styles.challengeHeader}>
                   <span className={styles.challengeNumber}>Challenge #{index + 1}</span>
                   {challenges.length > 1 && (
-                    <button 
-                      type="button" 
-                      className={styles.removeBtn} 
+                    <button
+                      type="button"
+                      className={styles.removeBtn}
                       onClick={() => removeChallenge(ch.id)}
                     >
                       <Trash2 size={14} style={{ marginRight: '4px' }} /> 삭제
