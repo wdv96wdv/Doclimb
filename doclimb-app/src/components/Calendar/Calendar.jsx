@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import styles from "./calendar.module.css"; // Assume a CSS module for styling
+import styles from "./Calendar.module.css"; // Assume a CSS module for styling
 
 const Calendar = ({ recordsByDate, onSelectDate }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
