@@ -1,6 +1,19 @@
 import { supabase } from "./supabase";
 
 /**
+ * 모든 암장 목록을 가져옵니다.
+ */
+export const getAllGyms = async () => {
+  const { data, error } = await supabase
+    .from("gyms")
+    .select("*")
+    .order("name", { ascending: true });
+
+  if (error) throw error;
+  return data;
+};
+
+/**
  * 암장의 혼잡도 상태를 업데이트합니다.
  * @param {string} gymId - 암장 UUID
  * @param {number} status - 혼잡도 단계 (0: 쾌적, 1: 보통, 2: 혼잡, 3: 매우혼잡)

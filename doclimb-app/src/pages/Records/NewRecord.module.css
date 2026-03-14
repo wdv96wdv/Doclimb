@@ -121,6 +121,32 @@
   color: rgba(255, 255, 255, 0.3);
 }
 
+.select {
+  background: var(--surface-light);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  outline: none;
+  width: 100%;
+  appearance: none;
+  cursor: pointer;
+}
+
+.select:focus {
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.loadingText {
+  color: var(--text-muted);
+  font-size: 14px;
+  font-style: italic;
+  padding: 10px 0;
+}
+
 /* Pill Selectors */
 .pillGroup {
   display: flex;

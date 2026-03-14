@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { createRecords } from "../../services/record";
 import { supabase } from "../../services/supabase";
@@ -7,6 +7,7 @@ import { Calendar, MapPin, Activity, Mountain, Trophy, XCircle, CheckCircle2, Pl
 import Swal from "sweetalert2";
 import styles from './NewRecord.module.css';
 
+import { getAllGyms } from "../../services/gym";
 import { difficultyColors } from "../../utils/climbingUtils";
 
 function NewRecord() {
@@ -31,12 +32,38 @@ function NewRecord() {
     { id: Date.now(), climb_type: "볼더링", difficulty: "흰색", success: false }
   ]);
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [gyms, setGyms] = useState([]);
+  const [gymLoading, setGymLoading] = useState(true);
+  const [isCustomLocation, setIsCustomLocation] = useState(false);
+
+  // Fetch gyms on mount
+  useEffect(() => {
+    const fetchGymData = async () => {
+      try {
+        const data = await getAllGyms();
+        setGyms(data || []);
+      } catch (err) {
+        console.error("암장 목록 로드 실패:", err);
+      } finally {
+        setGymLoading(false);
+      }
+    };
+    fetchGymData();
+  }, []);
 
   const handleCommonChange = (e) => {
     const { name, value } = e.target;
-    setCommonInfo(prev => ({ ...prev, [name]: value }));
+    if (name === "location") {
+      if (value === "custom") {
+        setIsCustomLocation(true);
+        setCommonInfo(prev => ({ ...prev, location: "" }));
+      } else {
+        setIsCustomLocation(false);
+        setCommonInfo(prev => ({ ...prev, location: value }));
+      }
+    } else {
+      setCommonInfo(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleChallengeChange = (id, field, value) => {
@@ -141,19 +168,41 @@ function NewRecord() {
           <div className={styles.formGroup}>
             <div className={styles.labelWrapper}>
               <MapPin size={18} className={styles.icon} />
-              <label htmlFor="location">암장 이름</label>
+              <label htmlFor="location">암장 선택</label>
             </div>
-            <input
-              type="text"
-              id="location"
-              name="location"
-              className={styles.input}
-              placeholder="예: 서울숲 클라이밍 뚝섬점"
-              value={commonInfo.location}
-              onChange={handleCommonChange}
-              required
-              maxLength={50}
-            />
+            {gymLoading ? (
+              <div className={styles.loadingText}>암장 목록을 불러오는 중...</div>
+            ) : (
+              <select
+                id="location"
+                name="location"
+                className={styles.select}
+                value={isCustomLocation ? "custom" : commonInfo.location}
+                onChange={handleCommonChange}
+                required
+              >
+                <option value="">암장을 선택해주세요</option>
+                {gyms.map(gym => (
+                  <option key={gym.id} value={gym.name}>
+                    {gym.name}
+                  </option>
+                ))}
+                <option value="custom">직접 입력 (검색에 없는 경우)</option>
+              </select>
+            )}
+            
+            {isCustomLocation && (
+              <input
+                type="text"
+                name="location"
+                className={styles.input}
+                style={{ marginTop: '10px' }}
+                placeholder="암장 이름을 직접 입력해주세요"
+                value={commonInfo.location}
+                onChange={handleCommonChange}
+                required
+              />
+            )}
           </div>
 
           <hr style={{ border: 'none', borderTop: '1px solid var(--border-subtle)', margin: '10px 0' }} />
