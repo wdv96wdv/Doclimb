@@ -160,16 +160,19 @@
     top: calc(100% + 12px);
     right: 16px;
     left: 16px;
-    padding: 24px;
+    padding: 20px;
     display: none;
     flex-direction: column;
-    gap: 12px;
-    background: rgba(26, 29, 41, 0.95);
+    gap: 8px;
+    background: rgba(26, 29, 41, 0.98);
     backdrop-filter: blur(30px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 24px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-    z-index: 100;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    z-index: 2000; /* BottomNav(1000)보다 높게 설정 */
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
     transform: translateY(-10px);
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -181,15 +184,20 @@
 
   .navButton {
     font-size: 16px;
-    padding: 16px;
-    text-align: center;
+    padding: 14px 20px;
+    text-align: left; /* 정렬 문제 해결 */
     width: 100%;
-    border-radius: 16px;
-    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 14px;
+    background-color: rgba(255, 255, 255, 0.04);
+    display: flex;
+    align-items: center;
   }
 
   .loginBtn, .logoutBtn {
-    margin-top: 12px;
+    margin-top: 8px;
+    justify-content: center;
+    text-align: center;
+    font-weight: 700;
   }
 
   .menuToggle {
