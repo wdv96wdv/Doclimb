@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { getProfile, updateProfile, uploadAvatar } from '../../services/profile';
+import { getAllGyms } from '../../services/gym';
 import { supabase } from '../../services/supabase';
 import { Footprints, Trophy, Map, Flame, Medal, Award, Trash2 } from 'lucide-react';
 import styles from './MyPage.module.css';
@@ -21,6 +22,9 @@ function MyPage() {
   const [climbingLevel, setClimbingLevel] = useState('');
   const [preferredGym, setPreferredGym] = useState('');
   const [climbingStyle, setClimbingStyle] = useState([]);
+  const [gyms, setGyms] = useState([]);
+  const [gymLoading, setGymLoading] = useState(false);
+  const [isCustomGym, setIsCustomGym] = useState(false);
   const [avatar_url, setAvatarUrl] = useState(null);
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
@@ -57,6 +61,13 @@ function MyPage() {
   const loadProfile = useCallback(async () => {
     try {
       setLoading(true);
+      setGymLoading(true);
+
+      // Fetch gym list
+      const gymData = await getAllGyms();
+      setGyms(gymData || []);
+
+      // Fetch profile
       const profile = await getProfile(user.id);
       setName(profile.name || '');
       setDisplayNickname(profile.display_nickname || '');
@@ -65,17 +76,24 @@ function MyPage() {
       setClimbingStyle(profile.climbing_style || []);
       setEmail(profile.email || '');
       setAvatarUrl(profile.avatar_url);
+
+      // Check if preferred gym is in the list
+      const gymExists = gymData?.some(g => g.name === profile.preferred_gym);
+      if (!gymExists && profile.preferred_gym) {
+        setIsCustomGym(true);
+      }
     } catch (err) {
-      console.error('프로필 로드 오류:', err);
+      console.error('데이터 로드 오류:', err);
       Swal.fire({ 
         icon: 'error', 
         title: '실패', 
-        text: '프로필 로드 중 오류가 발생했습니다.',
+        text: '데이터를 불러오는 중 오류가 발생했습니다.',
         background: '#1a1d29',
         color: '#fff'
       });
     } finally {
       setLoading(false);
+      setGymLoading(false);
     }
   }, [user.id]);
 
@@ -151,6 +169,17 @@ function MyPage() {
   const handleClimbingStyleChange = (e) => {
     const { value, checked } = e.target;
     setClimbingStyle((prev) => checked ? [...prev, value] : prev.filter((s) => s !== value));
+  };
+
+  const handleGymChange = (e) => {
+    const { value } = e.target;
+    if (value === 'custom') {
+      setIsCustomGym(true);
+      setPreferredGym('');
+    } else {
+      setIsCustomGym(false);
+      setPreferredGym(value);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -385,7 +414,35 @@ function MyPage() {
 
         <div className={styles.inputGroup}>
           <label className={styles.label}>주로 가는 암장</label>
-          <input type="text" value={preferredGym} onChange={(e) => setPreferredGym(e.target.value)} className={styles.input} maxLength={50} />
+          {gymLoading ? (
+            <div className={styles.loadingText}>암장 목록을 불러오는 중...</div>
+          ) : (
+            <select 
+              value={isCustomGym ? 'custom' : preferredGym} 
+              onChange={handleGymChange} 
+              className={styles.input}
+            >
+              <option value="">암장을 선택해주세요</option>
+              {gyms.map(gym => (
+                <option key={gym.id} value={gym.name}>
+                  {gym.name}
+                </option>
+              ))}
+              <option value="custom">직접 입력</option>
+            </select>
+          )}
+          
+          {isCustomGym && (
+            <input 
+              type="text" 
+              value={preferredGym} 
+              onChange={(e) => setPreferredGym(e.target.value)} 
+              className={styles.input} 
+              style={{ marginTop: '10px' }}
+              placeholder="암장 이름을 직접 입력해주세요"
+              maxLength={50} 
+            />
+          )}
         </div>
 
         <div className={styles.inputGroup}>

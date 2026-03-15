@@ -16,25 +16,21 @@ function AdminCongestion() {
 
   useEffect(() => {
     fetchGyms();
-  }, [currentPage, statusFilter]); // 필터 변경 시에도 다시 불러옴
+  }, [currentPage, statusFilter, searchTerm]); // searchTerm 추가하여 실시간 검색 지원
 
   const fetchGyms = async () => {
     setLoading(true);
     try {
-      // 1. 기본 쿼리 생성
       let query = supabase.from("gyms").select("*", { count: "exact" });
 
-      // 2. 이름 검색 조건 추가
       if (searchTerm.trim()) {
         query = query.ilike("name", `%${searchTerm}%`);
       }
 
-      // 3. 상태 필터 조건 추가
       if (statusFilter !== "all") {
         query = query.eq("current_status", parseInt(statusFilter));
       }
 
-      // 4. 페이징 처리
       const from = (currentPage - 1) * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
 
@@ -51,13 +47,6 @@ function AdminCongestion() {
     } finally {
       setLoading(false);
     }
-  };
-
-  // 검색 버튼 클릭 시 (1페이지부터 다시 검색)
-  const handleSearch = (e) => {
-    e.preventDefault();
-    setCurrentPage(1);
-    fetchGyms();
   };
 
   const handleStatusUpdate = async (gymId, status) => {
@@ -80,22 +69,24 @@ function AdminCongestion() {
   return (
     <div className={styles.container}>
       <header style={{ marginBottom: '30px' }}>
-        <h2 style={{ fontSize: '28px', fontWeight: '800' }}>📊 혼잡도 설정</h2>
-        <p style={{ color: '#718096' }}>각 지점의 실시간 혼잡도를 검색하고 관리하세요.</p>
+        <h2 style={{ fontSize: '28px', fontWeight: '800', color: '#f8fafc' }}>📊 혼잡도 설정</h2>
+        <p style={{ color: '#94a3b8' }}>각 지점의 실시간 혼잡도를 검색하고 관리하세요.</p>
       </header>
 
       {/* 검색 및 필터 바 섹션 */}
       <div style={filterSectionStyle}>
-        <form onSubmit={handleSearch} style={{ flex: 1, display: 'flex', gap: '10px' }}>
+        <div style={{ flex: 1, display: 'flex', gap: '10px' }}>
           <input 
             type="text" 
             placeholder="암장 이름으로 검색..." 
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1); // 검색 시 1페이지로 리셋
+            }}
             style={inputStyle}
           />
-          <button type="submit" style={searchBtnStyle}>검색</button>
-        </form>
+        </div>
 
         <select 
           value={statusFilter} 
@@ -127,8 +118,8 @@ function AdminCongestion() {
             {gyms.length > 0 ? gyms.map((gym) => (
               <tr key={gym.id} className={styles.tr}>
                 <td className={styles.td}>
-                  <div style={{ fontWeight: '700', color: '#2d3748' }}>{gym.name}</div>
-                  <div style={{ fontSize: '12px', color: '#718096' }}>{gym.location}</div>
+                  <div style={{ fontWeight: '700', color: '#f1f5f9' }}>{gym.name}</div>
+                  <div style={{ fontSize: '12px', color: '#64748b' }}>{gym.location}</div>
                 </td>
                 <td className={styles.td}>
                   {renderStatusBadge(gym.current_status)}
@@ -149,8 +140,8 @@ function AdminCongestion() {
               </tr>
             )) : (
               <tr>
-                <td colSpan="3" style={{ padding: '40px', textAlign: 'center', color: '#a0aec0' }}>
-                  검색 결과가 없습니다.
+                <td colSpan="3" style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>
+                  {loading ? "데이터를 불러오는 중..." : "검색 결과가 없습니다."}
                 </td>
               </tr>
             )}
@@ -158,40 +149,78 @@ function AdminCongestion() {
         </table>
       </div>
 
-      {/* 페이징 UI (이전과 동일) */}
+      {/* 페이징 UI */}
       <div className={styles.pagination}>
         <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => prev - 1)} className={styles.pageBtn}>이전</button>
-        <span style={{ fontWeight: '700', color: '#4a5568' }}>{currentPage} / {totalPages || 1}</span>
+        <span style={{ fontWeight: '700', color: '#94a3b8' }}>{currentPage} / {totalPages || 1}</span>
         <button disabled={currentPage === totalPages || totalPages === 0} onClick={() => setCurrentPage(prev => prev + 1)} className={styles.pageBtn}>다음</button>
       </div>
     </div>
   );
 }
 
-// --- 스타일링 (AdminUsers와 통일) ---
+// --- 스타일링 (다크 테마 최적화) ---
 const filterSectionStyle = { display: 'flex', gap: '12px', marginBottom: '25px', alignItems: 'center' };
-const inputStyle = { flex: 1, padding: '12px 16px', borderRadius: '10px', border: '1px solid #e2e8f0', fontSize: '14px', outline: 'none' };
-const searchBtnStyle = { padding: '12px 24px', backgroundColor: '#3182ce', color: 'white', border: 'none', borderRadius: '10px', fontWeight: '600', cursor: 'pointer' };
-const selectStyle = { padding: '12px', borderRadius: '10px', border: '1px solid #e2e8f0', backgroundColor: 'white', color: '#4a5568', fontWeight: '500', outline: 'none', cursor: 'pointer' };
-const refreshBtnStyle = { padding: '12px 16px', backgroundColor: '#edf2f7', border: 'none', borderRadius: '10px', color: '#4a5568', cursor: 'pointer', fontWeight: '500' };
+const inputStyle = { 
+  flex: 1, 
+  padding: '12px 16px', 
+  borderRadius: '12px', 
+  border: '1px solid rgba(255,255,255,0.1)', 
+  backgroundColor: 'rgba(15,23,42,0.6)', 
+  color: '#ffffff',
+  fontSize: '14px', 
+  outline: 'none' 
+};
+const selectStyle = { 
+  padding: '12px', 
+  borderRadius: '12px', 
+  border: '1px solid rgba(255,255,255,0.1)', 
+  backgroundColor: 'rgba(15,23,42,0.6)', 
+  color: '#cbd5e1', 
+  fontWeight: '500', 
+  outline: 'none', 
+  cursor: 'pointer' 
+};
+const refreshBtnStyle = { 
+  padding: '12px 16px', 
+  backgroundColor: 'rgba(255,255,255,0.05)', 
+  border: '1px solid rgba(255,255,255,0.1)', 
+  borderRadius: '12px', 
+  color: '#cbd5e1', 
+  cursor: 'pointer', 
+  fontWeight: '500' 
+};
 
 const renderStatusBadge = (status) => {
-  const colors = ["#48bb78", "#ecc94b", "#ed8936", "#e53e3e"];
+  const colors = ["#10b981", "#f59e0b", "#f97316", "#ef4444"];
   const labels = ["여유", "보통", "혼잡", "매우혼잡"];
   return (
-    <span style={{ padding: '6px 12px', backgroundColor: `${colors[status]}22`, color: colors[status], borderRadius: '20px', fontSize: '12px', fontWeight: '800' }}>
+    <span style={{ 
+      padding: '6px 12px', 
+      backgroundColor: `${colors[status]}22`, 
+      color: colors[status], 
+      borderRadius: '20px', 
+      fontSize: '12px', 
+      fontWeight: '800',
+      border: `1px solid ${colors[status]}44`
+    }}>
       {labels[status]}
     </span>
   );
 };
 
 const statusBtnStyle = (isActive, status) => {
-  const colors = ["#48bb78", "#ecc94b", "#ed8936", "#e53e3e"];
+  const colors = ["#10b981", "#f59e0b", "#f97316", "#ef4444"];
   return {
-    padding: '6px 12px', fontSize: '11px', cursor: 'pointer', borderRadius: '6px', border: '1px solid #e2e8f0',
-    backgroundColor: isActive ? colors[status] : 'white',
-    color: isActive ? 'white' : '#4a5568',
-    transition: 'all 0.2s', fontWeight: isActive ? '700' : '400'
+    padding: '8px 14px', 
+    fontSize: '12px', 
+    cursor: 'pointer', 
+    borderRadius: '10px', 
+    border: isActive ? `1px solid ${colors[status]}` : '1px solid rgba(255,255,255,0.1)',
+    backgroundColor: isActive ? colors[status] : 'rgba(255,255,255,0.05)',
+    color: isActive ? '#0f172a' : '#94a3b8',
+    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)', 
+    fontWeight: '700'
   };
 };
 

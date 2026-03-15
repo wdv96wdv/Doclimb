@@ -231,3 +231,36 @@ ALTER TABLE public.user_badges ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "뱃지 정보는 누구나 조회 가능" ON public.badges FOR SELECT USING (true);
 CREATE POLICY "자신의 뱃지 획득 정보만 조회 가능" ON public.user_badges FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "자신의 뱃지 정보 저장 가능" ON public.user_badges FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- -----------------------------------------------------------------------------
+-- Initial Data: Brands and Gyms
+-- -----------------------------------------------------------------------------
+
+-- 서울숲클라이밍 브랜드 및 지점 데이터 추가
+DO $$
+DECLARE
+    v_brand_id uuid;
+BEGIN
+    -- 브랜드 추가 (또는 기존 브랜드 ID 가져오기)
+    INSERT INTO public.brands (name, description)
+    VALUES ('서울숲클라이밍', '서울 전역에 여러 지점을 운영하는 클라이밍 브랜드입니다.')
+    ON CONFLICT (name) DO UPDATE SET description = EXCLUDED.description
+    RETURNING id INTO v_brand_id;
+
+    -- 지점 데이터 추가 (중복 방지)
+    IF NOT EXISTS (SELECT 1 FROM public.gyms WHERE name = '서울숲클라이밍 뚝섬점') THEN
+        INSERT INTO public.gyms (name, location, region, brand_id) VALUES ('서울숲클라이밍 뚝섬점', '서울 성동구 왕십리로10길 9-15', '서울', v_brand_id);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM public.gyms WHERE name = '서울숲클라이밍 잠실점') THEN
+        INSERT INTO public.gyms (name, location, region, brand_id) VALUES ('서울숲클라이밍 잠실점', '서울 송파구 올림픽로 86 B1', '서울', v_brand_id);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM public.gyms WHERE name = '서울숲클라이밍 구로점') THEN
+        INSERT INTO public.gyms (name, location, region, brand_id) VALUES ('서울숲클라이밍 구로점', '서울 구로구 디지털로31길 41 B1', '서울', v_brand_id);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM public.gyms WHERE name = '서울숲클라이밍 영등포점') THEN
+        INSERT INTO public.gyms (name, location, region, brand_id) VALUES ('서울숲클라이밍 영등포점', '서울 영등포구 경인로 824 B1', '서울', v_brand_id);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM public.gyms WHERE name = '서울숲클라이밍 종로점') THEN
+        INSERT INTO public.gyms (name, location, region, brand_id) VALUES ('서울숲클라이밍 종로점', '서울 종로구 율곡로 78 B1', '서울', v_brand_id);
+    END IF;
+END $$;

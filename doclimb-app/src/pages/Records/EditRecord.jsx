@@ -6,6 +6,8 @@ import styles from "./EditRecord.module.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/locale";
+import { getAllGyms } from "../../services/gym";
+import { difficultyColors, getContrastColor } from "../../utils/climbingUtils";
 
 function EditRecord() {
   const { id } = useParams();
@@ -21,26 +23,28 @@ function EditRecord() {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState("");
+  const [gyms, setGyms] = useState([]);
+  const [gymLoading, setGymLoading] = useState(true);
+  const [isCustomLocation, setIsCustomLocation] = useState(false);
 
   const climbTypes = ["볼더링", "리드", "탑로프"];
-  const difficulties = [
-    { id: "white", label: "흰색", color: "#FFFFFF" },
-    { id: "orange", label: "주황", color: "#ff8c00" },
-    { id: "yellow", label: "노랑", color: "#ffd700" },
-    { id: "green", label: "초록", color: "#32cd32" },
-    { id: "blue", label: "파랑", color: "#1e90ff" },
-    { id: "navy", label: "남색", color: "#04203aff" },
-    { id: "red", label: "빨강", color: "#ff0000" },
-    { id: "purple", label: "보라", color: "#8a2be2" },
-    { id: "gray", label: "회색", color: "#808080" },
-    { id: "brown", label: "갈색", color: "#8b4513" },
-    { id: "black", label: "검정색", color: "#000000" },
-    { id: "pink", label: "핑크색", color: "#eb0cc5ff" }
-  ];
+  const difficulties = Object.entries(difficultyColors).map(([label, color]) => ({
+    id: label,
+    label,
+    color
+  }));
 
   useEffect(() => {
-    const fetchRecord = async () => {
+    const fetchData = async () => {
       try {
+        setLoading(true);
+        setGymLoading(true);
+
+        // Fetch gym list
+        const gymData = await getAllGyms();
+        setGyms(gymData || []);
+
+        // Fetch record detail
         const record = await getRecordById(id);
         setForm({
           date: record.date.slice(0, 10),
@@ -50,23 +54,42 @@ function EditRecord() {
           success: record.success,
           is_public: record.is_public ?? true,
         });
+
+        // Check if the location is in the gym list
+        const gymExists = gymData?.some(g => g.name === record.location);
+        if (!gymExists && record.location) {
+          setIsCustomLocation(true);
+        }
+
       } catch (err) {
-        setError("기록을 불러오는데 실패했습니다.");
+        setError("데이터를 불러오는데 실패했습니다.");
         console.error(err);
       } finally {
         setLoading(false);
+        setGymLoading(false);
       }
     };
 
-    fetchRecord();
+    fetchData();
   }, [id]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    
+    if (name === "gymSelector") {
+      if (value === "custom") {
+        setIsCustomLocation(true);
+        setForm(prev => ({ ...prev, location: "" }));
+      } else {
+        setIsCustomLocation(false);
+        setForm(prev => ({ ...prev, location: value }));
+      }
+    } else {
+      setForm((prev) => ({
+        ...prev,
+        [name]: type === "checkbox" ? checked : value,
+      }));
+    }
   };
 
   const handleCustomSelect = (name, value) => {
@@ -139,19 +162,42 @@ function EditRecord() {
           <div className={styles.formGroup}>
             <div className={styles.labelWrapper}>
               <MapPin size={18} className={styles.icon} />
-              <label htmlFor="location">암장 이름</label>
+              <label htmlFor="location">암장 선택</label>
             </div>
-            <input
-              type="text"
-              id="location"
-              name="location"
-              className={styles.input}
-              placeholder="예: 서울숲 클라이밍 뚝섬점"
-              value={form.location}
-              onChange={handleChange}
-              required
-              maxLength={50}
-            />
+            {gymLoading ? (
+              <div className={styles.loadingText}>암장 목록을 불러오는 중...</div>
+            ) : (
+              <select
+                id="gymSelector"
+                name="gymSelector"
+                className={styles.select}
+                value={isCustomLocation ? "custom" : form.location}
+                onChange={handleChange}
+                required
+              >
+                <option value="">암장을 선택해주세요</option>
+                {gyms.map(gym => (
+                  <option key={gym.id} value={gym.name}>
+                    {gym.name}
+                  </option>
+                ))}
+                <option value="custom">직접 입력 (검색에 없는 경우)</option>
+              </select>
+            )}
+            
+            {isCustomLocation && (
+              <input
+                type="text"
+                name="location"
+                className={styles.input}
+                style={{ marginTop: '10px' }}
+                placeholder="암장 이름을 직접 입력해주세요"
+                value={form.location}
+                onChange={handleChange}
+                required
+                maxLength={50}
+              />
+            )}
           </div>
 
           {/* Public Status */}
@@ -204,11 +250,11 @@ function EditRecord() {
                   type="button"
                   key={diff.id}
                   className={`${styles.diffBtn} ${form.difficulty === diff.label ? styles.active : ""}`}
-                  onClick={() => handleCustomSelect("difficulty", diff.label)}
-                  style={{
-                    "--btn-color": diff.color,
-                    color: (diff.id === "white" || diff.id === "yellow") ? "#000" : "#fff",
-                  }}
+                   onClick={() => handleCustomSelect("difficulty", diff.label)}
+                   style={{
+                     "--btn-color": diff.color,
+                     color: getContrastColor(diff.label),
+                   }}
                 >
                   {diff.label}
                 </button>

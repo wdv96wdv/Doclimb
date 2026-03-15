@@ -2,15 +2,15 @@
 .adminContainer {
     display: flex;
     min-height: 100vh;
-    background-color: #f8fafc; /* 전체 배경을 차분한 연회색으로 */
+    background-color: #0f172a; /* 전체 배경 다크모드 적용 */
     overflow-y: scroll;
   }
   
-  /* 사이드바는 그대로 유지 */
+  /* 사이드바 다크모드 적용 */
   .sidebar {
     width: 250px;
-    background-color: #ffffff;
-    border-right: 1px solid #f0f0f0;
+    background-color: #1e293b; /* 어두운 네이비 배경 */
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
     padding: 32px 16px;
     position: sticky;
     top: 0;
@@ -20,20 +20,19 @@
     z-index: 10;
   }
   
-  /* 핵심: 컨텐츠 영역을 중앙으로 몰아주는 설정 */
+  /* 컨텐츠 영역 다크모드 적용 */
   .content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center; /* 가로 방향 중앙 정렬 */
+    align-items: center;
     padding: 40px 20px;
-    background-color: #f8fafc;
+    background-color: #0f172a;
   }
   
-  /* 내부 컨텐츠가 너무 퍼지지 않게 잡아주는 래퍼(가상의 통로) */
   .contentInner {
     width: 100%;
-    max-width: 1100px; /* AdminUsers에서 설정한 max-width와 맞춤 */
+    max-width: 1100px;
   }
   
   .menuTitle {
@@ -41,7 +40,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: #94a3b8; /* 차분한 그레이 톤의 제목 */
+    color: #64748b; /* 차분한 어두운 그레이 */
     margin-bottom: 24px;
     padding-left: 12px;
   }
@@ -51,7 +50,7 @@
     align-items: center;
     gap: 12px;
     padding: 12px 16px;
-    color: #64748b; /* 기본 텍스트 색상 */
+    color: #94a3b8; /* 비활성 텍스트 색상 */
     text-decoration: none;
     border-radius: 12px;
     margin-bottom: 4px;
@@ -61,21 +60,22 @@
   }
   
   .navLink:hover {
-    background-color: #f1f5f9;
-    color: #1e293b;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #f8fafc;
   }
   
-  /* 활성화된 메뉴 스타일 */
+  /* 활성화된 메뉴 스타일 (다크모드 최적화) */
   .activeLink {
-    background-color: #eff6ff !important; /* 연한 파란색 배경 */
-    color: #2563eb !important; /* 진한 파란색 텍스트 */
+    background-color: rgba(56, 189, 248, 0.1) !important; /* 연한 스카이블루 투명 배경 */
+    color: #38bdf8 !important; /* 밝은 스카이블루 텍스트 */
     font-weight: 700;
+    border: 1px solid rgba(56, 189, 248, 0.2);
   }
   
   .footer {
     margin-top: auto;
     padding-top: 20px;
-    border-top: 1px solid #f1f5f9;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
   }
   
   .logoutBtn {
@@ -86,7 +86,7 @@
     padding: 12px 16px;
     background: none;
     border: none;
-    color: #94a3b8;
+    color: #64748b;
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
@@ -95,6 +95,6 @@
   }
   
   .logoutBtn:hover {
-    background-color: #fff1f2; /* 로그아웃은 연한 빨간색 피드백 */
-    color: #e11d48;
+    background-color: rgba(239, 68, 68, 0.1); /* 로그아웃은 연한 빨간색 피드백 */
+    color: #f87171;
   }
