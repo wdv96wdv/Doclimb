@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getRecordById, updateRecord } from "../../services/record";
-import { Calendar, MapPin, Activity, Mountain, Trophy, XCircle, CheckCircle2 } from "lucide-react";
+import { Calendar, MapPin, Activity, Mountain, Trophy, XCircle, CheckCircle2, Eye, EyeOff } from "lucide-react";
 import styles from "./EditRecord.module.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { ko } from "date-fns/locale";
 
 function EditRecord() {
   const { id } = useParams();
@@ -13,6 +16,7 @@ function EditRecord() {
     climb_type: "볼더링",
     difficulty: "흰색",
     success: false,
+    is_public: true,
   });
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
@@ -44,6 +48,7 @@ function EditRecord() {
           climb_type: record.climb_type,
           difficulty: record.difficulty,
           success: record.success,
+          is_public: record.is_public ?? true,
         });
       } catch (err) {
         setError("기록을 불러오는데 실패했습니다.");
@@ -116,13 +121,16 @@ function EditRecord() {
               <Calendar size={18} className={styles.icon} />
               <label htmlFor="date">등반 날짜</label>
             </div>
-            <input
-              type="date"
-              id="date"
-              name="date"
+            <DatePicker
+              selected={form.date ? new Date(form.date) : null}
+              onChange={(date) => {
+                const formattedDate = date.toISOString().split('T')[0];
+                setForm(prev => ({ ...prev, date: formattedDate }));
+              }}
+              dateFormat="yyyy-MM-dd"
+              locale={ko}
               className={styles.input}
-              value={form.date}
-              onChange={handleChange}
+              placeholderText="날짜를 선택하세요"
               required
             />
           </div>
@@ -144,6 +152,24 @@ function EditRecord() {
               required
               maxLength={50}
             />
+          </div>
+
+          {/* Public Status */}
+          <div className={styles.formGroup}>
+            <div className={styles.publicToggleWrapper} onClick={() => handleCustomSelect("is_public", !form.is_public)}>
+              <div className={styles.labelWrapper}>
+                {form.is_public ? <Eye size={18} className={styles.icon} /> : <EyeOff size={18} className={styles.iconMuted} />}
+                <label>명예의 전당 공개</label>
+              </div>
+              <div className={`${styles.toggleSwitch} ${form.is_public ? styles.active : ''}`}>
+                <div className={styles.toggleHandle}></div>
+              </div>
+            </div>
+            <p className={styles.helperText}>
+              {form.is_public 
+                ? "이 기록은 명예의 전당(랭킹)에 집계되어 다른 사용자에게 공개됩니다." 
+                : "이 기록은 본인만 볼 수 있으며 랭킹에 집계되지 않습니다."}
+            </p>
           </div>
 
           {/* Climb Type */}

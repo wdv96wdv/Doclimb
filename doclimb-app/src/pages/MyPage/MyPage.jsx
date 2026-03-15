@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { getProfile, updateProfile, uploadAvatar } from '../../services/profile';
 import { supabase } from '../../services/supabase';
-import { Footprints, Trophy, Map, Flame, Medal, Award } from 'lucide-react';
+import { Footprints, Trophy, Map, Flame, Medal, Award, Trash2 } from 'lucide-react';
 import styles from './MyPage.module.css';
 import Swal from 'sweetalert2';
+import defaultAvatar from '../../assets/img/No_Image_Available.jpg';
 
 function MyPage() {
   const { user, signOut } = useAuth();
@@ -141,6 +142,12 @@ function MyPage() {
     }
   };
 
+  const handleDeleteAvatar = () => {
+    setAvatarUrl(null);
+    setAvatarFile(null);
+    setAvatarPreview(null);
+  };
+
   const handleClimbingStyleChange = (e) => {
     const { value, checked } = e.target;
     setClimbingStyle((prev) => checked ? [...prev, value] : prev.filter((s) => s !== value));
@@ -262,12 +269,19 @@ function MyPage() {
         <div className={styles.sectionTitle}>프로필 사진</div>
         <div className={styles.avatarSection}>
           <img 
-            src={avatarPreview || avatar_url || '/climbing_placeholder.jpg'} 
+            src={avatarPreview || avatar_url || defaultAvatar} 
             alt="Avatar" 
             className={styles.avatarPreview} 
           />
           <input type="file" id="avatar" accept="image/*" onChange={handleAvatarChange} className={styles.avatarInput} />
-          <label htmlFor="avatar" className={styles.avatarLabel}>사진 변경</label>
+          <div className={styles.avatarButtons}>
+            <label htmlFor="avatar" className={styles.avatarLabel}>사진 변경</label>
+            {(avatarPreview || avatar_url) && (
+              <button type="button" onClick={handleDeleteAvatar} className={styles.avatarDeleteBtn} title="사진 삭제">
+                <Trash2 size={18} /> 삭제
+              </button>
+            )}
+          </div>
         </div>
 
         <div className={styles.sectionTitle}>나의 뱃지 컬렉션</div>

@@ -99,6 +99,7 @@ CREATE TABLE public.records (
   climb_type TEXT,
   difficulty TEXT,
   success BOOLEAN DEFAULT FALSE,
+  is_public BOOLEAN DEFAULT TRUE,
   user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL
 );
 
@@ -107,9 +108,9 @@ CREATE TABLE public.records (
 -- -----------------------------------------------------------------------------
 ALTER TABLE public.records ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view their own records."
+CREATE POLICY "Users can view public records or their own."
 ON public.records FOR SELECT
-USING (auth.uid() = user_id);
+USING (is_public = true OR auth.uid() = user_id);
 
 CREATE POLICY "Users can insert their own records."
 ON public.records FOR INSERT

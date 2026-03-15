@@ -4,6 +4,7 @@ import { getPostById, deletePost, getCommentsByPostId, createComment, deleteComm
 import { useAuth } from "../../context/AuthContext";
 import { ChevronLeft, Edit3, Trash2, Tag, MessageCircle, Send, Reply, X, RefreshCw } from "lucide-react";
 import noImage from "../../assets/img/no_image.png";
+import defaultAvatar from "../../assets/img/No_Image_Available.jpg";
 import styles from "./PostDetail.module.css";
 import Swal from 'sweetalert2';
 
@@ -159,7 +160,7 @@ function PostDetail() {
           <div className={styles.authorSection}>
             <div className={styles.authorInfo}>
               <img
-                src={post.profiles.avatar_url || '/climbing_placeholder.jpg'}
+                src={post.profiles.avatar_url || defaultAvatar}
                 alt={post.profiles.display_nickname}
                 className={styles.authorAvatar}
                 style={{ 
@@ -266,7 +267,7 @@ function CommentNode({ node, user, onReply, onDelete, depth }) {
         style={{ marginLeft: depth > 0 ? `${Math.min(depth, maxDepth) * 20}px` : "0" }}
       >
         <img 
-          src={node.profiles.avatar_url || '/climbing_placeholder.jpg'} 
+          src={node.profiles.avatar_url || defaultAvatar} 
           alt="" 
           className={styles.commentAvatar} 
           style={{ 

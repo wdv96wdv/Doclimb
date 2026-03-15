@@ -3,9 +3,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { createRecords } from "../../services/record";
 import { supabase } from "../../services/supabase";
 import { checkAndAwardBadges } from "../../services/gamification";
-import { Calendar, MapPin, Activity, Mountain, Trophy, XCircle, CheckCircle2, Plus, Trash2 } from "lucide-react";
+import { Calendar, MapPin, Activity, Mountain, Trophy, XCircle, CheckCircle2, Plus, Trash2, Eye, EyeOff } from "lucide-react";
 import Swal from "sweetalert2";
 import styles from './NewRecord.module.css';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { ko } from "date-fns/locale";
 
 import { getAllGyms } from "../../services/gym";
 import { difficultyColors, getContrastColor } from "../../utils/climbingUtils";
@@ -24,6 +27,7 @@ function NewRecord() {
     return {
       date: dateFromQuery || today,
       location: "",
+      is_public: true,
     };
   });
 
@@ -54,7 +58,7 @@ function NewRecord() {
   }, []);
 
   const handleCommonChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     if (name === "gymSelector") {
       if (value === "custom") {
         setIsCustomLocation(true);
@@ -64,7 +68,7 @@ function NewRecord() {
         setCommonInfo(prev => ({ ...prev, location: value }));
       }
     } else {
-      setCommonInfo(prev => ({ ...prev, [name]: value }));
+      setCommonInfo(prev => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
     }
   };
 
@@ -156,13 +160,16 @@ function NewRecord() {
               <Calendar size={18} className={styles.icon} />
               <label htmlFor="date">등반 날짜</label>
             </div>
-            <input
-              type="date"
-              id="date"
-              name="date"
+            <DatePicker
+              selected={commonInfo.date ? new Date(commonInfo.date) : null}
+              onChange={(date) => {
+                const formattedDate = date.toISOString().split('T')[0];
+                setCommonInfo(prev => ({ ...prev, date: formattedDate }));
+              }}
+              dateFormat="yyyy-MM-dd"
+              locale={ko}
               className={styles.input}
-              value={commonInfo.date}
-              onChange={handleCommonChange}
+              placeholderText="날짜를 선택하세요"
               required
             />
           </div>
@@ -205,6 +212,23 @@ function NewRecord() {
                 required
               />
             )}
+          </div>
+
+          <div className={styles.formGroup}>
+            <div className={styles.publicToggleWrapper} onClick={() => setCommonInfo(prev => ({ ...prev, is_public: !prev.is_public }))}>
+              <div className={styles.labelWrapper}>
+                {commonInfo.is_public ? <Eye size={18} className={styles.icon} /> : <EyeOff size={18} className={styles.iconMuted} />}
+                <label>명예의 전당 공개</label>
+              </div>
+              <div className={`${styles.toggleSwitch} ${commonInfo.is_public ? styles.active : ''}`}>
+                <div className={styles.toggleHandle}></div>
+              </div>
+            </div>
+            <p className={styles.helperText}>
+              {commonInfo.is_public 
+                ? "이 기록은 명예의 전당(랭킹)에 집계되어 다른 사용자에게 공개됩니다." 
+                : "이 기록은 본인만 볼 수 있으며 랭킹에 집계되지 않습니다."}
+            </p>
           </div>
 
           <hr style={{ border: 'none', borderTop: '1px solid var(--border-subtle)', margin: '10px 0' }} />

@@ -76,6 +76,32 @@
   border-color: rgba(255, 255, 255, 0.2);
 }
 
+.avatarButtons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.avatarDeleteBtn {
+  background: rgba(255, 77, 79, 0.05);
+  color: #ff4d4f;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid rgba(255, 77, 79, 0.1);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.avatarDeleteBtn:hover {
+  background: rgba(255, 77, 79, 0.1);
+  border-color: #ff4d4f;
+}
+
 /* Inputs */
 .inputGroup {
   display: flex;

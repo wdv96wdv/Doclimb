@@ -121,6 +121,60 @@
   color: rgba(255, 255, 255, 0.3);
 }
 
+/* React DatePicker Custom Styling */
+:global(.react-datepicker) {
+  background: rgba(30, 32, 45, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 20px !important;
+  font-family: inherit !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(10px);
+}
+
+:global(.react-datepicker__header) {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 20px 20px 0 0 !important;
+  padding-top: 20px !important;
+}
+
+:global(.react-datepicker__current-month) {
+  color: #fff !important;
+  font-weight: 800 !important;
+  font-size: 1.1rem !important;
+}
+
+:global(.react-datepicker__day-name) {
+  color: rgba(255, 255, 255, 0.4) !important;
+  font-weight: 600 !important;
+}
+
+:global(.react-datepicker__day) {
+  color: #ddd !important;
+  border-radius: 12px !important;
+  transition: all 0.2s !important;
+}
+
+:global(.react-datepicker__day:hover) {
+  background: rgba(82, 113, 255, 0.2) !important;
+  color: #fff !important;
+}
+
+:global(.react-datepicker__day--selected) {
+  background: #5271ff !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 15px rgba(82, 113, 255, 0.4) !important;
+}
+
+:global(.react-datepicker__day--keyboard-selected) {
+  background: rgba(82, 113, 255, 0.1) !important;
+}
+
+:global(.react-datepicker__navigation-icon::before) {
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
 /* Pill Selectors */
 .pillGroup {
   display: flex;
@@ -321,4 +375,60 @@
   .diffGrid {
     grid-template-columns: repeat(5, 1fr);
   }
+}
+
+.publicToggleWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: var(--surface-light);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.publicToggleWrapper:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--primary);
+}
+
+.iconMuted {
+  color: var(--text-muted);
+}
+
+.toggleSwitch {
+  width: 44px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.toggleSwitch.active {
+  background: var(--success);
+}
+
+.toggleHandle {
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.active .toggleHandle {
+  left: 23px;
+}
+
+.helperText {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 4px 0 0 4px;
+  line-height: 1.4;
 }

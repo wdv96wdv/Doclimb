@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { fetchGymRankings } from "../../services/gamification";
 import { Trophy, Medal, Award, MapPin, User, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import styles from "./Ranking.module.css";
+import defaultAvatar from "../../assets/img/No_Image_Available.jpg";
 
 function Ranking() {
   const [rankings, setRankings] = useState([]);
@@ -63,7 +64,7 @@ function Ranking() {
                     </div>
                     
                     <img 
-                      src={user.avatar || "/climbing_placeholder.jpg"} 
+                      src={user.avatar || defaultAvatar} 
                       alt={user.nickname} 
                       className={styles.avatar}
                     />

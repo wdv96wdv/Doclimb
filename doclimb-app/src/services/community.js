@@ -186,6 +186,15 @@ export const createComment = async ({ postId, content, parentId = null }) => {
     `);
 
   if (error) throw error;
+  
+  // 댓글 작성 시 뱃지 체크 수행 (응원 댓글 뱃지 등)
+  try {
+    const { checkAndAwardBadges } = await import('./gamification');
+    await checkAndAwardBadges(user.id);
+  } catch (err) {
+    console.error("Badge check after comment failed:", err);
+  }
+
   return data[0];
 };
 
