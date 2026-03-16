@@ -181,6 +181,83 @@
   box-shadow: 0 4px 20px rgba(82, 113, 255, 0.15);
 }
 
+/* 암장 선택 및 링크 입력 */
+.select, .input {
+  width: 100%;
+  padding: 20px 24px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.select:focus, .input:focus {
+  outline: none;
+  border-color: #5271ff;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.select option {
+  background: #1a1d29;
+  color: white;
+}
+
+/* 난이도 그리드 */
+.diffGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 12px;
+}
+
+.diffBtn {
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--btn-color);
+  color: inherit;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.diffBtn:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.1);
+}
+
+.diffBtn.activeGrade {
+  transform: scale(1.05);
+  border: 2px solid white;
+  box-shadow: 0 0 15px var(--btn-color);
+}
+
+/* 프리미엄 배지 (미리보기용) */
+.previewMeta {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.miniBadge {
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 /* 업로드 영역 */
 .uploadArea {
   display: flex;

@@ -251,15 +251,18 @@
   letter-spacing: 0.05em;
 }
 
-.빨강 { background: linear-gradient(135deg, #ef4444, #991b1b); border: 1px solid rgba(239, 68, 68, 0.3); }
+.흰색 { background: linear-gradient(135deg, #ffffff, #d1d5db); color: #000; border: 1px solid rgba(0,0,0,0.1); }
 .주황 { background: linear-gradient(135deg, #f97316, #9a3412); }
 .노랑 { background: linear-gradient(135deg, #facc15, #854d0e); color: #000; }
 .초록 { background: linear-gradient(135deg, #10b981, #064e3b); }
 .파랑 { background: linear-gradient(135deg, #3b82f6, #1e3a8a); }
 .남색 { background: linear-gradient(135deg, #6366f1, #312e81); }
+.빨강 { background: linear-gradient(135deg, #ef4444, #991b1b); border: 1px solid rgba(239, 68, 68, 0.3); }
 .보라 { background: linear-gradient(135deg, #a855f7, #581c87); }
+.회색 { background: linear-gradient(135deg, #9ca3af, #4b5563); }
 .갈색 { background: linear-gradient(135deg, #78350f, #451a03); }
-.검정 { background: linear-gradient(135deg, #1a1a1a, #000); border: 1px solid rgba(255,255,255,0.2); }
+.검정색 { background: linear-gradient(135deg, #1a1a1a, #000); border: 1px solid rgba(255,255,255,0.2); }
+.핑크색 { background: linear-gradient(135deg, #ec4899, #9d174d); }
 
 .loading,
 .empty {

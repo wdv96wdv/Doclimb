@@ -302,6 +302,25 @@
   color: var(--text-muted);
 }
 
+.recordLocationWrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.publicBadge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: rgba(82, 113, 255, 0.15);
+  border: 1px solid rgba(82, 113, 255, 0.3);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
 .metaItem {
   display: flex;
   align-items: center;

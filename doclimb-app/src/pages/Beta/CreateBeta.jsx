@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { supabase } from "../../services/supabase";
 import { useNavigate } from "react-router-dom";
-import { Instagram, MapPin, Palette, FileText, Send, RefreshCw } from "lucide-react";
+import { Instagram, MapPin, Palette, FileText, Send, RefreshCw, Mountain } from "lucide-react";
 import Swal from "sweetalert2";
+import { getAllGyms } from "../../services/gym";
+import { difficultyColors, getContrastColor } from "../../utils/climbingUtils";
 import styles from "./CreateBeta.module.css";
+import { useEffect } from "react";
 
 function CreateBeta() {
   const navigate = useNavigate();
@@ -11,9 +14,19 @@ function CreateBeta() {
   const [formData, setFormData] = useState({
     video_url: "",
     gym_name: "",
-    color_level: "빨강", // 초기값
+    color_level: "빨강",
     description: "",
   });
+  const [gyms, setGyms] = useState([]);
+
+  useEffect(() => {
+    getAllGyms().then(setGyms).catch(console.error);
+  }, []);
+
+  const difficultyList = Object.entries(difficultyColors).map(([label, color]) => ({
+    label,
+    color
+  }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +50,7 @@ function CreateBeta() {
 
       await Swal.fire({
         title: "공유 완료!",
-        text: "베타 영상이 피드에 공유되었습니다.",
+        text: "인스타 영상이 피드에 공유되었습니다.",
         icon: "success",
         background: '#1a1d29',
         color: '#fff',
@@ -61,55 +74,60 @@ function CreateBeta() {
     <div className={styles.container}>
       <h2>인스타 피드 공유</h2>
       <form onSubmit={handleSubmit} className={styles.form}>
-        
+
         <div className={styles.inputGroup}>
           <label><Instagram size={14} className="inline mr-1" /> 영상 링크</label>
-          <input 
-            type="url" 
-            placeholder="https://www.instagram.com/p/..." 
+          <input
+            type="url"
+            placeholder="https://www.instagram.com/p/..."
             value={formData.video_url}
-            required 
-            onChange={(e) => setFormData({...formData, video_url: e.target.value})}
+            required
+            onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
           />
         </div>
 
         <div className={styles.inputGroup}>
           <label><MapPin size={14} className="inline mr-1" /> 클라이밍장</label>
-          <input 
-            type="text" 
-            placeholder="암장 이름을 입력하세요" 
-            value={formData.gym_name}
-            required 
-            onChange={(e) => setFormData({...formData, gym_name: e.target.value})}
-          />
-        </div>
-
-        <div className={styles.inputGroup}>
-          <label><Palette size={14} className="inline mr-1" /> 난이도 색상</label>
           <select 
             className={styles.select}
-            value={formData.color_level}
-            onChange={(e) => setFormData({...formData, color_level: e.target.value})}
+            value={formData.gym_name}
+            required 
+            onChange={(e) => setFormData({ ...formData, gym_name: e.target.value })}
           >
-            <option value="빨강">빨강</option>
-            <option value="주황">주황</option>
-            <option value="노랑">노랑</option>
-            <option value="초록">초록</option>
-            <option value="파랑">파랑</option>
-            <option value="남색">남색</option>
-            <option value="보라">보라</option>
-            <option value="갈색">갈색</option>
-            <option value="검정">검정</option>
+            <option value="">암장을 선택해주세요</option>
+            {gyms.map(gym => (
+              <option key={gym.id} value={gym.name}>{gym.name}</option>
+            ))}
           </select>
         </div>
 
         <div className={styles.inputGroup}>
+          <label><Mountain size={14} className="inline mr-1" /> 난이도 색상</label>
+          <div className={styles.diffGrid}>
+            {difficultyList.map((diff) => (
+              <button
+                key={diff.label}
+                type="button"
+                className={`${styles.diffBtn} ${formData.color_level === diff.label ? styles.activeDiff : ""}`}
+                onClick={() => setFormData({ ...formData, color_level: diff.label })}
+                style={{
+                  '--btn-color': diff.color,
+                  color: getContrastColor(diff.label)
+                }}
+              >
+                {diff.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className={styles.inputGroup}>
           <label><FileText size={14} className="inline mr-1" /> 상세 설명</label>
-          <textarea 
-            placeholder="문제에 대한 팁이나 설명을 적어주세요."
+          <textarea
+            placeholder="상세 정보를 적어주세요."
             value={formData.description}
-            rows={4}
-            onChange={(e) => setFormData({...formData, description: e.target.value})}
+            rows={2}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           />
         </div>
 

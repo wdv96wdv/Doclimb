@@ -49,9 +49,13 @@ export const createRecords = async (recordsData) => {
  * 현재 로그인된 사용자의 모든 클라이밍 기록을 가져옵니다.
  */
 export const getRecords = async () => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+
   const { data, error } = await supabase
     .from('records')
     .select('*')
+    .eq('user_id', user.id)
     .order('date', { ascending: false });
 
   if (error) {

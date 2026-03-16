@@ -99,7 +99,7 @@ CREATE TABLE public.records (
   climb_type TEXT,
   difficulty TEXT,
   success BOOLEAN DEFAULT FALSE,
-  is_public BOOLEAN DEFAULT TRUE,
+  is_public BOOLEAN DEFAULT FALSE,
   user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL
 );
 

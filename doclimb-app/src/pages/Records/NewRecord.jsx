@@ -27,7 +27,7 @@ function NewRecord() {
     return {
       date: dateFromQuery || today,
       location: "",
-      is_public: true,
+      is_public: false,
     };
   });
 

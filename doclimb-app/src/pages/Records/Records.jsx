@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { getRecords } from "../../services/record";
 import { getProfile } from "../../services/profile";
-import { Activity, CheckCircle2, XCircle, ChevronRight, Inbox, Plus } from "lucide-react";
+import { Activity, CheckCircle2, XCircle, ChevronRight, Inbox, Plus, Globe } from "lucide-react";
 import Calendar from "../../components/Calendar/Calendar";
 import styles from "./Records.module.css";
 
@@ -194,9 +194,17 @@ function Records() {
                     <li key={record.id} className={styles.recordCard}>
                       <Link to={`/records/${record.id}`}>
                         <div className={styles.cardMainInfo}>
-                          <span className={styles.recordLocation}>
-                            {record.location}
-                          </span>
+                          <div className={styles.recordLocationWrapper}>
+                            <span className={styles.recordLocation}>
+                              {record.location}
+                            </span>
+                            {record.is_public && (
+                              <div className={styles.publicBadge} title="명예의 전당 공개됨">
+                                <Globe size={12} />
+                                <span>명예의 전당</span>
+                              </div>
+                            )}
+                          </div>
                           <div className={styles.recordMeta}>
                             <div className={styles.metaItem}>
                               <Activity size={14} />
