@@ -4,7 +4,8 @@ import styles from "./Home.module.css";
 import { getRecords } from "../../services/record";
 import { useAuth } from "../../context/AuthContext";
 import { getUserBadges, fetchGymRankings } from "../../services/gamification";
-import { difficultyOrder, getHighestDifficulty } from "../../utils/climbingUtils";
+import { getHighestDifficulty } from "../../utils/climbingUtils";
+import Loading from "../../components/Common/Loading";
 import { 
   Activity, ShieldCheck, UserCheck, Settings, Map, BarChart3, 
   ChevronRight, Zap, Trophy, Footprints, Flame, Medal, Award, Sparkles 
@@ -20,16 +21,19 @@ function Home() {
   const [recentBadges, setRecentBadges] = useState([]);
   const [rankPreview, setRankPreview] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       if (!user) {
         setLoading(false);
+        setError("");
         return;
       }
 
       try {
         setLoading(true);
+        setError("");
         // 1. 등반 기록 통계
         const records = await getRecords();
         const now = new Date();
@@ -50,8 +54,9 @@ function Home() {
         const rankings = await fetchGymRankings(3);
         setRankPreview(rankings.slice(0, 1));
 
-      } catch (error) {
-        console.error("데이터 로딩 에러:", error);
+      } catch (err) {
+        console.error("데이터 로딩 에러:", err);
+        setError("대시보드 데이터를 불러오지 못했습니다.");
       } finally {
         setLoading(false);
       }
@@ -59,6 +64,14 @@ function Home() {
 
     fetchDashboardData();
   }, [user]);
+
+  if (user && loading) {
+    return (
+      <div className={styles.homeContainer}>
+        <Loading message="대시보드를 불러오고 있습니다..." />
+      </div>
+    );
+  }
 
   const getBadgeIcon = (iconType) => {
     const props = { size: 18 };
@@ -79,6 +92,11 @@ function Home() {
           {user ? (
             /* 로그인 시: 대시보드 뷰 */
             <div className={`${styles.dashboardHero} ${styles.animateFadeInUp}`}>
+              {error && (
+                <p className={styles.dashboardError} role="alert">
+                  {error}
+                </p>
+              )}
               <div className={styles.welcomeText}>
                 <h1>안녕하세요, {displayName}님!</h1>
                 <p>오늘도 한 단계 더 성장할 준비가 되셨나요?</p>

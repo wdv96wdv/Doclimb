@@ -23,6 +23,16 @@
 }
 
 /* Dashboard Hero (Logged In) */
+.dashboardError {
+  color: #ff6b6b;
+  background: rgba(255, 77, 79, 0.1);
+  border: 1px solid rgba(255, 77, 79, 0.3);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+}
+
 .dashboardHero {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(20px);
@@ -183,19 +193,33 @@
 
 .badgeRow {
   display: flex;
-  gap: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .miniBadgeCard {
-  background: rgba(255, 255, 255, 0.03);
-  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  padding: 12px 16px;
   border-radius: 16px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 8px;
-  min-width: 90px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.miniBadgeCard:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+  border-color: rgba(82, 113, 255, 0.3);
+}
+
+.miniBadgeCard svg {
+  color: #5271ff;
+  filter: drop-shadow(0 0 5px rgba(82, 113, 255, 0.3));
 }
 
 .miniBadgeName {
@@ -445,7 +469,10 @@
 @media (max-width: 768px) {
   .shortcutGrid { grid-template-columns: 1fr; }
   .etiquetteGrid { grid-template-columns: 1fr; }
-  .dashboardHero { padding: 40px 24px; }
+  .dashboardHero { padding: 40px 20px; }
   .welcomeText h1 { font-size: 2rem; }
   .mainActionBtn { width: 100%; margin-top: 24px; }
+  .badgeRow {
+    justify-content: center;
+  }
 }

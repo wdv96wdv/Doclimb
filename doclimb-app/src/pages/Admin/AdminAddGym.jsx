@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { supabase } from "../../services/supabase";
+import { createGym } from "../../services/gym";
 import Swal from "sweetalert2";
 import { Building2, MapPin, Phone, FileText, PlusCircle, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -25,21 +25,12 @@ function AdminAddGym() {
     setLoading(true);
     try {
       // DB 컬럼 매핑: address -> location
-      const insertData = {
+      await createGym({
         name: gymData.name,
         location: gymData.address,
         phone: gymData.phone,
         description: gymData.description,
-        current_status: 0, // 초기 상태: 여유
-        last_updated: new Date().toISOString()
-      };
-
-      const { error } = await supabase.from("gyms").insert([insertData]);
-      
-      if (error) {
-        console.error("Supabase Error:", error);
-        throw error;
-      }
+      });
 
       await Swal.fire({
         icon: "success",

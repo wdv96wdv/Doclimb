@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { createRecords } from "../../services/record";
-import { supabase } from "../../services/supabase";
+import { useAuth } from "../../context/AuthContext";
 import { checkAndAwardBadges } from "../../services/gamification";
 import { Calendar, MapPin, Activity, Mountain, Trophy, XCircle, CheckCircle2, Plus, Trash2, Eye, EyeOff } from "lucide-react";
 import Swal from "sweetalert2";
@@ -16,6 +16,7 @@ import { difficultyColors, getContrastColor } from "../../utils/climbingUtils";
 function NewRecord() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
 
   const queryParams = new URLSearchParams(location.search);
   const dateFromQuery = queryParams.get("date");
@@ -111,7 +112,6 @@ function NewRecord() {
       await createRecords(recordsToSave);
 
       // 뱃지 체크 로직 추가
-      const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const earned = await checkAndAwardBadges(user.id);
         if (earned && earned.length > 0) {

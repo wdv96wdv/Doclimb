@@ -3,14 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { getProfile, updateProfile, uploadAvatar } from '../../services/profile';
 import { getAllGyms } from '../../services/gym';
-import { supabase } from '../../services/supabase';
+import { getUserBadges } from '../../services/gamification';
+import { deleteUserAccount } from '../../services/auth';
 import { Footprints, Trophy, Map, Flame, Medal, Award, Trash2 } from 'lucide-react';
+import Loading from '../../components/Common/Loading';
 import styles from './MyPage.module.css';
 import Swal from 'sweetalert2';
 import defaultAvatar from '../../assets/img/No_Image_Available.jpg';
 
 function MyPage() {
-  const { user, signOut } = useAuth();
+  const { user, signOut, updatePassword } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -99,15 +101,7 @@ function MyPage() {
 
   const loadBadges = useCallback(async () => {
     try {
-      const { data, error } = await supabase
-        .from('user_badges')
-        .select(`
-          earned_at,
-          badges (*)
-        `)
-        .eq('user_id', user.id);
-      
-      if (error) throw error;
+      const data = await getUserBadges(user.id);
       setBadges(data || []);
     } catch (err) {
       console.error('뱃지 로드 오류:', err);
@@ -232,8 +226,7 @@ function MyPage() {
     
     setPasswordSaving(true);
     try {
-      const { error } = await supabase.auth.updateUser({ password });
-      if (error) throw error;
+      await updatePassword(password);
 
       await Swal.fire({ 
         icon: 'success', 
@@ -243,7 +236,7 @@ function MyPage() {
         color: '#fff',
         confirmButtonColor: '#5271ff'
       });
-      await supabase.auth.signOut({ scope: 'global' });
+      await signOut();
       navigate('/login', { replace: true });
     } catch (err) {
       Swal.fire({ icon: 'error', title: '실패', text: err.message });
@@ -268,8 +261,7 @@ function MyPage() {
     if (isConfirmed) {
       try {
         setLoading(true);
-        const { error } = await supabase.rpc('delete_user_account');
-        if (error) throw error;
+        await deleteUserAccount();
         await signOut();
         await Swal.fire({ icon: 'success', title: '탈퇴 완료' });
         navigate('/');
@@ -288,7 +280,9 @@ function MyPage() {
     { value: 'ADVANCED', label: 'ADVANCED' },
   ];
 
-  if (loading) return <div className={styles.loading}>로딩 중...</div>;
+  if (loading) {
+    return <Loading message="프로필을 불러오고 있습니다..." />;
+  }
 
   return (
     <div className={styles.myPageContainer}>

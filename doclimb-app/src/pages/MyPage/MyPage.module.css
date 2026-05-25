@@ -250,39 +250,41 @@ select.input {
 /* Badge Collection Styles */
 .badgeGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
   margin-top: 24px;
 }
 
 .badgeItem {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 24px;
-  padding: 20px;
+  padding: 16px;
   display: flex;
   align-items: center;
   gap: 16px;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .badgeItem:hover {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(82, 113, 255, 0.2);
-  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(82, 113, 255, 0.4);
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .badgeIconWrapper {
-  width: 56px;
-  height: 56px;
-  background: linear-gradient(135deg, rgba(82, 113, 255, 0.1), rgba(82, 113, 255, 0.05));
-  border-radius: 16px;
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, #5271ff 0%, #a5b4fc 100%);
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #5271ff;
+  color: #ffffff;
   flex-shrink: 0;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 15px rgba(82, 113, 255, 0.3);
 }
 
 .badgeInfo {
@@ -299,7 +301,7 @@ select.input {
 
 .badgeDesc {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.5);
   line-height: 1.4;
 }
 
@@ -324,6 +326,13 @@ select.input {
 }
 
 @media (max-width: 768px) {
-  .myPageContainer { margin: 20px 16px; padding: 40px 24px; border-radius: 32px; }
-  .title { font-size: 2rem; }
+  .myPageContainer { margin: 20px 12px; padding: 40px 20px; border-radius: 32px; }
+  .title { font-size: 2rem; margin-bottom: 32px; }
+  .badgeGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .badgeItem {
+    padding: 14px;
+  }
 }

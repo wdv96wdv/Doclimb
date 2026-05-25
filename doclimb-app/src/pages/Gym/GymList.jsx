@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
-import { supabase } from "../../services/supabase";
 import { useAuth } from "../../context/AuthContext";
-import { updateGymStatus } from "../../services/gym";
+import { getAllGyms, updateGymStatus, subscribeToGymUpdates } from "../../services/gym";
+import Loading from "../../components/Common/Loading";
 import { Search, MapPin, ChevronLeft, ChevronRight, Info } from "lucide-react";
 import styles from "./GymList.module.css";
 
@@ -17,11 +17,7 @@ export function GymList() {
 
   const fetchGyms = async () => {
     try {
-      const { data, error } = await supabase
-        .from("gyms")
-        .select("*")
-        .order("name", { ascending: true });
-      if (error) throw error;
+      const data = await getAllGyms();
       setGyms(data || []);
     } catch (err) {
       console.error("데이터 로드 에러:", err.message);
@@ -32,15 +28,12 @@ export function GymList() {
 
   useEffect(() => {
     fetchGyms();
-    const subscription = supabase
-      .channel("gym-updates")
-      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "gyms" }, (payload) => {
-        setGyms((current) =>
-          current.map((gym) => (gym.id === payload.new.id ? payload.new : gym))
-        );
-      })
-      .subscribe();
-    return () => supabase.removeChannel(subscription);
+    const unsubscribe = subscribeToGymUpdates((updatedGym) => {
+      setGyms((current) =>
+        current.map((gym) => (gym.id === updatedGym.id ? updatedGym : gym))
+      );
+    });
+    return unsubscribe;
   }, []);
 
   const filteredGyms = useMemo(() => {
@@ -83,6 +76,10 @@ export function GymList() {
     };
     return map[status ?? 0] || { label: "정보 없음", color: "#9ca3af" };
   };
+
+  if (loading) {
+    return <Loading message="암장 정보를 불러오고 있습니다..." />;
+  }
 
   return (
     <div className={styles.page}>

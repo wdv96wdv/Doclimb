@@ -2,12 +2,20 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
 import { useAuth } from "../../context/AuthContext";
-import { supabase } from "../../services/supabase";
+import {
+  resetPasswordForEmail,
+  signInWithOAuth,
+} from "../../services/auth";
+import { findEmailByNameAndNickname } from "../../services/profile";
+import { showError, showSuccess, showWarning } from "../../utils/notify";
 import Swal from "sweetalert2";
 import kakaoLoginImage from "../../assets/img/kakao_login_large_wide.png";
 
-const APP_BASE_URL =
-  import.meta.env.VITE_APP_BASE_URL || "https://doclimb.vercel.app";
+const SWAL_FORM_DEFAULTS = {
+  background: "#1a1d29",
+  color: "#fff",
+  confirmButtonColor: "#5271ff",
+};
 
 function Login() {
   const navigate = useNavigate();
@@ -21,173 +29,104 @@ function Login() {
   const [pendingEmail, setPendingEmail] = useState("");
   const [resending, setResending] = useState(false);
 
-
-  // --- 추가된 기능: 아이디(이메일) 찾기 ---
   const handleFindEmail = async () => {
     const { value: formValues } = await Swal.fire({
-      title: '아이디 찾기',
+      title: "아이디 찾기",
       html:
         '<input id="swal-input1" class="swal2-input" placeholder="이름을 입력하세요" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1);">' +
         '<input id="swal-input2" class="swal2-input" placeholder="닉네임을 입력하세요" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1);">',
       focusConfirm: false,
       showCancelButton: true,
-      background: '#1a1d29',
-      color: '#fff',
-      confirmButtonColor: "#5271ff",
+      ...SWAL_FORM_DEFAULTS,
       didOpen: () => {
-        const input1 = document.getElementById('swal-input1');
-        const input2 = document.getElementById('swal-input2');
-        input1.addEventListener('keydown', (event) => {
-          if (event.key === 'Enter') {
+        const input1 = document.getElementById("swal-input1");
+        const input2 = document.getElementById("swal-input2");
+        input1.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
             event.preventDefault();
             input2.focus();
           }
         });
-        input2.addEventListener('keydown', (event) => {
-          if (event.key === 'Enter') {
+        input2.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
             event.preventDefault();
             Swal.clickConfirm();
           }
         });
       },
       preConfirm: () => {
-        const name = document.getElementById('swal-input1').value;
-        const nickname = document.getElementById('swal-input2').value;
+        const name = document.getElementById("swal-input1").value;
+        const nickname = document.getElementById("swal-input2").value;
         if (!name || !nickname) {
-          Swal.showValidationMessage('이름과 닉네임을 모두 입력해주세요.');
+          Swal.showValidationMessage("이름과 닉네임을 모두 입력해주세요.");
         }
         return { name, nickname };
-      }
+      },
     });
 
-    if (formValues) {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('email')
-        .eq('name', formValues.name)
-        .eq('display_nickname', formValues.nickname)
-        .maybeSingle();
-  
-      if (error) {
-        Swal.fire({ 
-          icon: 'error', 
-          text: '조회 중 오류가 발생했습니다.',
-          background: '#1a1d29',
-          color: '#fff'
-        });
-      } else if (data) {
-        Swal.fire({
-          icon: 'success',
-          title: '아이디 찾기 결과',
+    if (!formValues) return;
+
+    try {
+      const data = await findEmailByNameAndNickname(
+        formValues.name,
+        formValues.nickname
+      );
+      if (data) {
+        await Swal.fire({
+          icon: "success",
+          title: "아이디 찾기 결과",
           html: `가입하신 이메일은 <br><b>[ ${data.email} ]</b><br> 입니다.`,
-          background: '#1a1d29',
-          color: '#fff',
-          confirmButtonColor: "#5271ff",
+          ...SWAL_FORM_DEFAULTS,
         });
       } else {
-        Swal.fire({ 
-          icon: 'warning', 
-          text: '일치하는 정보가 없습니다. 이름과 닉네임을 다시 확인해주세요.',
-          background: '#1a1d29',
-          color: '#fff'
-        });
+        await showWarning(
+          "일치하는 정보가 없습니다. 이름과 닉네임을 다시 확인해주세요."
+        );
       }
+    } catch {
+      await showError("조회 중 오류가 발생했습니다.");
     }
   };
 
   const handleResetPassword = async () => {
     const { value: resetEmail } = await Swal.fire({
-      title: '비밀번호 재설정',
-      input: 'email',
-      inputPlaceholder: 'example@email.com',
+      title: "비밀번호 재설정",
+      input: "email",
+      inputPlaceholder: "example@email.com",
       showCancelButton: true,
-      confirmButtonText: '메일 발송',
-      background: '#1a1d29',
-      color: '#fff',
-      confirmButtonColor: "#5271ff",
+      confirmButtonText: "메일 발송",
+      ...SWAL_FORM_DEFAULTS,
       didOpen: () => {
-        Swal.getInput().addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') Swal.clickConfirm();
+        Swal.getInput().addEventListener("keydown", (e) => {
+          if (e.key === "Enter") Swal.clickConfirm();
         });
-      }
+      },
     });
-  
-    if (resetEmail) {
-      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-        redirectTo: `${APP_BASE_URL}/update-password`,
-      });
-  
-      if (error) {
-        const msg = error.message.includes("Too many requests") 
-                    ? "잠시 후 다시 시도해주세요." 
-                    : "발송 실패 (이메일을 확인해주세요)";
-        Swal.fire({ 
-          icon: 'error', 
-          text: msg,
-          background: '#1a1d29',
-          color: '#fff'
-        });
-      } else {
-        Swal.fire({ 
-          icon: 'success', 
-          text: '재설정 메일을 보냈습니다!',
-          background: '#1a1d29',
-          color: '#fff'
-        });
-      }
+
+    if (!resetEmail) return;
+
+    try {
+      await resetPasswordForEmail(resetEmail);
+      await showSuccess("재설정 메일을 보냈습니다!");
+    } catch (err) {
+      const msg = err.message?.includes("Too many requests")
+        ? "잠시 후 다시 시도해주세요."
+        : "발송 실패 (이메일을 확인해주세요)";
+      await showError(msg);
     }
   };
 
-
-  // 구글 로그인 핸들러 추가
-  const handleGoogleLogin = async () => {
+  const handleOAuthLogin = async (provider) => {
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${APP_BASE_URL}/`,
-          queryParams: {
-            access_type: "offline",
-            prompt: "consent",
-          },
-        },
-      });
-      if (error) throw error;
+      const data = await signInWithOAuth(provider);
       if (data?.url) window.location.href = data.url;
     } catch (err) {
-      console.error("구글 로그인 에러:", err);
-      Swal.fire({
-        icon: "error",
-        title: "로그인 실패",
-        text: "구글 로그인 중 오류가 발생했습니다.",
-        background: '#1a1d29',
-        color: '#fff',
-        confirmButtonColor: "#5271ff"
-      });
-    }
-  };
-
-  // 카카오 로그인 핸들러
-  const handleKakaoLogin = async () => {
-    try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: "kakao",
-        options: {
-          redirectTo: `${APP_BASE_URL}/`,
-        },
-      });
-      if (error) throw error;
-      if (data?.url) window.location.href = data.url;
-    } catch (err) {
-      console.error("카카오 로그인 에러:", err);
-      Swal.fire({
-        icon: "error",
-        title: "로그인 실패",
-        text: "이미 가입된 이메일이거나 서버 오류가 발생했습니다.",
-        background: '#1a1d29',
-        color: '#fff',
-        confirmButtonColor: "#5271ff"
-      });
+      console.error(`${provider} 로그인 에러:`, err);
+      const text =
+        provider === "kakao"
+          ? "이미 가입된 이메일이거나 서버 오류가 발생했습니다."
+          : "구글 로그인 중 오류가 발생했습니다.";
+      await showError(text, "로그인 실패");
     }
   };
 
@@ -217,8 +156,6 @@ function Login() {
 
     try {
       await signIn(email, password);
-      // 실제 이동 경로는 App의 /login 라우트 가드가
-      // userProfile/role을 보고 / 또는 /admin 으로 결정
       navigate("/", { replace: true });
     } catch (err) {
       let korMessage = "로그인 중 에러가 발생했습니다.";
@@ -230,7 +167,8 @@ function Login() {
         setEmailNotConfirmed(true);
         setPendingEmail(email);
       } else if (err.message.includes("Too many requests")) {
-        korMessage = "너무 많은 로그인 시도가 있었습니다. 잠시 후 다시 시도해주세요.";
+        korMessage =
+          "너무 많은 로그인 시도가 있었습니다. 잠시 후 다시 시도해주세요.";
       } else if (err.message.includes("User not found")) {
         korMessage = "존재하지 않는 계정입니다.";
       }
@@ -246,12 +184,30 @@ function Login() {
       <h1 className={styles.title}>로그인</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.inputGroup}>
-          <label htmlFor="email" className={styles.label}>이메일</label>
-          <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required className={styles.input} />
+          <label htmlFor="email" className={styles.label}>
+            이메일
+          </label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className={styles.input}
+          />
         </div>
         <div className={styles.inputGroup}>
-          <label htmlFor="password" className={styles.label}>비밀번호</label>
-          <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required className={styles.input} />
+          <label htmlFor="password" className={styles.label}>
+            비밀번호
+          </label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className={styles.input}
+          />
         </div>
 
         {error && <p className={styles.error}>{error}</p>}
@@ -260,17 +216,25 @@ function Login() {
         {emailNotConfirmed && (
           <div className={styles.emailConfirmNotice}>
             <p>📧 이메일 인증이 필요합니다</p>
-            <button type="button" onClick={handleResendEmail} disabled={resending} className={styles.resendButton}>
-              {resending ? '전송 중...' : '인증 메일 다시 보내기'}
+            <button
+              type="button"
+              onClick={handleResendEmail}
+              disabled={resending}
+              className={styles.resendButton}
+            >
+              {resending ? "전송 중..." : "인증 메일 다시 보내기"}
             </button>
           </div>
         )}
 
-        {/* 아이디/비밀번호 찾기 링크 추가 */}
         <div className={styles.findCredentials}>
-          <span onClick={handleFindEmail} className={styles.link}>아이디 찾기</span>
+          <span onClick={handleFindEmail} className={styles.link}>
+            아이디 찾기
+          </span>
           <span className={styles.divider}>|</span>
-          <span onClick={handleResetPassword} className={styles.link}>비밀번호 찾기</span>
+          <span onClick={handleResetPassword} className={styles.link}>
+            비밀번호 찾기
+          </span>
         </div>
 
         <button type="submit" disabled={loading} className={styles.button}>
@@ -281,20 +245,31 @@ function Login() {
           <img
             src={kakaoLoginImage}
             alt="카카오 로그인"
-            onClick={handleKakaoLogin}
+            onClick={() => handleOAuthLogin("kakao")}
             className={styles.kakaoLoginButton}
           />
         </div>
 
         <div className={styles.googleLoginContainer}>
-          <button type="button" onClick={handleGoogleLogin} className={styles.googleLoginButton}>
-            <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" style={{ width: '20px', marginRight: '10px' }} />
+          <button
+            type="button"
+            onClick={() => handleOAuthLogin("google")}
+            className={styles.googleLoginButton}
+          >
+            <img
+              src="https://developers.google.com/identity/images/g-logo.png"
+              alt="Google"
+              style={{ width: "20px", marginRight: "10px" }}
+            />
             Google 계정으로 로그인
           </button>
         </div>
       </form>
       <p className={styles.registerLink}>
-        계정이 없으신가요? <span onClick={() => navigate('/join')} className={styles.link}>회원가입</span>
+        계정이 없으신가요?{" "}
+        <span onClick={() => navigate("/join")} className={styles.link}>
+          회원가입
+        </span>
       </p>
     </div>
   );

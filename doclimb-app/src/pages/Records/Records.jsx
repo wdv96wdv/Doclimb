@@ -5,6 +5,8 @@ import { getRecords } from "../../services/record";
 import { getProfile } from "../../services/profile";
 import { Activity, CheckCircle2, XCircle, ChevronRight, Inbox, Plus, Globe } from "lucide-react";
 import Calendar from "../../components/Calendar/Calendar";
+import Loading from "../../components/Common/Loading";
+import PageStatus from "../../components/Common/PageStatus";
 import styles from "./Records.module.css";
 
 import { 
@@ -36,26 +38,42 @@ function Records() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const displayName = profile?.display_nickname || user?.user_metadata?.name || user?.user_metadata?.full_name || "클라이머";
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [recordsData, profileData] = await Promise.all([
-          getRecords(),
-          getProfile(user.id)
-        ]);
-        setAllRecords(recordsData);
-        setRecordsByDate(groupByDate(recordsData));
-        setProfile(profileData);
-      } catch (err) {
-        setError("데이터를 불러오는데 실패했습니다.");
-      }
-    };
+  const fetchData = async () => {
+    if (!user) return;
+    setLoading(true);
+    setError("");
+    try {
+      const [recordsData, profileData] = await Promise.all([
+        getRecords(),
+        getProfile(user.id),
+      ]);
+      setAllRecords(recordsData);
+      setRecordsByDate(groupByDate(recordsData));
+      setProfile(profileData);
+    } catch {
+      setError("데이터를 불러오는데 실패했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    if (user) fetchData();
+  useEffect(() => {
+    fetchData();
   }, [user]);
+
+  if (loading) {
+    return <Loading message="기록을 불러오고 있습니다..." />;
+  }
+
+  if (error) {
+    return (
+      <PageStatus error={error} loading={false} onRetry={fetchData} />
+    );
+  }
 
   // 통계 데이터 계산
   const currentMonth = new Date().toISOString().slice(0, 7);

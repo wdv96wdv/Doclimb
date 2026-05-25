@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { createPost, getPostById, updatePost } from "../../services/community";
 import { ImagePlus, Upload, X, Send, Check, RefreshCw, MessageSquare, Tag } from "lucide-react";
 import noImage from "../../assets/img/no_image.png";
+import Loading from "../../components/Common/Loading";
 import styles from "./PostForm.module.css";
 
 function PostForm() {
@@ -73,7 +74,9 @@ function PostForm() {
     }
   };
 
-  if (loading && isEditMode) return <div className={styles.page}><div className={styles.error}>데이터를 가져오는 중...</div></div>;
+  if (loading && isEditMode) {
+    return <Loading message="게시물을 불러오고 있습니다..." />;
+  }
 
   return (
     <div className={styles.page}>

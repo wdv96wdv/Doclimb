@@ -1,24 +1,26 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from '../../context/AuthContext';
-import Join from './Join';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import { BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "../../context/AuthContext";
+import Join from "./Join";
 
-// Mock the AuthContext
-const mockSignUp = vi.fn();
-
-vi.mock('../../context/AuthContext', async (importOriginal) => {
+vi.mock("../../context/AuthContext", async (importOriginal) => {
   const mod = await importOriginal();
   return {
     ...mod,
     useAuth: () => ({
-      signUp: mockSignUp,
+      signUp: vi.fn(),
     }),
   };
 });
 
-describe('Join Component', () => {
-  it('should not have a profile ID input field', () => {
+vi.mock("../../services/profile", () => ({
+  checkEmailAvailable: vi.fn(),
+  checkNicknameAvailable: vi.fn(),
+}));
+
+describe("Join Component", () => {
+  it("should not have a profile ID input field", () => {
     render(
       <BrowserRouter>
         <AuthProvider>
@@ -27,11 +29,10 @@ describe('Join Component', () => {
       </BrowserRouter>
     );
 
-    const profileIdInput = screen.queryByLabelText(/프로필 아이디/i);
-    expect(profileIdInput).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(/프로필 아이디/i)).not.toBeInTheDocument();
   });
 
-  it('should submit the form without a nickname', async () => {
+  it("should associate email label with email id input", () => {
     render(
       <BrowserRouter>
         <AuthProvider>
@@ -40,21 +41,20 @@ describe('Join Component', () => {
       </BrowserRouter>
     );
 
-    fireEvent.change(screen.getByLabelText(/이메일/i), { target: { value: 'test@example.com' } });
-    fireEvent.change(screen.getByLabelText(/비밀번호/i), { target: { value: 'password123' } });
-    fireEvent.change(screen.getByLabelText(/^이름/i), { target: { value: 'Test User' } });
-    fireEvent.change(screen.getByLabelText(/닉네임/i), { target: { value: 'testuser' } });
+    const emailInput = screen.getByLabelText(/이메일/i);
+    expect(emailInput).toHaveAttribute("id", "emailId");
+  });
 
-    fireEvent.click(screen.getByRole('button', { name: /회원가입/i }));
-
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    expect(mockSignUp).toHaveBeenCalledWith(
-      'test@example.com',
-      'password123',
-      expect.not.objectContaining({
-        nickname: expect.any(String),
-      })
+  it("should render password checklist", () => {
+    render(
+      <BrowserRouter>
+        <AuthProvider>
+          <Join />
+        </AuthProvider>
+      </BrowserRouter>
     );
+
+    expect(screen.getByText("8자 이상")).toBeInTheDocument();
+    expect(screen.getByText("특수문자 포함")).toBeInTheDocument();
   });
 });

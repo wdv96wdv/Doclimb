@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../../services/supabase";
+import { getBetas, deleteBeta, upsertBetaRating } from "../../services/beta";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { Plus, Trash2, MapPin, Smile, Meh, Frown, PlayCircle } from "lucide-react";
+import Loading from "../../components/Common/Loading";
 import styles from "./Beta.module.css";
 import Swal from "sweetalert2";
 
@@ -14,22 +15,7 @@ function BetaList() {
 
   const fetchBetas = async () => {
     try {
-      const { data, error } = await supabase
-        .from("betas")
-        .select(`
-          *,
-          profiles (
-            display_nickname,
-            avatar_url
-          ),
-          route_ratings (
-            perceived_difficulty,
-            user_id
-          )
-        `)
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
+      const data = await getBetas();
       setBetas(data);
     } catch (err) {
       console.error("데이터 로딩 에러:", err.message);
@@ -54,11 +40,7 @@ function BetaList() {
       return;
     }
     try {
-      const { error } = await supabase.from("route_ratings").upsert(
-        { beta_id: betaId, user_id: userProfile.id, perceived_difficulty: ratingValue },
-        { onConflict: 'beta_id, user_id' }
-      );
-      if (error) throw error;
+      await upsertBetaRating(betaId, userProfile.id, ratingValue);
       fetchBetas();
     } catch (err) {
       Swal.fire({ 
@@ -86,12 +68,12 @@ function BetaList() {
     });
 
     if (result.isConfirmed) {
-      const { error } = await supabase.from("betas").delete().eq("id", id);
-      if (error) {
-        Swal.fire({ title: "에러", text: error.message, icon: "error", background: '#1a1d29', color: '#fff' });
-      } else {
+      try {
+        await deleteBeta(id);
         Swal.fire({ title: "삭제 완료", text: "포스트가 삭제되었습니다.", icon: "success", background: '#1a1d29', color: '#fff' });
         fetchBetas();
+      } catch (err) {
+        Swal.fire({ title: "에러", text: err.message, icon: "error", background: '#1a1d29', color: '#fff' });
       }
     }
   };
@@ -105,7 +87,9 @@ function BetaList() {
   const getRatingCount = (ratings, type) => ratings?.filter(r => r.perceived_difficulty === type).length || 0;
 
 
-  if (loading) return <div className={styles.loading}>등반 영상 로드 중...</div>;
+  if (loading) {
+    return <Loading message="등반 영상을 불러오고 있습니다..." />;
+  }
 
   return (
     <div className={styles.page}>

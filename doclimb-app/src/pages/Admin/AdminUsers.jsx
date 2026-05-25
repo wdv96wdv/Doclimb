@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
-import { supabase } from "../../services/supabase";
+import {
+  getUsersWithMemberships,
+  grantMembership,
+  cancelActiveMembership,
+} from "../../services/admin";
 import Swal from "sweetalert2";
+import Loading from "../../components/Common/Loading";
 import styles from "./AdminUsers.module.css";
 
 function AdminUsers() {
@@ -15,19 +20,8 @@ function AdminUsers() {
   const fetchAllUsers = async () => {
     setLoading(true);
     try {
-      // 검색어가 있을 경우 filter 추가
-      let query = supabase
-        .from("profiles")
-        .select(`*, memberships(id, type, end_date, status)`);
-
-      if (searchTerm) {
-        query = query.or(`name.ilike.%${searchTerm}%,email.ilike.%${searchTerm}%`);
-      }
-
-      const { data, error } = await query.order("created_at", { ascending: false });
-
-      if (error) throw error;
-      setUsers(data || []);
+      const data = await getUsersWithMemberships(searchTerm);
+      setUsers(data);
     } catch (err) {
       console.error(err.message);
     } finally {
@@ -51,34 +45,7 @@ function AdminUsers() {
     Swal.fire({ title: '처리 중...', didOpen: () => Swal.showLoading() });
 
     try {
-      const { data: existing } = await supabase
-        .from('memberships')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('status', 'active')
-        .gte('end_date', new Date().toISOString().split('T')[0])
-        .maybeSingle();
-
-      let startDate = new Date();
-      let endDate = new Date();
-
-      if (existing) {
-        const currentEndDate = new Date(existing.end_date);
-        startDate = currentEndDate;
-        endDate = new Date(currentEndDate);
-        endDate.setDate(currentEndDate.getDate() + days);
-        await supabase.from('memberships').update({ status: 'extended' }).eq('id', existing.id);
-      } else {
-        endDate.setDate(startDate.getDate() + days);
-      }
-
-      await supabase.from('memberships').insert([{
-        user_id: userId, type,
-        start_date: startDate.toISOString().split('T')[0],
-        end_date: endDate.toISOString().split('T')[0],
-        status: 'active'
-      }]);
-
+      await grantMembership(userId, type, days);
       Swal.fire({ icon: 'success', title: '완료!', timer: 1000, showConfirmButton: false });
       fetchAllUsers();
     } catch (err) {
@@ -100,19 +67,17 @@ function AdminUsers() {
     if (!isConfirmed) return;
 
     try {
-      const { error } = await supabase
-        .from('memberships')
-        .update({ status: 'cancelled', end_date: new Date().toISOString().split('T')[0] })
-        .eq('user_id', userId)
-        .eq('status', 'active');
-
-      if (error) throw error;
+      await cancelActiveMembership(userId);
       Swal.fire({ icon: 'success', title: '회수 완료', timer: 1000, showConfirmButton: false });
       fetchAllUsers();
     } catch (err) {
       Swal.fire('에러', err.message, 'error');
     }
   };
+
+  if (loading && users.length === 0) {
+    return <Loading message="회원 목록을 불러오고 있습니다..." />;
+  }
 
   return (
     <div className={styles.container}>

@@ -13,6 +13,7 @@ import {
   XCircle 
 } from "lucide-react";
 import Swal from "sweetalert2";
+import Loading from "../../components/Common/Loading";
 import styles from "./RecordDetail.module.css";
 
 // 난이도별 색상 매핑 함수
@@ -100,11 +101,9 @@ function RecordDetail() {
     }
   };
 
-  if (loading) return (
-    <div className={styles.page}>
-      <div className={styles.loading}>기록을 가져오는 중...</div>
-    </div>
-  );
+  if (loading) {
+    return <Loading message="기록을 불러오고 있습니다..." />;
+  }
 
   if (error || !record) {
     return (

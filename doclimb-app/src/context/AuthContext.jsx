@@ -65,6 +65,11 @@ export function AuthProvider({ children }) {
     if (error) throw error;
   };
 
+  const updatePassword = async (newPassword) => {
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) throw error;
+  };
+
   useEffect(() => {
     const initializeAuth = async () => {
       try {
@@ -112,8 +117,9 @@ export function AuthProvider({ children }) {
     loading, // loading 상태도 공유
     signUp,
     signIn,
-    signOut, 
+    signOut,
     resendConfirmationEmail,
+    updatePassword,
   };
 
   return (

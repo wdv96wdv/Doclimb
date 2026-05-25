@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { supabase } from "../../services/supabase";
 import { useNavigate } from "react-router-dom";
+import { createBeta } from "../../services/beta";
 import { Instagram, MapPin, Palette, FileText, Send, RefreshCw, Mountain } from "lucide-react";
 import Swal from "sweetalert2";
 import { getAllGyms } from "../../services/gym";
@@ -33,20 +33,12 @@ function CreateBeta() {
     setLoading(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("로그인이 필요합니다.");
-
-      const { error } = await supabase.from("betas").insert([
-        {
-          user_id: user.id,
-          video_url: formData.video_url,
-          gym_name: formData.gym_name,
-          color_level: formData.color_level,
-          description: formData.description,
-        },
-      ]);
-
-      if (error) throw error;
+      await createBeta({
+        video_url: formData.video_url,
+        gym_name: formData.gym_name,
+        color_level: formData.color_level,
+        description: formData.description,
+      });
 
       await Swal.fire({
         title: "공유 완료!",

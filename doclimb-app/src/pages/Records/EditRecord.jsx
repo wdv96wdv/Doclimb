@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getRecordById, updateRecord } from "../../services/record";
 import { Calendar, MapPin, Activity, Mountain, Trophy, XCircle, CheckCircle2, Eye, EyeOff } from "lucide-react";
+import Loading from "../../components/Common/Loading";
 import styles from "./EditRecord.module.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -118,15 +119,7 @@ function EditRecord() {
   };
 
   if (loading) {
-    return (
-      <div className={styles.pageOverlay}>
-        <div className={styles.container}>
-          <div className={styles.header}>
-            <p>기록을 불러오는 중...</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <Loading message="기록을 불러오고 있습니다..." />;
   }
 
   return (

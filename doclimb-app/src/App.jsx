@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom
 import { useAuth, AuthProvider } from "./context/AuthContext";
 import Layout from "./components/Layout/Layout";
 import Loading from "./components/Common/Loading";
+import RequireUserNonAdmin from "./routes/RequireUserNonAdmin";
 import { Analytics } from "@vercel/analytics/react"
 
 // Lazy Loading 적용
@@ -34,12 +35,6 @@ function Navigation() {
   if (loading) {
     return <Loading message="권한 정보를 확인하고 있습니다..." />;
   }
-
-  const RequireUserNonAdmin = ({ children }) => {
-    if (!userProfile) return <Navigate to="/login" replace />;
-    if (isAdmin) return <Navigate to="/admin" replace />;
-    return children;
-  };
 
   return (
     <BrowserRouter>

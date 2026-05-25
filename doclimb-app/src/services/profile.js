@@ -80,3 +80,37 @@ export async function uploadAvatar(file, userId) {
 
   return publicUrlData.publicUrl;
 }
+
+export async function checkEmailAvailable(email) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('email')
+    .eq('email', email)
+    .maybeSingle();
+
+  if (error) throw error;
+  return !data;
+}
+
+export async function checkNicknameAvailable(displayNickname) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('display_nickname')
+    .eq('display_nickname', displayNickname)
+    .maybeSingle();
+
+  if (error) throw error;
+  return !data;
+}
+
+export async function findEmailByNameAndNickname(name, displayNickname) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('email')
+    .eq('name', name)
+    .eq('display_nickname', displayNickname)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data;
+}

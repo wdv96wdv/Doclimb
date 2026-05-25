@@ -1,21 +1,32 @@
 import { useEffect, useState } from "react";
 import { fetchGymRankings } from "../../services/gamification";
-import { Trophy, Medal, Award, MapPin, User, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Trophy, Medal, Award, MapPin, User, ChevronLeft, ChevronRight } from "lucide-react";
+import Loading from "../../components/Common/Loading";
+import PageStatus from "../../components/Common/PageStatus";
 import styles from "./Ranking.module.css";
 import defaultAvatar from "../../assets/img/No_Image_Available.jpg";
 
 function Ranking() {
   const [rankings, setRankings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 6;
 
-  useEffect(() => {
-    const loadRankings = async () => {
+  const loadRankings = async () => {
+    setLoading(true);
+    setError("");
+    try {
       const data = await fetchGymRankings();
       setRankings(data);
+    } catch {
+      setError("랭킹 데이터를 불러오지 못했습니다.");
+    } finally {
       setLoading(false);
-    };
+    }
+  };
+
+  useEffect(() => {
     loadRankings();
   }, []);
 
@@ -26,11 +37,12 @@ function Ranking() {
   );
 
   if (loading) {
+    return <Loading message="암장별 랭킹을 불러오고 있습니다..." />;
+  }
+
+  if (error) {
     return (
-      <div className={styles.loading}>
-        <Loader2 className={styles.spinner} />
-        <p>암장별 랭킹 로드 중...</p>
-      </div>
+      <PageStatus error={error} onRetry={loadRankings} loading={false} />
     );
   }
 

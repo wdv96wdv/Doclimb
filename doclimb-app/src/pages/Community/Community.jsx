@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getPosts } from "../../services/community";
+import Loading from "../../components/Common/Loading";
+import PageStatus from "../../components/Common/PageStatus";
 import { Plus, Image as ImageIcon, MessageCircle, Heart } from "lucide-react";
 import noImage from "../../assets/img/no_image.png";
 import styles from "./Community.module.css";
@@ -8,22 +10,30 @@ import styles from "./Community.module.css";
 function Community() {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const fetchPosts = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const data = await getPosts();
+      setPosts(data);
+    } catch (err) {
+      setError("게시물을 불러오는데 실패했습니다.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const data = await getPosts();
-        setPosts(data);
-      } catch (err) {
-        setError("게시물을 불러오는데 실패했습니다.");
-        console.error(err);
-      }
-    };
-
     fetchPosts();
   }, []);
 
-  if (error) return <div className={styles.error}>{error}</div>;
+  if (loading) return <Loading message="게시물을 불러오고 있습니다..." />;
+  if (error) {
+    return <PageStatus error={error} loading={false} onRetry={fetchPosts} />;
+  }
 
   return (
     <div className={styles.page}>

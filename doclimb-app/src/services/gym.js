@@ -31,3 +31,67 @@ export const updateGymStatus = async (gymId, status) => {
   if (error) throw error;
   return data;
 };
+
+/**
+ * 페이지네이션·검색·필터가 적용된 암장 목록
+ */
+export const getGymsPaginated = async ({
+  page = 1,
+  pageSize = 10,
+  searchTerm = "",
+  statusFilter = "all",
+} = {}) => {
+  let query = supabase.from("gyms").select("*", { count: "exact" });
+
+  if (searchTerm.trim()) {
+    query = query.ilike("name", `%${searchTerm}%`);
+  }
+
+  if (statusFilter !== "all") {
+    query = query.eq("current_status", parseInt(statusFilter, 10));
+  }
+
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  const { data, count, error } = await query
+    .order("name", { ascending: true })
+    .range(from, to);
+
+  if (error) throw error;
+  return { data: data || [], count: count || 0 };
+};
+
+/**
+ * 새 암장 등록 (관리자)
+ */
+export const createGym = async ({ name, location, phone, description }) => {
+  const { error } = await supabase.from("gyms").insert([
+    {
+      name,
+      location,
+      phone,
+      description,
+      current_status: 0,
+      last_updated: new Date().toISOString(),
+    },
+  ]);
+
+  if (error) throw error;
+};
+
+/**
+ * 암장 실시간 업데이트 구독
+ */
+export const subscribeToGymUpdates = (onUpdate) => {
+  const channel = supabase
+    .channel("gym-updates")
+    .on(
+      "postgres_changes",
+      { event: "UPDATE", schema: "public", table: "gyms" },
+      (payload) => onUpdate(payload.new)
+    )
+    .subscribe();
+
+  return () => supabase.removeChannel(channel);
+};

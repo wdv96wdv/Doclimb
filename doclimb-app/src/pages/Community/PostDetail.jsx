@@ -7,6 +7,8 @@ import noImage from "../../assets/img/no_image.png";
 import defaultAvatar from "../../assets/img/No_Image_Available.jpg";
 import styles from "./PostDetail.module.css";
 import Swal from 'sweetalert2';
+import Loading from "../../components/Common/Loading";
+import PageStatus from "../../components/Common/PageStatus";
 
 function PostDetail() {
   const { id } = useParams();
@@ -141,8 +143,19 @@ function PostDetail() {
     return roots;
   }, [comments]);
 
-  if (loading) return <div className={styles.page}><div className={styles.loading}>로딩 중...</div></div>;
-  if (!post) return <div className={styles.page}><div className={styles.error}>게시물을 찾을 수 없습니다.</div></div>;
+  if (loading) {
+    return <Loading message="게시물을 불러오고 있습니다..." />;
+  }
+
+  if (error || !post) {
+    return (
+      <PageStatus
+        error={error || "게시물을 찾을 수 없습니다."}
+        onRetry={fetchData}
+        loading={false}
+      />
+    );
+  }
 
   const isAuthor = user && user.id === post.user_id;
 

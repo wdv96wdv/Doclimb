@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "../../services/supabase";
+import { getGymsPaginated, updateGymStatus } from "../../services/gym";
 import Swal from "sweetalert2";
 import styles from "./AdminCongestion.module.css";
 
@@ -21,27 +21,14 @@ function AdminCongestion() {
   const fetchGyms = async () => {
     setLoading(true);
     try {
-      let query = supabase.from("gyms").select("*", { count: "exact" });
-
-      if (searchTerm.trim()) {
-        query = query.ilike("name", `%${searchTerm}%`);
-      }
-
-      if (statusFilter !== "all") {
-        query = query.eq("current_status", parseInt(statusFilter));
-      }
-
-      const from = (currentPage - 1) * PAGE_SIZE;
-      const to = from + PAGE_SIZE - 1;
-
-      const { data, count, error } = await query
-        .order("name", { ascending: true })
-        .range(from, to);
-
-      if (error) throw error;
-
-      setGyms(data || []);
-      setTotalCount(count || 0);
+      const { data, count } = await getGymsPaginated({
+        page: currentPage,
+        pageSize: PAGE_SIZE,
+        searchTerm,
+        statusFilter,
+      });
+      setGyms(data);
+      setTotalCount(count);
     } catch (err) {
       console.error("데이터 로드 실패:", err.message);
     } finally {
@@ -51,13 +38,7 @@ function AdminCongestion() {
 
   const handleStatusUpdate = async (gymId, status) => {
     try {
-      const { error } = await supabase
-        .from("gyms")
-        .update({ current_status: status, last_updated: new Date().toISOString() })
-        .eq("id", gymId);
-
-      if (error) throw error;
-      
+      await updateGymStatus(gymId, status);
       fetchGyms();
     } catch (err) {
       Swal.fire("오류", err.message, "error");
