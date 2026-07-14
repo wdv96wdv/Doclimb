@@ -190,7 +190,10 @@ function Home() {
               <span className={styles.newBadge}>AI Coach</span>
               <h2>데이터 기반의 성장을 경험하세요</h2>
               <p>기록된 기록을 AI가 분석하여 당신의 강점과 약점을 시각화해 드립니다.</p>
-              <button onClick={() => navigate("/login")} className={styles.aiButton}>
+              <button
+                onClick={() => navigate(user ? "/ai-coach" : "/login")}
+                className={styles.aiButton}
+              >
                 무료 분석 시작하기 <ChevronRight size={18} />
               </button>
             </div>
